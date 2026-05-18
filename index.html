@@ -79,6 +79,20 @@
         
         .teacher-only-btn { display: none; }
 
+        /* داخلہ اور اخراج سیکشن کا ڈیزائن */
+        .management-panel {
+            background: #eef2f3; border: 2px solid var(--primary);
+            padding: 15px; border-radius: 15px; margin-bottom: 15px;
+            display: none;
+        }
+        .mgmt-input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; width: 60%; max-width: 250px; }
+        .btn-mgmt { padding: 8px 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; color: white; }
+
+        .delete-btn {
+            background: #b71c1c; color: white; border: none; padding: 4px 8px;
+            border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold;
+        }
+
         /* ویڈیو گیلری کا خاص ڈیزائن */
         .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
         .video-container { display: none; padding: 10px; background: #f9f9f9; text-align: center; }
@@ -102,7 +116,7 @@
         .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
         @media print {
-            .tabs, .footer-tools, input[type="date"], .login-portal, .teacher-badge { display: none !important; }
+            .tabs, .footer-tools, input[type="date"], .login-portal, .teacher-badge, .management-panel, .delete-th, .delete-td { display: none !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
@@ -117,6 +131,15 @@
 
     <div id="teacherBadge" class="teacher-badge" style="display: none;">🔓 استاد موڈ فعال ہے (ترمیم کھلی ہے)</div>
 
+    <div id="managementPanel" class="management-panel">
+        <strong style="color: var(--primary); font-size: 18px;">🆕 نیا داخلہ (طالب علم شامل کریں):</strong>
+        <div style="margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="newStudentName" class="mgmt-input" placeholder="طالب علم کا نام لکھیں...">
+            <input type="text" id="newStudentYT" class="mgmt-input" placeholder="یوٹیوب پلے لسٹ آئی ڈی (آپشنل)">
+            <button class="btn-mgmt" style="background: var(--present-clr);" onclick="addStudent()">داخل کریں</button>
+        </div>
+    </div>
+
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('dailyAtt', event)">حاضری</button>
         <button class="tab-btn" onclick="openTab('dailyLesson', event)">سبق</button>
@@ -129,10 +152,10 @@
     <div id="dailyAtt" class="tab-content active">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
             <input type="date" id="mainDate" onchange="updateAll()">
-            <div style="color:var(--primary); font-weight:bold; font-size:18px;">تعداد: 53</div>
+            <div style="color:var(--primary); font-weight:bold; font-size:18px;" id="totalStudentsCount">تعداد: 53</div>
         </div>
         <table>
-            <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>حاضری</th></tr></thead>
+            <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>حاضری</th><th class="teacher-only-btn delete-th">اخراج</th></tr></thead>
             <tbody id="attTableBody"></tbody>
         </table>
     </div>
@@ -205,122 +228,17 @@
 </div>
 
 <script>
-    const names = ["آذان فاروق", "ابراہیم رفعت", "ابراہیم طاہر", "اسماعیل رفعت", "اسماعیل مشتاق", "ام ابیہا", "انتشال زہراء", "ایشال زہراء", "ایمان فاروق", "ایمان نیاز", "ثانیہ امیر", "جنت فاطمہ", "حسن عمران", "حسن نواز", "حسین نواز", "حمیر مرتضی", "حنظلہ دلدار", "ذکاء اللّٰه", "رفیع الدین", "ریحان نثار", "زرمینہ بی بی", "سائرہ سخاوت", "سمیع مصطفى", "شعیب نثار", "صائم حفیظ", "صائم سلیم", "صالحہ بی بی", "صالقہ بی بی", "صفی الدین", "عبد الاحد", "عبد الرافع", "عبداللّٰه سخاوت", "عتیق الرحمن", "عثمان امیر", "علی رضا", "غلام مصطفی", "کشف دلدار", "کمیل حیدر", "محمد اویس", "محمد سالار", "محمد شاہزیب", "محمد شہروز", "محمد علی", "محمد علیان", "مریم بی بی", "وہاب شعیب", "حسن سجاد", "آمنہ نور", "علیزہ سخاوت", "شاہ زین", "حیدر علی", "محمد سبحان", "کیف نذیر"];
+    // بنیادی ناموں کی لسٹ (اگر لوکل سٹوریج میں کچھ نہ ہو تو یہ چلے گی)
+    const defaultNames = ["آذان فاروق", "ابراہیم رفعت", "ابراہیم طاہر", "اسماعیل رفعت", "اسماعیل مشتاق", "ام ابیہا", "انتشال زہراء", "ایشال زہراء", "ایمان فاروق", "ایمان نیاز", "ثانیہ امیر", "جنت فاطمہ", "حسن عمران", "حسن نواز", "حسین نواز", "حمیر مرتضی", "حنظلہ دلدار", "ذکاء اللّٰه", "رفیع الدین", "ریحان نثار", "زرمینہ بی بی", "سائرہ سخاوت", "سمیع مصطفى", "شعیب نثار", "صائم حفیظ", "صائم سلیم", "صالحہ بی بی", "صالقہ بی بی", "صفی الدین", "عبد الاحد", "عبد الرافع", "عبداللّٰه سخاوت", "عتیق الرحمن", "عثمان امیر", "علی رضا", "غلام مصطفی", "کشف دلدار", "کمیل حیدر", "محمد اویس", "محمد سالار", "محمد شاہزیب", "محمد شہروز", "محمد علی", "محمد علیان", "مریم بی بی", "وہاب شعیب", "حسن سجاد", "آمنہ نور", "علیزہ سخاوت", "شاہ زین", "حیدر علی", "محمد سبحان", "کیف نذیر"];
     
-    const videoLinks = {
-        "0": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq", 
-        "1": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn", 
-        "2": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-116okM9dzkndAI06ybp79lQ", 
-        "3": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI", 
-        "4": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx", 
-        "5": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645", 
-        "6": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_", 
-        "7": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv", 
-        "8": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12kJ48mws_483lW2GPAseMg", 
-        "9": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD", 
-        "10": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379", 
-        "11": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf", 
-        "12": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD", 
-        "13": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV", 
-        "14": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G", 
-        "15": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_", 
-        "16": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ", 
-        "17": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_", 
-        "18": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT", 
-        "19": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9", 
-        "20": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS", 
-        "21": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q", 
-        "22": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv", 
-        "23": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP", 
-        "24": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf", 
-        "25": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV", 
-        "26": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H", 
-        "27": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD", 
-        "28": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ", 
-        "29": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf", 
-        "30": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m", 
-        "31": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8", 
-        "32": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11-1UT-G817EP5co--NgjN9", 
-        "33": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp", 
-        "34": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m", 
-        "35": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo", 
-        "36": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE", 
-        "37": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q", 
-        "38": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz", 
-        "39": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto", 
-        "40": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m", 
-        "41": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs", 
-        "42": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb", 
-        "43": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy", 
-        "44": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR", 
-        "45": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A", 
-        "46": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP", 
-        "47": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N", 
-        "48": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6", 
-        "49": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E", 
-        "50": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj", 
-        "51": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv", 
-        "52": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"
-    };
-
-    // اینڈرائیڈ ڈیپ لنک 'intent://' فارمیٹ جو براؤزر کو بائی پاس کر کے براہ راست یوٹیوب ایپ کھولتا ہے
-    const directPlaylistLinks = {
-        "0": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq#Intent;package=com.google.android.youtube;scheme=https;end",
-        "1": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn#Intent;package=com.google.android.youtube;scheme=https;end",
-        "2": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-116okM9dzkndAI06ybp79lQ#Intent;package=com.google.android.youtube;scheme=https;end",
-        "3": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI#Intent;package=com.google.android.youtube;scheme=https;end",
-        "4": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx#Intent;package=com.google.android.youtube;scheme=https;end",
-        "5": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645#Intent;package=com.google.android.youtube;scheme=https;end",
-        "6": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_#Intent;package=com.google.android.youtube;scheme=https;end",
-        "7": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv#Intent;package=com.google.android.youtube;scheme=https;end",
-        "8": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12kJ48mws_483lW2GPAseMg#Intent;package=com.google.android.youtube;scheme=https;end",
-        "9": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD#Intent;package=com.google.android.youtube;scheme=https;end",
-        "10": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379#Intent;package=com.google.android.youtube;scheme=https;end",
-        "11": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf#Intent;package=com.google.android.youtube;scheme=https;end",
-        "12": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD#Intent;package=com.google.android.youtube;scheme=https;end",
-        "13": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV#Intent;package=com.google.android.youtube;scheme=https;end",
-        "14": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G#Intent;package=com.google.android.youtube;scheme=https;end",
-        "15": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_#Intent;package=com.google.android.youtube;scheme=https;end",
-        "16": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ#Intent;package=com.google.android.youtube;scheme=https;end",
-        "17": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_#Intent;package=com.google.android.youtube;scheme=https;end",
-        "18": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT#Intent;package=com.google.android.youtube;scheme=https;end",
-        "19": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9#Intent;package=com.google.android.youtube;scheme=https;end",
-        "20": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS#Intent;package=com.google.android.youtube;scheme=https;end",
-        "21": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q#Intent;package=com.google.android.youtube;scheme=https;end",
-        "22": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv#Intent;package=com.google.android.youtube;scheme=https;end",
-        "23": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP#Intent;package=com.google.android.youtube;scheme=https;end",
-        "24": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf#Intent;package=com.google.android.youtube;scheme=https;end",
-        "25": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV#Intent;package=com.google.android.youtube;scheme=https;end",
-        "26": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H#Intent;package=com.google.android.youtube;scheme=https;end",
-        "27": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD#Intent;package=com.google.android.youtube;scheme=https;end",
-        "28": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ#Intent;package=com.google.android.youtube;scheme=https;end",
-        "29": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf#Intent;package=com.google.android.youtube;scheme=https;end",
-        "30": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m#Intent;package=com.google.android.youtube;scheme=https;end",
-        "31": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8#Intent;package=com.google.android.youtube;scheme=https;end",
-        "32": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11-1UT-G817EP5co--NgjN9#Intent;package=com.google.android.youtube;scheme=https;end",
-        "33": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp#Intent;package=com.google.android.youtube;scheme=https;end",
-        "34": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m#Intent;package=com.google.android.youtube;scheme=https;end",
-        "35": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo#Intent;package=com.google.android.youtube;scheme=https;end",
-        "36": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE#Intent;package=com.google.android.youtube;scheme=https;end",
-        "37": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q#Intent;package=com.google.android.youtube;scheme=https;end",
-        "38": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz#Intent;package=com.google.android.youtube;scheme=https;end",
-        "39": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto#Intent;package=com.google.android.youtube;scheme=https;end",
-        "40": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m#Intent;package=com.google.android.youtube;scheme=https;end",
-        "41": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs#Intent;package=com.google.android.youtube;scheme=https;end",
-        "42": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb#Intent;package=com.google.android.youtube;scheme=https;end",
-        "43": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy#Intent;package=com.google.android.youtube;scheme=https;end",
-        "44": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR#Intent;package=com.google.android.youtube;scheme=https;end",
-        "45": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A#Intent;package=com.google.android.youtube;scheme=https;end",
-        "46": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP#Intent;package=com.google.android.youtube;scheme=https;end",
-        "47": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N#Intent;package=com.google.android.youtube;scheme=https;end",
-        "48": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6#Intent;package=com.google.android.youtube;scheme=https;end",
-        "49": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E#Intent;package=com.google.android.youtube;scheme=https;end",
-        "50": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj#Intent;package=com.google.android.youtube;scheme=https;end",
-        "51": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv#Intent;package=com.google.android.youtube;scheme=https;end",
-        "52": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F#Intent;package=com.google.android.youtube;scheme=https;end"
-    };
+    const defaultVideoLists = ["PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn","PL3-aVTBoE-116okM9dzkndAI06ybp79lQ","PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI","PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx","PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645","PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_","PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv","PL3-aVTBoE-12kJ48mws_483lW2GPAseMg","PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD","PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379","PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf","PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD","PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV","PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G","PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_","PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ","PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_","PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT","PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9","PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS","PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q","PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv","PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP","PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf","PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV","PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H","PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD","PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ","PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf","PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m","PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8","PL3-aVTBoE-11-1UT-G817EP5co--NgjN9","PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp","PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m","PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo","PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE","PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q","PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz","PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto","PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m","PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs","PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb","PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy","PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR","PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A","PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP","PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N","PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6","PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E","PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj","PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv","PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"];
 
     const storageKey = 'rizwan_masjid_final_v3';
+    const namesStorageKey = 'rizwan_masjid_names';
+    const videoStorageKey = 'rizwan_masjid_videos';
+    
+    let names = JSON.parse(localStorage.getItem(namesStorageKey)) || defaultNames;
+    let videoLists = JSON.parse(localStorage.getItem(videoStorageKey)) || defaultVideoLists;
     let isTeacherMode = false;
 
     window.onload = function() {
@@ -340,7 +258,7 @@
         if(u === "nasirali258" && p === "merayquaidjalali") {
             sessionStorage.setItem('isTeacherLoggedIn', 'true');
             activateTeacherMode();
-            alert("لاگ ان کامیاب! اب آپ کو بیک اپ بٹنز نظر آئیں گے اور آپ ترمیم کر سکتے ہیں۔");
+            alert("لاگ ان کامیاب! اب آپ کو بیک اپ، داخلہ اور اخراج کے آپشنز نظر آئیں گے۔");
         } else {
             alert("غلط یوزر نیم یا پاس ورڈ!");
         }
@@ -349,6 +267,7 @@
     function activateTeacherMode() {
         isTeacherMode = true;
         document.getElementById('teacherBadge').style.display = "block";
+        document.getElementById('managementPanel').style.display = "block";
         document.getElementById('loginFormInputs').style.display = "none";
         document.getElementById('logoutBtn').style.display = "inline-block";
         document.getElementById('portalTitle').innerText = "🧔 ناصر علی (استاد)";
@@ -361,6 +280,7 @@
         isTeacherMode = false;
         sessionStorage.removeItem('isTeacherLoggedIn');
         document.getElementById('teacherBadge').style.display = "none";
+        document.getElementById('managementPanel').style.display = "none";
         document.getElementById('loginFormInputs').style.display = "block";
         document.getElementById('logoutBtn').style.display = "none";
         document.getElementById('portalTitle').innerText = "🔐 استاد پورٹل لاگ ان";
@@ -369,6 +289,64 @@
         
         document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'none');
         alert("لاگ آؤٹ ہو گئے۔ رجسٹر صرف دیکھنے کے موڈ پر ہے۔");
+        updateAll();
+    }
+
+    // نیا طالب علم آخر میں داخل کرنے کا فنکشن
+    function addStudent() {
+        const nameInput = document.getElementById('newStudentName');
+        const ytInput = document.getElementById('newStudentYT');
+        const name = nameInput.value.trim();
+        const ytList = ytInput.value.trim() || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq"; // اگر خالی ہو تو پہلا ڈیفالٹ لنک لگ جائے گا
+
+        if(name === "") {
+            alert("براہ کرم طالب علم کا نام لکھیں!");
+            return;
+        }
+
+        names.push(name);
+        videoLists.push(ytList);
+
+        localStorage.setItem(namesStorageKey, JSON.stringify(names));
+        localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
+
+        nameInput.value = "";
+        ytInput.value = "";
+        
+        alert(`${name} کا داخلہ کامیابی سے آخر میں کر دیا گیا ہے۔`);
+        updateAll();
+    }
+
+    // صرف منتخب طالب علم کو خارج (حذف) کرنے کا فنکشن
+    function deleteStudent(index) {
+        if(!confirm(`کیا آپ واقعی "${names[index]}" کو لسٹ سے خارج کرنا چاہتے ہیں؟ باقی ریکارڈ پر کوئی اثر نہیں پڑے گا۔`)) return;
+
+        names.splice(index, 1);
+        videoLists.splice(index, 1);
+
+        // تمام تواریخ کے ریکارڈز میں سے بھی اس انڈیکس کا ڈیٹا ہٹانا تاکہ حاضری لسٹ خراب نہ ہو
+        let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        for (let date in data) {
+            if (data[date]) {
+                // چونکہ انڈیکسز بدل جائیں گے، اس لیے ہم ڈیٹا کو ری الائن کر رہے ہیں
+                let updatedDayData = {};
+                let currentNewIndex = 0;
+                for (let oldIndex in data[date]) {
+                    if (parseInt(oldIndex) === index) {
+                        continue; // خارج شدہ طالب علم کا ڈیٹا چھوڑ دیں
+                    }
+                    updatedDayData[currentNewIndex] = data[date][oldIndex];
+                    currentNewIndex++;
+                }
+                data[date] = updatedDayData;
+            }
+        }
+
+        localStorage.setItem(namesStorageKey, JSON.stringify(names));
+        localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
+        localStorage.setItem(storageKey, JSON.stringify(data));
+
+        alert("طالب علم کو خارج کر دیا گیا ہے۔");
         updateAll();
     }
 
@@ -384,6 +362,8 @@
         const date = document.getElementById('mainDate').value;
         const dObj = new Date(date);
         document.getElementById('displayUrduDate').innerText = dObj.toLocaleDateString('ur-PK', {day:'numeric', month:'long', year:'numeric'});
+        
+        document.getElementById('totalStudentsCount').innerText = `تعداد: ${names.length}`;
 
         const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
         const dayData = data[date] || {};
@@ -391,14 +371,19 @@
         const b1 = document.getElementById('attTableBody'), b2 = document.getElementById('lessTableBody'), b3 = document.getElementById('diaryTableBody'), b4 = document.getElementById('videoTableBody');
         b1.innerHTML = ''; b2.innerHTML = ''; b3.innerHTML = ''; b4.innerHTML = '';
 
+        // ڈیلیٹ کالم ہیڈر کنٹرول
+        const delTh = document.querySelector('.delete-th');
+        if(delTh) delTh.style.display = isTeacherMode ? 'table-cell' : 'none';
+
         names.forEach((n, i) => {
             const s = dayData[i] || { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '' };
             
             const clickA = `onclick="tglA(this,${i})"`;
             const clickL = `onclick="tglL(this,${i})"`;
             const disabledInput = isTeacherMode ? '' : 'disabled';
+            const displayDeleteTd = isTeacherMode ? `<td class="delete-td"><button class="delete-btn" onclick="deleteStudent(${i})">خارج کریں</button></td>` : '';
 
-            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.aC}" ${clickA}>${s.aS}</div></td></tr>`;
+            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.aC}" ${clickA}>${s.aS}</div></td>${displayDeleteTd}</tr>`;
             b2.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.lC}" ${clickL}>${s.lS}</div></td></tr>`;
             b3.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><input type="text" class="diary-input" value="${s.w}" ${disabledInput} onchange="saveW(${i},this.value)"></td></tr>`;
             
@@ -419,8 +404,10 @@
     function toggleVideo(i) {
         const row = document.getElementById(`videoRow-${i}`);
         const area = document.getElementById(`videoArea-${i}`);
-        const embedLink = videoLinks[i];
-        const directLink = directPlaylistLinks[i];
+        const listID = videoLists[i] || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
+        
+        const embedLink = `https://www.youtube.com/embed/videoseries?list=${listID}`;
+        const directLink = `intent://www.youtube.com/playlist?list=${listID}#Intent;package=com.google.android.youtube;scheme=https;end`;
 
         if (row.style.display === "table-row") {
             row.style.display = "none";
@@ -428,7 +415,7 @@
         } else {
             document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
             row.style.display = "table-row";
-            if (embedLink) {
+            if (listID) {
                 area.innerHTML = `
                     <iframe height="250" src="${embedLink}" frameborder="0" allowfullscreen></iframe>
                     <br>
@@ -500,9 +487,14 @@
     }
 
     function downloadBackup() {
-        const blob = new Blob([localStorage.getItem(storageKey)], {type:'text/plain'});
+        const backupData = {
+            attendance: JSON.parse(localStorage.getItem(storageKey) || '{}'),
+            names: names,
+            videos: videoLists
+        };
+        const blob = new Blob([JSON.stringify(backupData)], {type:'text/plain'});
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-        a.download = 'rizwan_masjid_data.txt'; a.click();
+        a.download = 'rizwan_masjid_full_backup.txt'; a.click();
     }
 </script>
 </body>
