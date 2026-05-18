@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آل ان ون رجسٹر - رضوان مسجد</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+        
+        * { font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif !important; }
+
+        :root { 
+            --primary: #4B0082; 
+            --present-clr: #1b5e20;
+            --absent-clr: #b71c1c;
+            --leave-clr: #ef6c00;
+        }
+
+        body { 
+            background-color: var(--primary);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M50 50c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10-10-4.48-10-10z'/%3E%3C/g%3E%3C/svg%3E");
+            padding: 10px; margin: 0; 
+        }
+
+        .container { 
+            max-width: 100%; margin: auto; background: #fff9e5; 
+            padding: 15px; border-radius: 20px; border: 3px solid #311b92;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .header-section { text-align: center; margin: -15px -15px 20px -15px; }
+        .banner-img { width: 100%; border-radius: 15px 15px 0 0; border-bottom: 4px solid #ffd700; display: block; }
+        
+        .urdu-date { 
+            background: var(--primary); color: white; padding: 5px 20px; 
+            border-radius: 50px; display: inline-block; margin-top: -20px;
+            position: relative; border: 2px solid #ffd700; font-size: 18px;
+        }
+
+        .tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
+        .tab-btn { 
+            flex: 1; min-width: 70px; padding: 10px 2px; cursor: pointer; 
+            border: 2px solid var(--primary); background: white; 
+            font-size: 16px; font-weight: bold; color: var(--primary); border-radius: 10px;
+        }
+        .tab-btn.active { background: var(--primary); color: white; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
+        th, td { padding: 10px 5px; border: 1px solid #ddd; text-align: center; font-size: 18px; }
+        th { background-color: var(--primary); color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        
+        .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; width: 40%; }
+        
+        .status-btn { 
+            width: 90px; padding: 6px 0; cursor: pointer; font-weight: bold; 
+            border-radius: 6px; background: #eee; border: 1px solid #ccc; 
+            display: inline-block; font-size: 16px;
+        }
+        
+        .present { background-color: var(--present-clr) !important; color: white !important; }
+        .absent { background-color: var(--absent-clr) !important; color: white !important; }
+        .leave { background-color: var(--leave-clr) !important; color: white !important; }
+        
+        .report-count { font-weight: 900; font-family: Arial, sans-serif !important; font-size: 24px; }
+
+        .diary-input { width: 90%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 17px; }
+
+        .footer-tools { margin-top: 20px; display: flex; gap: 10px; }
+        .btn-tool { padding: 12px; font-size: 17px; cursor: pointer; border: none; border-radius: 10px; color: white; flex: 1; font-weight: bold; }
+
+        /* ویڈیو گیلری کا خاص ڈیزائن */
+        .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        .video-container { display: none; padding: 10px; background: #f0f0f0; border-top: 1px solid #ddd; text-align: center; }
+        .video-container iframe { width: 100%; border-radius: 10px; border: 2px solid #ff0000; }
+        
+        @media print {
+            .tabs, .footer-tools, input[type="date"] { display: none !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-section">
+        <img src="https://lh3.googleusercontent.com/d/192M7_vyAAituM0uYIwsGlTUUgubfo_SY" alt="Header" class="banner-img">
+        <div id="displayUrduDate" class="urdu-date"></div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('dailyAtt', event)">حاضری</button>
+        <button class="tab-btn" onclick="openTab('dailyLesson', event)">سبق</button>
+        <button class="tab-btn" onclick="openTab('diary', event)">ڈائری</button>
+        <button class="tab-btn" onclick="openTab('videoTab', event)">ویڈیوز</button>
+        <button class="tab-btn" onclick="openTab('attReport', event)">حاضری رپورٹ</button>
+        <button class="tab-btn" onclick="openTab('lessReport', event)">سبق رپورٹ</button>
+    </div>
+
+    <div id="dailyAtt" class="tab-content active">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <input type="date" id="mainDate" onchange="updateAll()">
+            <div style="color:var(--primary); font-weight:bold;">تعداد: 53</div>
+        </div>
+        <table>
+            <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>حاضری</th></tr></thead>
+            <tbody id="attTableBody"></tbody>
+        </table>
+    </div>
+
+    <div id="dailyLesson" class="tab-content">
+        <table>
+            <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>کیفیت</th></tr></thead>
+            <tbody id="lessTableBody"></tbody>
+        </table>
+    </div>
+
+    <div id="diary" class="tab-content">
+        <table>
+            <thead><tr><th>نمبر</th><th>نام</th><th>آج کا سبق</th></tr></thead>
+            <tbody id="diaryTableBody"></tbody>
+        </table>
+    </div>
+
+    <div id="videoTab" class="tab-content">
+        <table>
+            <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>ویڈیوز دیکھیں</th></tr></thead>
+            <tbody id="videoTableBody"></tbody>
+        </table>
+    </div>
+
+    <div id="attReport" class="tab-content">
+        <div style="text-align:center; padding:10px; font-weight:bold; font-size:24px; color:var(--primary);" class="monthTitle"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th style="background:var(--present-clr)">حاضر</th>
+                    <th style="background:var(--absent-clr)">غیر حاضر</th>
+                    <th style="background:var(--leave-clr)">رخصت</th>
+                </tr>
+            </thead>
+            <tbody id="attReportBody"></tbody>
+        </table>
+    </div>
+
+    <div id="lessReport" class="tab-content">
+        <div style="text-align:center; padding:10px; font-weight:bold; font-size:24px; color:var(--primary);" class="monthTitle"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th style="background:var(--present-clr)">سنایا</th>
+                    <th style="background:var(--absent-clr)">یاد نہیں</th>
+                    <th style="background:var(--leave-clr)">نہیں سنایا</th>
+                </tr>
+            </thead>
+            <tbody id="lessReportBody"></tbody>
+        </table>
+    </div>
+
+    <div class="footer-tools">
+        <button class="btn-tool" style="background:#311b92" onclick="window.print()">پرنٹ نکالیں</button>
+        <button class="btn-tool" style="background:var(--primary)" onclick="downloadBackup()">بیک اپ</button>
+    </div>
+</div>
+
+<script>
+    const names = ["آذان فاروق", "ابراہیم رفعت", "ابراہیم طاہر", "اسماعیل رفعت", "اسماعیل مشتاق", "ام ابیہا", "انتشال زہراء", "ایشال زہراء", "ایمان فاروق", "ایمان نیاز", "ثانیہ امیر", "جنت فاطمہ", "حسن عمران", "حسن نواز", "حسین نواز", "حمیر مرتضی", "حنظلہ دلدار", "ذکاء اللّٰه", "رفیع الدین", "ریحان نثار", "زرمینہ بی بی", "سائرہ سخاوت", "سمیع مصطفى", "شعیب نثار", "صائم حفیظ", "صائم سلیم", "صالحہ بی بی", "صالقہ بی بی", "صفی الدین", "عبد الاحد", "عبد الرافع", "عبداللّٰه سخاوت", "عتیق الرحمن", "عثمان امیر", "علی رضا", "غلام مصطفی", "کشف دلدار", "کمیل حیدر", "محمد اویس", "محمد سالار", "محمد شاہزیب", "محمد شہروز", "محمد علی", "محمد علیان", "مریم بی بی", "وہاب شعیب", "حسن سجاد", "آمنہ نور", "علیزہ سخاوت", "شاہ زین", "حیدر علی", "محمد سبحان", "کیف نذیر"];
+    
+    const videoLinks = {
+        "0": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq", 
+        "1": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn", 
+        "2": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-116okM9dzkndAI06ybp79lQ", 
+        "3": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI", 
+        "4": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx", 
+        "5": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645", 
+        "6": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_", 
+        "7": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv", 
+        "8": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12kJ48mws_483lW2GPAseMg", 
+        "9": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD", 
+        "10": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379", 
+        "11": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf", 
+        "12": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD", 
+        "13": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV", 
+        "14": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G", 
+        "15": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_", 
+        "16": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ", 
+        "17": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_", 
+        "18": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT", 
+        "19": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9", 
+        "20": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS", 
+        "21": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q", 
+        "22": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv", 
+        "23": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP", 
+        "24": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf", 
+        "25": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV", 
+        "26": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H", 
+        "27": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD", 
+        "28": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ", 
+        "29": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf", 
+        "30": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m", 
+        "31": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8", 
+        "32": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11-1UT-G817EP5co--NgjN9", 
+        "33": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp", 
+        "34": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m", 
+        "35": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo", 
+        "36": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE", 
+        "37": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q", 
+        "38": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz", 
+        "39": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto", 
+        "40": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m", 
+        "41": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs", 
+        "42": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb", 
+        "43": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy", 
+        "44": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR", 
+        "45": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A", 
+        "46": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP", 
+        "47": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N", 
+        "48": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6", 
+        "49": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E", 
+        "50": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj", 
+        "51": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv", 
+        "52": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"
+    };
+
+    const storageKey = 'rizwan_masjid_final_v3';
+
+    window.onload = function() {
+        if(!document.getElementById('mainDate').value) document.getElementById('mainDate').valueAsDate = new Date();
+        updateAll();
+    };
+
+    function openTab(id, e) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        e.currentTarget.classList.add('active');
+        if(id.includes('Report')) loadReports();
+    }
+
+    function updateAll() {
+        const date = document.getElementById('mainDate').value;
+        const dObj = new Date(date);
+        document.getElementById('displayUrduDate').innerText = dObj.toLocaleDateString('ur-PK', {day:'numeric', month:'long', year:'numeric'});
+
+        const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        const dayData = data[date] || {};
+
+        const b1 = document.getElementById('attTableBody'), b2 = document.getElementById('lessTableBody'), b3 = document.getElementById('diaryTableBody'), b4 = document.getElementById('videoTableBody');
+        b1.innerHTML = ''; b2.innerHTML = ''; b3.innerHTML = ''; b4.innerHTML = '';
+
+        names.forEach((n, i) => {
+            const s = dayData[i] || { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '' };
+            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.aC}" onclick="tglA(this,${i})">${s.aS}</div></td></tr>`;
+            b2.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.lC}" onclick="tglL(this,${i})">${s.lS}</div></td></tr>`;
+            b3.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><input type="text" class="diary-input" value="${s.w}" onchange="saveW(${i},this.value)"></td></tr>`;
+            
+            // ویڈیو ٹیب کی رو
+            b4.innerHTML += `
+                <tr>
+                    <td>${i+1}</td>
+                    <td class="student-name">${n}</td>
+                    <td><button class="video-btn" onclick="toggleVideo(${i})">ویڈیوز دیکھیں</button></td>
+                </tr>
+                <tr id="videoRow-${i}" class="video-container">
+                    <td colspan="3">
+                        <div id="videoArea-${i}"></div>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    function toggleVideo(i) {
+        const row = document.getElementById(`videoRow-${i}`);
+        const area = document.getElementById(`videoArea-${i}`);
+        const link = videoLinks[i] || "https://www.youtube.com/embed/dQw4w9WgXcQ"; // اگر لنک نہ ہو تو سیمپل ویڈیو
+
+        if (row.style.display === "table-row") {
+            row.style.display = "none";
+            area.innerHTML = "";
+        } else {
+            // پہلے سے کھلی تمام ویڈیوز بند کریں
+            document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
+            row.style.display = "table-row";
+            area.innerHTML = `<iframe height="250" src="${link}" frameborder="0" allowfullscreen></iframe>`;
+        }
+    }
+
+    function tglA(el, i) {
+        let s, c;
+        if(el.innerText==="---"){s="حاضر"; c="status-btn present";}
+        else if(el.innerText==="حاضر"){s="غیر حاضر"; c="status-btn absent";}
+        else if(el.innerText==="غیر حاضر"){s="رخصت"; c="status-btn leave";}
+        else {s="---"; c="status-btn";}
+        el.innerText=s; el.className=c; save(i,'aS',s,c);
+    }
+
+    function tglL(el, i) {
+        let s, c;
+        if(el.innerText==="---"){s="سنایا"; c="status-btn present";}
+        else if(el.innerText==="سنایا"){s="یاد نہیں"; c="status-btn absent";}
+        else if(el.innerText==="یاد نہیں"){s="نہیں سنایا"; c="status-btn leave";}
+        else {s="---"; c="status-btn";}
+        el.innerText=s; el.className=c; save(i,'lS',s,c);
+    }
+
+    function saveW(i, v) { save(i, 'w', v); }
+
+    function save(i, k, v, c) {
+        const d = document.getElementById('mainDate').value;
+        let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        if(!data[d]) data[d] = {};
+        if(!data[d][i]) data[d][i] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:''};
+        
+        if(k==='aS'){ data[d][i].aS=v; data[d][i].aC=c; }
+        else if(k==='lS'){ data[d][i].lS=v; data[d][i].lC=c; }
+        else { data[d][i].w=v; }
+        localStorage.setItem(storageKey, JSON.stringify(data));
+    }
+
+    function loadReports() {
+        const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        const selDate = new Date(document.getElementById('mainDate').value);
+        const mName = selDate.toLocaleDateString('ur-PK', {month:'long', year:'numeric'});
+        const mKey = document.getElementById('mainDate').value.substring(0, 7);
+        
+        document.querySelectorAll('.monthTitle').forEach(el => el.innerText = "رپورٹ برائے: " + mName);
+        
+        const bA = document.getElementById('attReportBody'), bL = document.getElementById('lessReportBody');
+        bA.innerHTML = ''; bL.innerHTML = '';
+
+        names.forEach((n, i) => {
+            let p=0, ab=0, lv=0, sn=0, yn=0, ns=0;
+            for(let d in data) {
+                if(d.startsWith(mKey) && data[d][i]) {
+                    const r = data[d][i];
+                    if(r.aS==="حاضر") p++; else if(r.aS==="غیر حاضر") ab++; else if(r.aS==="رخصت") lv++;
+                    if(r.lS==="سنایا") sn++; else if(r.lS==="یاد نہیں") yn++; else if(r.lS==="نہیں سنایا") ns++;
+                }
+            }
+            bA.innerHTML += `<tr><td class="student-name">${n}</td><td class="report-count" style="color:var(--present-clr)">${p}</td><td class="report-count" style="color:var(--absent-clr)">${ab}</td><td class="report-count" style="color:var(--leave-clr)">${lv}</td></tr>`;
+            bL.innerHTML += `<tr><td class="student-name">${n}</td><td class="report-count" style="color:var(--present-clr)">${sn}</td><td class="report-count" style="color:var(--absent-clr)">${yn}</td><td class="report-count" style="color:var(--leave-clr)">${ns}</td></tr>`;
+        });
+    }
+
+    function downloadBackup() {
+        const blob = new Blob([localStorage.getItem(storageKey)], {type:'text/plain'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        a.download = 'rizwan_masjid_data.txt'; a.click();
+    }
+</script>
+</body>
+</html>
+
