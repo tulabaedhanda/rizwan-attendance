@@ -213,7 +213,9 @@
 
     <div class="footer-tools">
         <button class="btn-tool" style="background:#311b92" onclick="window.print()">پرنٹ نکالیں</button>
-        <button class="btn-tool teacher-only-btn" style="background:var(--primary)" id="exportBtn" onclick="downloadBackup()">بیک اپ</button>
+        <button class="btn-tool teacher-only-btn" style="background:var(--present-clr)" id="importBtn" onclick="triggerImport()">ڈیٹا لوڈ کریں (Restore)</button>
+        <button class="btn-tool teacher-only-btn" style="background:var(--primary)" id="exportBtn" onclick="downloadBackup()">بیک اپ (Backup)</button>
+        <input type="file" id="importFileInput" style="display:none" onchange="uploadBackup(event)">
     </div>
 
     <div class="login-portal" id="loginPortalSection">
@@ -228,10 +230,12 @@
 </div>
 
 <script>
-    // بنیادی ناموں کی لسٹ (اگر لوکل سٹوریج میں کچھ نہ ہو تو یہ چلے گی)
-    const defaultNames = ["آذان فاروق", "ابراہیم رفعت", "ابراہیم طاہر", "اسماعیل رفعت", "اسماعیل مشتاق", "ام ابیہا", "انتشال زہراء", "ایشال زہراء", "ایمان فاروق", "ایمان نیاز", "ثانیہ امیر", "جنت فاطمہ", "حسن عمران", "حسن نواز", "حسین نواز", "حمیر مرتضی", "حنظلہ دلدار", "ذکاء اللّٰه", "رفیع الدین", "ریحان نثار", "زرمینہ بی بی", "سائرہ سخاوت", "سمیع مصطفى", "شعیب نثار", "صائم حفیظ", "صائم سلیم", "صالحہ بی بی", "صالقہ بی بی", "صفی الدین", "عبد الاحد", "عبد الرافع", "عبداللّٰه سخاوت", "عتیق الرحمن", "عثمان امیر", "علی رضا", "غلام مصطفی", "کشف دلدار", "کمیل حیدر", "محمد اویس", "محمد سالار", "محمد شاہزیب", "محمد شہروز", "محمد علی", "محمد علیان", "مریم بی بی", "وہاب شعیب", "حسن سجاد", "آمنہ نور", "علیزہ سخاوت", "شاہ زین", "حیدر علی", "محمد سبحان", "کیف نذیر"];
+    // آپ کی فائل سے لسٹ اور مئی 18 کا مکمل حاضری ریکارڈ یہاں شامل کر دیا ہے
+    const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام ابیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر"];
     
     const defaultVideoLists = ["PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn","PL3-aVTBoE-116okM9dzkndAI06ybp79lQ","PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI","PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx","PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645","PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_","PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv","PL3-aVTBoE-12kJ48mws_483lW2GPAseMg","PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD","PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379","PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf","PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD","PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV","PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G","PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_","PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ","PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_","PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT","PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9","PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS","PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q","PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv","PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP","PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf","PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV","PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H","PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD","PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ","PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf","PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m","PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8","PL3-aVTBoE-11-1UT-G817EP5co--NgjN9","PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp","PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m","PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo","PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE","PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q","PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz","PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto","PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m","PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs","PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb","PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy","PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR","PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A","PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP","PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N","PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6","PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E","PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj","PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv","PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"];
+
+    const embeddedAttendance = {"2026-05-18":{"0":{"aS":"حاضر","aC":"status-btn present","lS":"نہیں سنایا","lC":"status-btn leave","w":""},"1":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 6"},"2":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":""},"3":{"aS":"غیر حاضر","aC":"status-btn absent","lS":"---","lC":"status-btn","w":""},"4":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ13"},"5":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"نماز"},"6":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 29"},"7":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 14"},"8":{"aS":"حاضر","aC":"status-btn present","lS":"یاد نہیں","lC":"status-btn absent","w":"قاعدہ 6 "},"9":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"قاعدہ 8"},"10":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"بقرہ 28"},"11":{"aS":"رخصت","aC":"status-btn leave","lS":"---","lC":"status-btn","w":""},"12":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"شِقَاقٌ"},"13":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 10"},"14":{"aS":"رخصت","aC":"status-btn leave","lS":"---","lC":"status-btn","w":""},"15":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"اَ بَ"},"16":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"ب"},"17":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 4"},"18":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"ضرب وزن"},"19":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ11"},"20":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 15"},"21":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 11"},"22":{"aS":"غیر حاضر","aC":"status-btn absent","lS":"---","lC":"status-btn","w":""},"23":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"سونے کی دعا"},"24":{"aS":"غیر حاضر","aC":"status-btn absent","lS":"---","lC":"status-btn","w":""},"25":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 9"},"26":{"aS":"حاضر","aC":"status-btn present","lS":"یاد نہیں","lC":"status-btn absent","w":"سبحنک"},"27":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":""},"28":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 2"},"29":{"aS":"حاضر","aC":"status-btn present","lS":"نہیں سنایا","lC":"status-btn leave","w":""},"30":{"aS":"حاضر","aC":"status-btn present","lS":"یاد نہیں","lC":"status-btn absent","w":"بس یس"},"31":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 16"},"32":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"بقرہ 213"},"33":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 3"},"34":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"بقرہ 191"},"35":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"بقرہ 206"},"36":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"اظلم من"},"37":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"بقرہ 216"},"38":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":""},"39":{"aS":"غیر حاضر","aC":"status-btn absent","lS":"---","lC":"status-btn","w":""},"40":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 2"},"41":{"aS":"حاضر","aC":"status-btn present","lS":"یاد نہیں","lC":"status-btn absent","w":""},"42":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 18 مومنون 92"},"43":{"aS":"رخصت","aC":"status-btn leave","lS":"---","lC":"status-btn","w":""},"44":{"aS":"رخصت","aC":"status-btn leave","lS":"---","lC":"status-btn","w":""},"45":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"بقرہ 4"},"46":{"aS":"حاضر","aC":"status-btn present","lS":"نہیں سنایا","lC":"status-btn leave","w":""},"47":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"ثَ جَ حَ"},"48":{"aS":"حاضر","aC":"status-btn present","lS":"یاد نہیں","lC":"status-btn absent","w":"ثَ جَ حَ"},"49":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"نون ساکن کے قاعدے"},"50":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 9"},"51":{"aS":"حاضر","aC":"status-btn present","lS":"سنایا","lC":"status-btn present","w":"پارہ 1"},"52":{"aS":"غیر حاضر","aC":"status-btn absent","lS":"---","lC":"status-btn","w":""}}};
 
     const storageKey = 'rizwan_masjid_final_v3';
     const namesStorageKey = 'rizwan_masjid_names';
@@ -242,7 +246,17 @@
     let isTeacherMode = false;
 
     window.onload = function() {
-        if(!document.getElementById('mainDate').value) document.getElementById('mainDate').valueAsDate = new Date();
+        // اگر لوکل سٹوریج خالی ہے تو ایمبیڈڈ ڈیٹا خودکار طریقے سے لوڈ کر دیں
+        if (!localStorage.getItem(storageKey)) {
+            localStorage.setItem(storageKey, JSON.stringify(embeddedAttendance));
+            localStorage.setItem(namesStorageKey, JSON.stringify(defaultNames));
+            localStorage.setItem(videoStorageKey, JSON.stringify(defaultVideoLists));
+        }
+
+        if(!document.getElementById('mainDate').value) {
+            // ڈیفالٹ تاریخ مئی 18، 2026 سیٹ کریں تاکہ ڈیٹا فوراً نظر آئے
+            document.getElementById('mainDate').value = "2026-05-18";
+        }
         
         if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
             activateTeacherMode();
@@ -292,12 +306,11 @@
         updateAll();
     }
 
-    // نیا طالب علم آخر میں داخل کرنے کا فنکشن
     function addStudent() {
         const nameInput = document.getElementById('newStudentName');
         const ytInput = document.getElementById('newStudentYT');
         const name = nameInput.value.trim();
-        const ytList = ytInput.value.trim() || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq"; // اگر خالی ہو تو پہلا ڈیفالٹ لنک لگ جائے گا
+        const ytList = ytInput.value.trim() || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
 
         if(name === "") {
             alert("براہ کرم طالب علم کا نام لکھیں!");
@@ -317,23 +330,20 @@
         updateAll();
     }
 
-    // صرف منتخب طالب علم کو خارج (حذف) کرنے کا فنکشن
     function deleteStudent(index) {
         if(!confirm(`کیا آپ واقعی "${names[index]}" کو لسٹ سے خارج کرنا چاہتے ہیں؟ باقی ریکارڈ پر کوئی اثر نہیں پڑے گا۔`)) return;
 
         names.splice(index, 1);
         videoLists.splice(index, 1);
 
-        // تمام تواریخ کے ریکارڈز میں سے بھی اس انڈیکس کا ڈیٹا ہٹانا تاکہ حاضری لسٹ خراب نہ ہو
         let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
         for (let date in data) {
             if (data[date]) {
-                // چونکہ انڈیکسز بدل جائیں گے، اس لیے ہم ڈیٹا کو ری الائن کر رہے ہیں
                 let updatedDayData = {};
                 let currentNewIndex = 0;
                 for (let oldIndex in data[date]) {
                     if (parseInt(oldIndex) === index) {
-                        continue; // خارج شدہ طالب علم کا ڈیٹا چھوڑ دیں
+                        continue;
                     }
                     updatedDayData[currentNewIndex] = data[date][oldIndex];
                     currentNewIndex++;
@@ -371,7 +381,6 @@
         const b1 = document.getElementById('attTableBody'), b2 = document.getElementById('lessTableBody'), b3 = document.getElementById('diaryTableBody'), b4 = document.getElementById('videoTableBody');
         b1.innerHTML = ''; b2.innerHTML = ''; b3.innerHTML = ''; b4.innerHTML = '';
 
-        // ڈیلیٹ کالم ہیڈر کنٹرول
         const delTh = document.querySelector('.delete-th');
         if(delTh) delTh.style.display = isTeacherMode ? 'table-cell' : 'none';
 
@@ -495,6 +504,36 @@
         const blob = new Blob([JSON.stringify(backupData)], {type:'text/plain'});
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
         a.download = 'rizwan_masjid_full_backup.txt'; a.click();
+    }
+
+    function triggerImport() {
+        document.getElementById('importFileInput').click();
+    }
+
+    function uploadBackup(event) {
+        const file = event.target.files;
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                if (importedData.names && importedData.attendance && importedData.videos) {
+                    names = importedData.names;
+                    videoLists = importedData.videos;
+                    localStorage.setItem(namesStorageKey, JSON.stringify(names));
+                    localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
+                    localStorage.setItem(storageKey, JSON.stringify(importedData.attendance));
+                    alert("ڈیٹا کامیابی سے ری سٹور (لوڈ) ہو گیا ہے۔");
+                    updateAll();
+                } else {
+                    alert("غلط فائل!");
+                }
+            } catch (err) {
+                alert("فائل پڑھنے میں غلطی ہوئی!");
+            }
+        };
+        reader.readAsText(file);
     }
 </script>
 </body>
