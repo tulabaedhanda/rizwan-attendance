@@ -28,13 +28,13 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
-        .header-section { text-align: center; margin: -15px -15px 20px -15px; }
-        .banner-img { width: 100%; border-radius: 15px 15px 0 0; border-bottom: 4px solid #ffd700; display: block; }
+        .header-section { text-align: center; margin: -15px -15px 20px -15px; position: relative; }
+        .banner-img { width: 100%; border-radius: 15px 15px 0 0; border-bottom: 4px solid #ffd700; display: block; height: auto; }
         
         .urdu-date { 
             background: var(--primary); color: white; padding: 5px 20px; 
             border-radius: 50px; display: inline-block; margin-top: -20px;
-            position: relative; border: 2px solid #ffd700; font-size: 18px;
+            position: relative; border: 2px solid #ffd700; font-size: 18px; z-index: 10;
         }
 
         .tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
@@ -66,18 +66,43 @@
         
         .report-count { font-weight: 900; font-family: Arial, sans-serif !important; font-size: 24px; }
 
-        .diary-input { width: 90%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 17px; }
+        .diary-input { width: 90%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 17px; background: #fff; }
+        .diary-input:disabled { background: #f5f5f5; color: #333; border: 1px solid #ddd; cursor: not-allowed; }
 
-        .footer-tools { margin-top: 20px; display: flex; gap: 10px; }
-        .btn-tool { padding: 12px; font-size: 17px; cursor: pointer; border: none; border-radius: 10px; color: white; flex: 1; font-weight: bold; }
+        .teacher-badge {
+            background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50;
+            padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 18px;
+        }
+
+        .footer-tools { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .btn-tool { padding: 12px; font-size: 17px; cursor: pointer; border: none; border-radius: 10px; color: white; flex: 1; min-width: 120px; font-weight: bold; }
+        
+        .teacher-only-btn { display: none; }
 
         /* ویڈیو گیلری کا خاص ڈیزائن */
-        .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-        .video-container { display: none; padding: 10px; background: #f0f0f0; border-top: 1px solid #ddd; text-align: center; }
-        .video-container iframe { width: 100%; border-radius: 10px; border: 2px solid #ff0000; }
+        .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .video-container { display: none; padding: 10px; background: #f9f9f9; text-align: center; }
+        .video-container iframe { width: 100%; max-width: 450px; height: 250px; border-radius: 10px; border: 2px solid #ff0000; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         
+        .yt-playlist-link-btn {
+            display: inline-block; background: #ff0000; color: white !important; 
+            text-decoration: none; padding: 8px 15px; border-radius: 5px; 
+            font-size: 15px; font-weight: bold; margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .yt-playlist-link-btn:hover { background: #cc0000; }
+
+        /* لاگ ان پورٹل کا ڈیزائن */
+        .login-portal {
+            margin-top: 40px; background: #fff9e5; border: 3px dashed var(--primary);
+            padding: 15px; border-radius: 15px; text-align: center;
+        }
+        .login-portal h3 { margin-top: 0; color: var(--primary); font-size: 20px; }
+        .login-input { padding: 8px; margin: 5px; border: 1px solid var(--primary); border-radius: 5px; font-size: 16px; width: 80%; max-width: 200px; text-align: center; }
+        .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+
         @media print {
-            .tabs, .footer-tools, input[type="date"] { display: none !important; }
+            .tabs, .footer-tools, input[type="date"], .login-portal, .teacher-badge { display: none !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
@@ -89,6 +114,8 @@
         <img src="https://lh3.googleusercontent.com/d/192M7_vyAAituM0uYIwsGlTUUgubfo_SY" alt="Header" class="banner-img">
         <div id="displayUrduDate" class="urdu-date"></div>
     </div>
+
+    <div id="teacherBadge" class="teacher-badge" style="display: none;">🔓 استاد موڈ فعال ہے (ترمیم کھلی ہے)</div>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('dailyAtt', event)">حاضری</button>
@@ -102,7 +129,7 @@
     <div id="dailyAtt" class="tab-content active">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
             <input type="date" id="mainDate" onchange="updateAll()">
-            <div style="color:var(--primary); font-weight:bold;">تعداد: 53</div>
+            <div style="color:var(--primary); font-weight:bold; font-size:18px;">تعداد: 53</div>
         </div>
         <table>
             <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>حاضری</th></tr></thead>
@@ -163,7 +190,17 @@
 
     <div class="footer-tools">
         <button class="btn-tool" style="background:#311b92" onclick="window.print()">پرنٹ نکالیں</button>
-        <button class="btn-tool" style="background:var(--primary)" onclick="downloadBackup()">بیک اپ</button>
+        <button class="btn-tool teacher-only-btn" style="background:var(--primary)" id="exportBtn" onclick="downloadBackup()">بیک اپ</button>
+    </div>
+
+    <div class="login-portal" id="loginPortalSection">
+        <h3 id="portalTitle">🔐 استاد پورٹل لاگ ان</h3>
+        <div id="loginFormInputs">
+            <input type="text" id="uName" class="login-input" placeholder="یوزر نیم">
+            <input type="password" id="pWord" class="login-input" placeholder="پاس ورڈ">
+            <button class="login-submit" onclick="checkTeacherLogin()">لاگ ان</button>
+        </div>
+        <button class="login-submit" id="logoutBtn" style="display:none; background:#b71c1c;" onclick="teacherLogout()">لاگ آؤٹ</button>
     </div>
 </div>
 
@@ -226,12 +263,114 @@
         "52": "https://www.youtube.com/embed/videoseries?list=PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"
     };
 
+    // اینڈرائیڈ ڈیپ لنک 'intent://' فارمیٹ جو براؤزر کو بائی پاس کر کے براہ راست یوٹیوب ایپ کھولتا ہے
+    const directPlaylistLinks = {
+        "0": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq#Intent;package=com.google.android.youtube;scheme=https;end",
+        "1": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn#Intent;package=com.google.android.youtube;scheme=https;end",
+        "2": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-116okM9dzkndAI06ybp79lQ#Intent;package=com.google.android.youtube;scheme=https;end",
+        "3": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI#Intent;package=com.google.android.youtube;scheme=https;end",
+        "4": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx#Intent;package=com.google.android.youtube;scheme=https;end",
+        "5": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645#Intent;package=com.google.android.youtube;scheme=https;end",
+        "6": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_#Intent;package=com.google.android.youtube;scheme=https;end",
+        "7": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv#Intent;package=com.google.android.youtube;scheme=https;end",
+        "8": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12kJ48mws_483lW2GPAseMg#Intent;package=com.google.android.youtube;scheme=https;end",
+        "9": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD#Intent;package=com.google.android.youtube;scheme=https;end",
+        "10": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379#Intent;package=com.google.android.youtube;scheme=https;end",
+        "11": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf#Intent;package=com.google.android.youtube;scheme=https;end",
+        "12": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD#Intent;package=com.google.android.youtube;scheme=https;end",
+        "13": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV#Intent;package=com.google.android.youtube;scheme=https;end",
+        "14": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G#Intent;package=com.google.android.youtube;scheme=https;end",
+        "15": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_#Intent;package=com.google.android.youtube;scheme=https;end",
+        "16": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ#Intent;package=com.google.android.youtube;scheme=https;end",
+        "17": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_#Intent;package=com.google.android.youtube;scheme=https;end",
+        "18": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT#Intent;package=com.google.android.youtube;scheme=https;end",
+        "19": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9#Intent;package=com.google.android.youtube;scheme=https;end",
+        "20": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS#Intent;package=com.google.android.youtube;scheme=https;end",
+        "21": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q#Intent;package=com.google.android.youtube;scheme=https;end",
+        "22": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv#Intent;package=com.google.android.youtube;scheme=https;end",
+        "23": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP#Intent;package=com.google.android.youtube;scheme=https;end",
+        "24": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf#Intent;package=com.google.android.youtube;scheme=https;end",
+        "25": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV#Intent;package=com.google.android.youtube;scheme=https;end",
+        "26": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H#Intent;package=com.google.android.youtube;scheme=https;end",
+        "27": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD#Intent;package=com.google.android.youtube;scheme=https;end",
+        "28": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ#Intent;package=com.google.android.youtube;scheme=https;end",
+        "29": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf#Intent;package=com.google.android.youtube;scheme=https;end",
+        "30": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m#Intent;package=com.google.android.youtube;scheme=https;end",
+        "31": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8#Intent;package=com.google.android.youtube;scheme=https;end",
+        "32": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11-1UT-G817EP5co--NgjN9#Intent;package=com.google.android.youtube;scheme=https;end",
+        "33": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp#Intent;package=com.google.android.youtube;scheme=https;end",
+        "34": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m#Intent;package=com.google.android.youtube;scheme=https;end",
+        "35": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo#Intent;package=com.google.android.youtube;scheme=https;end",
+        "36": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE#Intent;package=com.google.android.youtube;scheme=https;end",
+        "37": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q#Intent;package=com.google.android.youtube;scheme=https;end",
+        "38": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz#Intent;package=com.google.android.youtube;scheme=https;end",
+        "39": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto#Intent;package=com.google.android.youtube;scheme=https;end",
+        "40": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m#Intent;package=com.google.android.youtube;scheme=https;end",
+        "41": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs#Intent;package=com.google.android.youtube;scheme=https;end",
+        "42": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb#Intent;package=com.google.android.youtube;scheme=https;end",
+        "43": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy#Intent;package=com.google.android.youtube;scheme=https;end",
+        "44": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR#Intent;package=com.google.android.youtube;scheme=https;end",
+        "45": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A#Intent;package=com.google.android.youtube;scheme=https;end",
+        "46": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP#Intent;package=com.google.android.youtube;scheme=https;end",
+        "47": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N#Intent;package=com.google.android.youtube;scheme=https;end",
+        "48": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6#Intent;package=com.google.android.youtube;scheme=https;end",
+        "49": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E#Intent;package=com.google.android.youtube;scheme=https;end",
+        "50": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj#Intent;package=com.google.android.youtube;scheme=https;end",
+        "51": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv#Intent;package=com.google.android.youtube;scheme=https;end",
+        "52": "intent://www.youtube.com/playlist?list=PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F#Intent;package=com.google.android.youtube;scheme=https;end"
+    };
+
     const storageKey = 'rizwan_masjid_final_v3';
+    let isTeacherMode = false;
 
     window.onload = function() {
         if(!document.getElementById('mainDate').value) document.getElementById('mainDate').valueAsDate = new Date();
+        
+        if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
+            activateTeacherMode();
+        }
+        
         updateAll();
     };
+
+    function checkTeacherLogin() {
+        const u = document.getElementById('uName').value;
+        const p = document.getElementById('pWord').value;
+
+        if(u === "nasirali258" && p === "merayquaidjalali") {
+            sessionStorage.setItem('isTeacherLoggedIn', 'true');
+            activateTeacherMode();
+            alert("لاگ ان کامیاب! اب آپ کو بیک اپ بٹنز نظر آئیں گے اور آپ ترمیم کر سکتے ہیں۔");
+        } else {
+            alert("غلط یوزر نیم یا پاس ورڈ!");
+        }
+    }
+
+    function activateTeacherMode() {
+        isTeacherMode = true;
+        document.getElementById('teacherBadge').style.display = "block";
+        document.getElementById('loginFormInputs').style.display = "none";
+        document.getElementById('logoutBtn').style.display = "inline-block";
+        document.getElementById('portalTitle').innerText = "🧔 ناصر علی (استاد)";
+        
+        document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'inline-block');
+        updateAll();
+    }
+
+    function teacherLogout() {
+        isTeacherMode = false;
+        sessionStorage.removeItem('isTeacherLoggedIn');
+        document.getElementById('teacherBadge').style.display = "none";
+        document.getElementById('loginFormInputs').style.display = "block";
+        document.getElementById('logoutBtn').style.display = "none";
+        document.getElementById('portalTitle').innerText = "🔐 استاد پورٹل لاگ ان";
+        document.getElementById('uName').value = "";
+        document.getElementById('pWord').value = "";
+        
+        document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'none');
+        alert("لاگ آؤٹ ہو گئے۔ رجسٹر صرف دیکھنے کے موڈ پر ہے۔");
+        updateAll();
+    }
 
     function openTab(id, e) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -254,11 +393,15 @@
 
         names.forEach((n, i) => {
             const s = dayData[i] || { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '' };
-            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.aC}" onclick="tglA(this,${i})">${s.aS}</div></td></tr>`;
-            b2.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.lC}" onclick="tglL(this,${i})">${s.lS}</div></td></tr>`;
-            b3.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><input type="text" class="diary-input" value="${s.w}" onchange="saveW(${i},this.value)"></td></tr>`;
             
-            // ویڈیو ٹیب کی رو
+            const clickA = `onclick="tglA(this,${i})"`;
+            const clickL = `onclick="tglL(this,${i})"`;
+            const disabledInput = isTeacherMode ? '' : 'disabled';
+
+            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.aC}" ${clickA}>${s.aS}</div></td></tr>`;
+            b2.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.lC}" ${clickL}>${s.lS}</div></td></tr>`;
+            b3.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><input type="text" class="diary-input" value="${s.w}" ${disabledInput} onchange="saveW(${i},this.value)"></td></tr>`;
+            
             b4.innerHTML += `
                 <tr>
                     <td>${i+1}</td>
@@ -276,20 +419,29 @@
     function toggleVideo(i) {
         const row = document.getElementById(`videoRow-${i}`);
         const area = document.getElementById(`videoArea-${i}`);
-        const link = videoLinks[i] || "https://www.youtube.com/embed/dQw4w9WgXcQ"; // اگر لنک نہ ہو تو سیمپل ویڈیو
+        const embedLink = videoLinks[i];
+        const directLink = directPlaylistLinks[i];
 
         if (row.style.display === "table-row") {
             row.style.display = "none";
             area.innerHTML = "";
         } else {
-            // پہلے سے کھلی تمام ویڈیوز بند کریں
             document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
             row.style.display = "table-row";
-            area.innerHTML = `<iframe height="250" src="${link}" frameborder="0" allowfullscreen></iframe>`;
+            if (embedLink) {
+                area.innerHTML = `
+                    <iframe height="250" src="${embedLink}" frameborder="0" allowfullscreen></iframe>
+                    <br>
+                    <a href="${directLink}" class="yt-playlist-link-btn">تمام ویڈیوز یوٹیوب پہ دیکھیں</a>
+                `;
+            } else {
+                area.innerHTML = `<p style="color:red; font-weight:bold;">اس طالب علم کا لنک دستیاب نہیں ہے</p>`;
+            }
         }
     }
 
     function tglA(el, i) {
+        if (!isTeacherMode) return; 
         let s, c;
         if(el.innerText==="---"){s="حاضر"; c="status-btn present";}
         else if(el.innerText==="حاضر"){s="غیر حاضر"; c="status-btn absent";}
@@ -299,6 +451,7 @@
     }
 
     function tglL(el, i) {
+        if (!isTeacherMode) return; 
         let s, c;
         if(el.innerText==="---"){s="سنایا"; c="status-btn present";}
         else if(el.innerText==="سنایا"){s="یاد نہیں"; c="status-btn absent";}
@@ -354,4 +507,3 @@
 </script>
 </body>
 </html>
-
