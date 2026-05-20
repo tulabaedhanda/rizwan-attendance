@@ -325,8 +325,8 @@
 </div>
 
 <script>
-    // ⬇️ آپ کا گوگل ایپ اسکرپٹ لنک کامیابی سے یہاں شامل کر دیا گیا ہے ⬇️
-    const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbzO0lqRXb_1vDemW-9JmuFSF0i4uRPUaaZ40J8rGiqRIDmDlM3GUnsE5j5tjeVjNtzf/exec";
+    // ⬇️ آن لائن ڈیٹا بیس کلاؤڈ یو آر ایل (KVdb.io) ⬇️
+    const cloudDatabaseUrl = "https://kvdb.io/4y9nnd4pGg6hBvU9f3uCgC/rizwan_masjid_data";
 
     const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام ابیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر"];
     const defaultVideoLists = ["PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn","PL3-aVTBoE-116okM9dzkndAI06ybp79lQ","PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI","PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx","PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645","PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_","PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv","PL3-aVTBoE-12kJ48mws_483lW2GPAseMg","PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD","PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379","PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf","PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD","PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV","PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G","PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_","PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ","PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_","PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT","PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9","PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS","PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q","PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv","PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP","PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf","PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV","PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H","PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD","PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ","PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf","PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m","PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8","PL3-aVTBoE-11-1UT-G817EP5co--NgjN9","PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp","PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m","PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo","PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE","PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q","PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz","PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto","PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m","PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs","PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb","PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy","PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR","PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A","PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP","PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N","PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6","PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E","PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj","PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv","PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"];
@@ -351,19 +351,15 @@
             activateTeacherMode();
         }
         
-        loadDataFromGoogleSheets();
+        loadDataFromCloud();
     };
 
-    function loadDataFromGoogleSheets() {
-        if(!googleAppScriptUrl || googleAppScriptUrl.includes("YOUR_WEB_APP_URL_HERE")) {
-            document.getElementById('syncStatus').innerText = "⚠️ گوگل اسکرپٹ کا لنک شامل نہیں ہے!";
-            populateStudentSelect();
-            updateAll();
-            return;
-        }
-
-        fetch(googleAppScriptUrl)
-        .then(response => response.json())
+    function loadDataFromCloud() {
+        fetch(cloudDatabaseUrl)
+        .then(response => {
+            if(!response.ok) throw new Error("Data empty");
+            return response.json();
+        })
         .then(data => {
             if(data) {
                 if(data.names) names = data.names;
@@ -377,36 +373,31 @@
             updateAll();
         })
         .catch(err => {
-            document.getElementById('syncStatus').innerText = "❌ آن لائن ڈیٹا لوڈ کرنے میں خرابی!";
+            document.getElementById('syncStatus').innerText = "⚠️ نیا سسٹم فعال ہے، پہلا ریکارڈ محفوظ کریں";
             populateStudentSelect();
             updateAll();
         });
     }
 
-    function pushDataToGoogleSheets() {
-        if(!googleAppScriptUrl || googleAppScriptUrl.includes("YOUR_WEB_APP_URL_HERE")) return;
-        
+    function pushDataToCloud() {
         document.getElementById('syncStatus').innerText = "🔄 ڈیٹا آن لائن محفوظ ہو رہا ہے...";
         
         const packet = {
-            action: "saveAll",
-            payload: {
-                names: names,
-                videos: videoLists,
-                timelinePosts: timelinePosts,
-                attendance: attendanceData
-            }
+            names: names,
+            videos: videoLists,
+            timelinePosts: timelinePosts,
+            attendance: attendanceData
         };
 
-        fetch(googleAppScriptUrl, {
+        fetch(cloudDatabaseUrl, {
             method: "POST",
-            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(packet)
-        }).then(() => {
-            document.getElementById('syncStatus').innerText = "✅ ریکارڈ گوگل شیٹ میں محفوظ ہو گیا ہے";
+        }).then(res => {
+            if(res.ok) document.getElementById('syncStatus').innerText = "✅ ریکارڈ کامیابی سے آن لائن محفوظ ہو گیا";
+            else document.getElementById('syncStatus').innerText = "❌ محفوظ کرنے میں ناکامی!";
         }).catch(() => {
-            document.getElementById('syncStatus').innerText = "❌ محفوظ کرنے میں ناکامی!";
+            document.getElementById('syncStatus').innerText = "❌ انٹرنیٹ خرابی!";
         });
     }
 
@@ -480,7 +471,7 @@
         populateStudentSelect();
         renderRemovalList();
         updateAll();
-        pushDataToGoogleSheets();
+        pushDataToCloud();
     }
 
     function deleteStudent(index) {
@@ -499,7 +490,7 @@
         populateStudentSelect();
         renderRemovalList();
         updateAll();
-        pushDataToGoogleSheets();
+        pushDataToCloud();
     }
 
     function renderRemovalList() {
@@ -557,14 +548,14 @@
 
         alert("پوسٹ کامیابی سے میڈیا ٹائم لائن پر اپلوڈ کر دی گئی ہے!");
         renderTimeline();
-        pushDataToGoogleSheets();
+        pushDataToCloud();
     }
 
     function deleteTimelinePost(idx) {
         if(!confirm("کیا آپ واقعی یہ پوسٹ میڈیا وال سے حذف کرنا چاہتے ہیں؟")) return;
         timelinePosts.splice(idx, 1);
         renderTimeline();
-        pushDataToGoogleSheets();
+        pushDataToCloud();
     }
 
     function formatMediaEmbed(url) {
@@ -739,7 +730,7 @@
         else if(k==='w'){ attendanceData[d][name].w=v; }
         else if(k==='wD'){ attendanceData[d][name].wD=v; }
         
-        pushDataToGoogleSheets();
+        pushDataToCloud();
     }
 
     function loadReports() {
