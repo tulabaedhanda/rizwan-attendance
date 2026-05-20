@@ -308,7 +308,10 @@
 
         fetch(cloudDatabaseUrl, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", "X-Master-Key": apiKey },
+            headers: { 
+                "Content-Type": "application/json", 
+                "X-Master-Key": apiKey
+            },
             body: JSON.stringify(packet)
         }).then(res => {
             if(res.ok) document.getElementById('syncStatus').innerText = "✅ ریکارڈ کامیابی سے آن لائن محفوظ ہو گیا";
@@ -414,7 +417,7 @@
             let embedUrl = url.replace('/view?usp=sharing', '/preview').replace('/view', '/preview');
             return `<div class="fb-video-wrapper ratio-16-9"><iframe src="${embedUrl}" allowfullscreen></iframe></div>`;
         } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
-            return `<div class="fb-video-wrapper ratio-16-9"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0" allowfullscreen></iframe></div>`;
+            return `<div class="fb-video-wrapper ratio-16-9"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>`;
         }
         return `<img src="${url}" style="max-width:100%; border-radius:10px; display:block;" alt="Media">`;
     }
@@ -489,28 +492,41 @@
         }
     }
 
+    // درست شدہ حاضری فنکشنز
     function tglA(el, name) {
         if (!isTeacherMode) return;
         let s = el.innerText === "---" ? "حاضر" : (el.innerText === "حاضر" ? "غیر حاضر" : (el.innerText === "غیر حاضر" ? "رخصت" : "---"));
         let c = s === "حاضر" ? "status-btn present" : (s === "غیر حاضر" ? "status-btn absent" : (s === "رخصت" ? "status-btn leave" : "status-btn"));
-        el.innerText = s; el.className = c; save(s, name, 'aS', c);
+        el.innerText = s; el.className = c;
+        
+        const d = document.getElementById('mainDate').value;
+        if(!attendanceData[d]) attendanceData[d] = {};
+        if(!attendanceData[d][name]) { let last = getLastKnownLesson(name); attendanceData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD}; }
+        attendanceData[d][name].aS = s;
+        attendanceData[d][name].aC = c;
+        pushDataToCloud();
     }
 
     function tglL(el, name) {
         if (!isTeacherMode) return;
         let s = el.innerText === "---" ? "سنایا" : (el.innerText === "سنایا" ? "یاد نہیں" : (el.innerText === "یاد نہیں" ? "نہیں سنایا" : "---"));
         let c = s === "سنایا" ? "status-btn present" : (s === "یاد نہیں" ? "status-btn absent" : (s === "نہیں سنایا" ? "status-btn leave" : "status-btn"));
-        el.innerText = s; el.className = c; save(s, name, 'lS', c);
-    }
-
-    function save(v, name, k, c) {
+        el.innerText = s; el.className = c;
+        
         const d = document.getElementById('mainDate').value;
         if(!attendanceData[d]) attendanceData[d] = {};
         if(!attendanceData[d][name]) { let last = getLastKnownLesson(name); attendanceData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD}; }
-        if(k==='aS'){ attendanceData[d][name].aS=v; attendanceData[d][name].aC=c; }
-        else if(k==='lS'){ attendanceData[d][name].lS=v; attendanceData[d][name].lC=c; }
-        else if(k==='w') attendanceData[d][name].w=v;
-        else if(k==='wD') attendanceData[d][name].wD=v;
+        attendanceData[d][name].lS = s;
+        attendanceData[d][name].lC = c;
+        pushDataToCloud();
+    }
+
+    function save(v, name, k) {
+        const d = document.getElementById('mainDate').value;
+        if(!attendanceData[d]) attendanceData[d] = {};
+        if(!attendanceData[d][name]) { let last = getLastKnownLesson(name); attendanceData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD}; }
+        if(k==='w') attendanceData[d][name].w=v;
+        if(k==='wD') attendanceData[d][name].wD=v;
         pushDataToCloud();
     }
 
