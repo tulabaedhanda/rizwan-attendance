@@ -145,12 +145,9 @@
         .fb-post-date { font-size: 13px; color: #777; font-family: Arial, sans-serif !important; }
         .fb-post-title { font-size: 20px; font-weight: bold; color: #000000; margin-bottom: 12px; line-height: 1.5; }
         
-        /* --- میڈیا ریشو سیٹنگز (مکمل آزاد) --- */
-        .fb-post-media { width: 100%; text-align: center; margin-bottom: 5px; position: relative; background: transparent; }
-        .fb-post-media img { max-width: 100% !important; height: auto !important; display: inline-block; border-radius: 10px; }
         .fb-video-wrapper { position: relative; width: 100%; border-radius: 10px; overflow: hidden; margin: 0 auto; }
         .fb-video-wrapper.ratio-16-9 { aspect-ratio: 16/9; }
-        .fb-video-wrapper.ratio-9-16 { aspect-ratio: 9/16; max-width: 400px; } /* شارٹس اور ریلز کے لیے */
+        .fb-video-wrapper.ratio-9-16 { aspect-ratio: 9/16; max-width: 400px; }
         .fb-video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
         .fb-del-btn { background: #b71c1c; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; }
@@ -205,8 +202,10 @@
         }
         .whatsapp-icon { width: 24px; height: 24px; fill: white; }
 
+        .sync-indicator { text-align: center; font-size: 14px; color: #666; font-weight: bold; margin-bottom: 5px; }
+
         @media print {
-            .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .whatsapp-contact-box { display: none !important; }
+            .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .whatsapp-contact-box, .sync-indicator { display: none !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
@@ -223,6 +222,8 @@
         <label for="mainDate" style="color: var(--primary); font-weight: bold; font-size: 16px; margin-left: 5px;">تاریخ منتخب کریں:</label>
         <input type="date" id="mainDate" onchange="updateAll()">
     </div>
+
+    <div id="syncStatus" class="sync-indicator">⏳ آن لائن ڈیٹا لوڈ ہو رہا ہے...</div>
 
     <div id="teacherBadge" class="teacher-badge" style="display: none;">🔓 استاد موڈ فعال ہے (ترمیم کھلی ہے)</div>
 
@@ -310,9 +311,6 @@
 
     <div class="footer-tools">
         <button class="btn-tool" style="background:#311b92" onclick="window.print()">پرنٹ نکالیں</button>
-        <button class="btn-tool teacher-only-btn" style="background:var(--present-clr)" id="importBtn" onclick="triggerImport()">ڈیٹا لوڈ کریں (Restore)</button>
-        <button class="btn-tool teacher-only-btn" style="background:var(--primary)" id="exportBtn" onclick="downloadBackup()">بیک اپ (Backup)</button>
-        <input type="file" id="importFileInput" style="display:none" onchange="uploadBackup(event)">
     </div>
 
     <div class="login-portal" id="loginPortalSection">
@@ -327,36 +325,90 @@
 </div>
 
 <script>
+    // ⬇️ آپ کا گوگل ایپ اسکرپٹ لنک کامیابی سے یہاں شامل کر دیا گیا ہے ⬇️
+    const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbzO0lqRXb_1vDemW-9JmuFSF0i4uRPUaaZ40J8rGiqRIDmDlM3GUnsE5j5tjeVjNtzf/exec";
+
     const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام ابیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر"];
     const defaultVideoLists = ["PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn","PL3-aVTBoE-116okM9dzkndAI06ybp79lQ","PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI","PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx","PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645","PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_","PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv","PL3-aVTBoE-12kJ48mws_483lW2GPAseMg","PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD","PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379","PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf","PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD","PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV","PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G","PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_","PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ","PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_","PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT","PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9","PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS","PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q","PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv","PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP","PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf","PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV","PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H","PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD","PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ","PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf","PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m","PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8","PL3-aVTBoE-11-1UT-G817EP5co--NgjN9","PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp","PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m","PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo","PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE","PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q","PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz","PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto","PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m","PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs","PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb","PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy","PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR","PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A","PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP","PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N","PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6","PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E","PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj","PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv","PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"];
 
-    const storageKey = 'rizwan_masjid_final_v3';
-    const namesStorageKey = 'rizwan_masjid_names';
-    const videoStorageKey = 'rizwan_masjid_videos';
-    const timelineStorageKey = 'rizwan_masjid_timeline_posts';
-
-    let names = JSON.parse(localStorage.getItem(namesStorageKey)) || defaultNames;
-    let videoLists = JSON.parse(localStorage.getItem(videoStorageKey)) || defaultVideoLists;
-    let timelinePosts = JSON.parse(localStorage.getItem(timelineStorageKey)) || [];
+    let names = [...defaultNames];
+    let videoLists = [...defaultVideoLists];
+    let timelinePosts = [];
+    let attendanceData = {};
     let isTeacherMode = false;
 
     const urduMonths = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
     const urduDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
 
     window.onload = function() {
-        if (!localStorage.getItem(storageKey)) {
-            const embeddedAttendance = {"2026-05-18":{"آذان فاروق":{"aS":"حاضر","aC":"status-btn present","lS":"نہیں سنایا","lC":"status-btn leave","w":"","wD":""}}};
-            localStorage.setItem(storageKey, JSON.stringify(embeddedAttendance));
-        }
         if(!document.getElementById('mainDate').value) {
-            document.getElementById('mainDate').value = "2026-05-18";
+            const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().slice(0, 10);
+            document.getElementById('mainDate').value = localISOTime;
         }
+
         if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
             activateTeacherMode();
         }
-        populateStudentSelect();
-        updateAll();
+        
+        loadDataFromGoogleSheets();
     };
+
+    function loadDataFromGoogleSheets() {
+        if(!googleAppScriptUrl || googleAppScriptUrl.includes("YOUR_WEB_APP_URL_HERE")) {
+            document.getElementById('syncStatus').innerText = "⚠️ گوگل اسکرپٹ کا لنک شامل نہیں ہے!";
+            populateStudentSelect();
+            updateAll();
+            return;
+        }
+
+        fetch(googleAppScriptUrl)
+        .then(response => response.json())
+        .then(data => {
+            if(data) {
+                if(data.names) names = data.names;
+                if(data.videos) videoLists = data.videos;
+                if(data.timelinePosts) timelinePosts = data.timelinePosts;
+                if(data.attendance) attendanceData = data.attendance;
+            }
+            document.getElementById('syncStatus').innerText = "✅ سارا ریکارڈ آن لائن لوڈ ہو چکا ہے";
+            populateStudentSelect();
+            if (isTeacherMode) renderRemovalList();
+            updateAll();
+        })
+        .catch(err => {
+            document.getElementById('syncStatus').innerText = "❌ آن لائن ڈیٹا لوڈ کرنے میں خرابی!";
+            populateStudentSelect();
+            updateAll();
+        });
+    }
+
+    function pushDataToGoogleSheets() {
+        if(!googleAppScriptUrl || googleAppScriptUrl.includes("YOUR_WEB_APP_URL_HERE")) return;
+        
+        document.getElementById('syncStatus').innerText = "🔄 ڈیٹا آن لائن محفوظ ہو رہا ہے...";
+        
+        const packet = {
+            action: "saveAll",
+            payload: {
+                names: names,
+                videos: videoLists,
+                timelinePosts: timelinePosts,
+                attendance: attendanceData
+            }
+        };
+
+        fetch(googleAppScriptUrl, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(packet)
+        }).then(() => {
+            document.getElementById('syncStatus').innerText = "✅ ریکارڈ گوگل شیٹ میں محفوظ ہو گیا ہے";
+        }).catch(() => {
+            document.getElementById('syncStatus').innerText = "❌ محفوظ کرنے میں ناکامی!";
+        });
+    }
 
     function populateStudentSelect() {
         const select = document.getElementById('mediaStudentSelect');
@@ -365,13 +417,16 @@
     }
 
     function checkTeacherLogin() {
-        const u = document.getElementById('uName').value;
-        const p = document.getElementById('pWord').value;
+        const u = document.getElementById('uName').value.trim();
+        const p = document.getElementById('pWord').value.trim();
+        
         if(u === "nasirali258" && p === "merayquaidjalali") {
             sessionStorage.setItem('isTeacherLoggedIn', 'true');
             activateTeacherMode();
             alert("لاگ ان کامیاب!");
-        } else { alert("غلط معلومات!"); }
+        } else { 
+            alert("غلط معلومات!"); 
+        }
     }
 
     function activateTeacherMode() {
@@ -385,7 +440,6 @@
         document.getElementById('loginFormInputs').style.display = "none";
         document.getElementById('logoutBtn').style.display = "inline-block";
         document.getElementById('portalTitle').innerText = "🧔 ناصر علی (استاد)";
-        document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'inline-block');
         renderRemovalList();
         updateAll();
     }
@@ -400,7 +454,6 @@
         document.getElementById('loginFormInputs').style.display = "block";
         document.getElementById('logoutBtn').style.display = "none";
         document.getElementById('portalTitle').innerText = "🔐 استاد پورٹل لاگ ان";
-        document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'none');
         updateAll();
     }
 
@@ -422,13 +475,12 @@
 
         names.push(name);
         videoLists.push(ytList);
-        localStorage.setItem(namesStorageKey, JSON.stringify(names));
-        localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
         document.getElementById('newStudentName').value = "";
         document.getElementById('newStudentYT').value = "";
         populateStudentSelect();
         renderRemovalList();
         updateAll();
+        pushDataToGoogleSheets();
     }
 
     function deleteStudent(index) {
@@ -437,20 +489,17 @@
         
         names.splice(index, 1);
         videoLists.splice(index, 1);
-        localStorage.setItem(namesStorageKey, JSON.stringify(names));
-        localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
         
-        let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        for (let dateKey in data) {
-            if (data[dateKey] && data[dateKey][nameToRemove]) {
-                delete data[dateKey][nameToRemove];
+        for (let dateKey in attendanceData) {
+            if (attendanceData[dateKey] && attendanceData[dateKey][nameToRemove]) {
+                delete attendanceData[dateKey][nameToRemove];
             }
         }
-        localStorage.setItem(storageKey, JSON.stringify(data));
         
         populateStudentSelect();
         renderRemovalList();
         updateAll();
+        pushDataToGoogleSheets();
     }
 
     function renderRemovalList() {
@@ -501,7 +550,6 @@
         if(!title || !url) return alert("براہ کرم ٹائٹل اور میڈیا لنک دونوں فراہم کریں!");
 
         timelinePosts.unshift({ student, title, url, date: formattedCurrentUrduDate });
-        localStorage.setItem(timelineStorageKey, JSON.stringify(timelinePosts));
 
         document.getElementById('mediaTitleInput').value = '';
         document.getElementById('mediaUrlInput').value = '';
@@ -509,16 +557,16 @@
 
         alert("پوسٹ کامیابی سے میڈیا ٹائم لائن پر اپلوڈ کر دی گئی ہے!");
         renderTimeline();
+        pushDataToGoogleSheets();
     }
 
     function deleteTimelinePost(idx) {
         if(!confirm("کیا آپ واقعی یہ پوسٹ میڈیا وال سے حذف کرنا چاہتے ہیں؟")) return;
         timelinePosts.splice(idx, 1);
-        localStorage.setItem(timelineStorageKey, JSON.stringify(timelinePosts));
         renderTimeline();
+        pushDataToGoogleSheets();
     }
 
-    // --- اپڈیٹ شدہ ریشو فری فنکشن ---
     function formatMediaEmbed(url) {
         let isFb = url.includes('facebook.com') || url.includes('fb.watch');
         let isShort = url.includes('/shorts/') || url.includes('/reel/') || url.includes('/reels/');
@@ -538,7 +586,7 @@
             let encodedUrl = encodeURIComponent(url);
             return `<div class="fb-video-wrapper ${ratioClass}"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>`;
         } else {
-            return `<div class="fb-post-media"><img src="${url}" alt="Media Resource"></div>`;
+            return `<img src="${url}" style="max-width: 100%; height: auto; border-radius: 10px; margin-top: 10px; display: block;" alt="Media Resource">`;
         }
     }
 
@@ -575,14 +623,13 @@
     }
 
     function getLastKnownLesson(studentName) {
-        let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        let dates = Object.keys(data).sort();
+        let dates = Object.keys(attendanceData).sort();
         let lastW = '';
         let lastWD = '';
         for (let d of dates) {
-            if (data[d][studentName]) {
-                if (data[d][studentName].w) lastW = data[d][studentName].w;
-                if (data[d][studentName].wD) lastWD = data[d][studentName].wD;
+            if (attendanceData[d] && attendanceData[d][studentName]) {
+                if (attendanceData[d][studentName].w) lastW = attendanceData[d][studentName].w;
+                if (attendanceData[d][studentName].wD) lastWD = attendanceData[d][studentName].wD;
             }
         }
         return { w: lastW, wD: lastWD };
@@ -600,8 +647,7 @@
         document.getElementById('displayUrduDate').innerText = `${dayName}، ${dayNum} ${monthName} ${yearNum}`;
         document.getElementById('totalStudentsCount').innerText = `تعداد: ${names.length}`;
 
-        const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        const dayData = data[date] || {};
+        const dayData = attendanceData[date] || {};
 
         const b1 = document.getElementById('attTableBody'), b4 = document.getElementById('videoTableBody');
         const lessCardsContainer = document.getElementById('lessCardsContainer');
@@ -683,30 +729,29 @@
 
     function save(name, k, v, c) {
         const d = document.getElementById('mainDate').value;
-        let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        if(!data[d]) data[d] = {};
-        if(!data[d][name]) {
+        if(!attendanceData[d]) attendanceData[d] = {};
+        if(!attendanceData[d][name]) {
             let last = getLastKnownLesson(name);
-            data[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD};
+            attendanceData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD};
         }
-        if(k==='aS'){ data[d][name].aS=v; data[d][name].aC=c; }
-        else if(k==='lS'){ data[d][name].lS=v; data[d][name].lC=c; }
-        else if(k==='w'){ data[d][name].w=v; }
-        else if(k==='wD'){ data[d][name].wD=v; }
-        localStorage.setItem(storageKey, JSON.stringify(data));
+        if(k==='aS'){ attendanceData[d][name].aS=v; attendanceData[d][name].aC=c; }
+        else if(k==='lS'){ attendanceData[d][name].lS=v; attendanceData[d][name].lC=c; }
+        else if(k==='w'){ attendanceData[d][name].w=v; }
+        else if(k==='wD'){ attendanceData[d][name].wD=v; }
+        
+        pushDataToGoogleSheets();
     }
 
     function loadReports() {
-        const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
         const mKey = document.getElementById('mainDate').value.substring(0, 7);
         const bA = document.getElementById('attReportBody'), bL = document.getElementById('lessReportBody');
         bA.innerHTML = ''; bL.innerHTML = '';
 
         names.forEach((n, i) => {
             let p=0, ab=0, lv=0, sn=0, yn=0, ns=0;
-            for(let d in data) {
-                if(d.startsWith(mKey) && data[d][n]) {
-                    const r = data[d][n];
+            for(let d in attendanceData) {
+                if(d.startsWith(mKey) && attendanceData[d][n]) {
+                    const r = attendanceData[d][n];
                     if(r.aS==="حاضر") p++; else if(r.aS==="غیر حاضر") ab++; else if(r.aS==="رخصت") lv++;
                     if(r.lS==="سنایا") sn++; else if(r.lS==="یاد نہیں") yn++; else if(r.lS==="نہیں سنایا") ns++;
                 }
@@ -714,45 +759,6 @@
             bA.innerHTML += `<tr><td class="student-name">${n}</td><td class="report-count" style="color:var(--present-clr)">${p}</td><td class="report-count" style="color:var(--absent-clr)">${ab}</td><td class="report-count" style="color:var(--leave-clr)">${lv}</td></tr>`;
             bL.innerHTML += `<tr><td class="student-name">${n}</td><td class="report-count" style="color:var(--present-clr)">${sn}</td><td class="report-count" style="color:var(--absent-clr)">${yn}</td><td class="report-count" style="color:var(--leave-clr)">${ns}</td></tr>`;
         });
-    }
-
-    function downloadBackup() {
-        const backupData = {
-            attendance: JSON.parse(localStorage.getItem(storageKey)),
-            names: JSON.parse(localStorage.getItem(namesStorageKey)),
-            videos: JSON.parse(localStorage.getItem(videoStorageKey)),
-            timelinePosts: JSON.parse(localStorage.getItem(timelineStorageKey))
-        };
-        const blob = new Blob([JSON.stringify(backupData)], {type:'text/plain'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-        a.download = 'rizwan_masjid_backup_' + new Date().toISOString().slice(0,10) + '.txt'; a.click();
-    }
-
-    function triggerImport() { document.getElementById('importFileInput').click(); }
-
-    function uploadBackup(event) {
-        const file = event.target.files;
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const importedData = JSON.parse(e.target.result);
-                if (importedData.names && importedData.attendance) {
-                    names = importedData.names;
-                    videoLists = importedData.videos || defaultVideoLists;
-                    timelinePosts = importedData.timelinePosts || [];
-                    localStorage.setItem(namesStorageKey, JSON.stringify(names));
-                    localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
-                    localStorage.setItem(timelineStorageKey, JSON.stringify(timelinePosts));
-                    localStorage.setItem(storageKey, JSON.stringify(importedData.attendance));
-                    alert("بیک اپ کامیابی سے بحال ہو گیا ہے۔");
-                    populateStudentSelect();
-                    renderRemovalList();
-                    updateAll();
-                }
-            } catch (err) { alert("فائل پڑھنے میں غلطی!"); }
-        };
-        reader.readAsText(file);
     }
 </script>
 </body>
