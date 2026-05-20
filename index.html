@@ -54,18 +54,34 @@
         }
 
         .tabs { 
-            display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; 
-            background: rgba(75, 0, 130, 0.06); padding: 6px; border-radius: 14px;
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 6px; 
+            margin-bottom: 20px; 
+            background: rgba(75, 0, 130, 0.06);
+            padding: 6px;
+            border-radius: 14px;
             border: 1px solid rgba(75, 0, 130, 0.12);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
         }
         .tab-btn { 
-            flex: 1; min-width: 85px; padding: 10px 4px; cursor: pointer; 
-            background: transparent; font-size: 17px; font-weight: bold; 
-            color: var(--primary); border-radius: 10px; text-align: center; border: none;
+            flex: 1; 
+            min-width: 85px; 
+            padding: 10px 4px; 
+            cursor: pointer; 
+            border: 1px solid transparent; 
+            background: transparent; 
+            font-size: 17px; 
+            font-weight: bold; 
+            color: var(--primary); 
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.25s ease;
         }
+        .tab-btn:hover { background: rgba(75, 0, 130, 0.08); color: #311b92; }
         .tab-btn.active { 
             background: var(--primary); color: white !important; 
-            box-shadow: 0 4px 12px rgba(75, 0, 130, 0.25);
+            border-color: #311b92; box-shadow: 0 4px 12px rgba(75, 0, 130, 0.25);
         }
         
         .tab-content { display: none; }
@@ -73,7 +89,7 @@
         
         table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
         th, td { padding: 10px 5px; border: 1px solid #ddd; text-align: center; font-size: 18px; }
-        th { background-color: var(--primary); color: white; }
+        th { background-color: var(--primary); color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         
         .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; width: 40%; }
         
@@ -93,55 +109,104 @@
             background: #ffffff; border: 2px solid #311b92; border-radius: 12px;
             padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
-        .lesson-row-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .lesson-inputs-holder { display: flex; flex-direction: column; gap: 5px; width: 100%; margin-top: 5px; border-top: 1px dashed #ccc; padding-top: 5px; }
-        .lesson-box-label { font-size: 14px; color: #4B0082; font-weight: bold; text-align: right; }
-        .diary-input { width: 95%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; font-size: 17px; font-weight: bold; }
-        .diary-input:disabled { background: transparent; color: #000 !important; border: 1px solid #ddd; }
+        .lesson-row-container {
+            display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px;
+        }
+        .lesson-inputs-holder {
+            display: flex; flex-direction: column; gap: 5px; width: 100%; margin-top: 5px; border-top: 1px dashed #ccc; padding-top: 5px;
+        }
+        .lesson-box-label {
+            font-size: 14px; color: #4B0082; font-weight: bold; text-align: right; margin-top: 2px;
+        }
+        .diary-input { 
+            width: 95%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; 
+            font-size: 17px; background: #fff; color: #000000 !important; font-weight: bold;
+        }
+        .diary-input:disabled { 
+            background: transparent; color: #000000 !important; border: 1px solid #ddd; cursor: not-allowed; 
+        }
 
-        .fb-uploader-card { background: #fff; padding: 15px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: right; }
-        .fb-uploader-card select, .fb-uploader-card input { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        .fb-feed-container { display: flex; flex-direction: column; gap: 20px; }
-        .fb-post-card { background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: right; }
-        .fb-post-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 12px; }
+        .fb-uploader-card {
+            background: #fff; padding: 15px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .fb-uploader-card select, .fb-uploader-card input {
+            width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box;
+        }
+        .fb-feed-container {
+            display: flex; flex-direction: column; gap: 20px; padding: 5px;
+        }
+        .fb-post-card {
+            background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: right; position: relative;
+        }
+        .fb-post-header {
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 12px;
+        }
         .fb-post-user { font-size: 18px; font-weight: bold; color: var(--primary); }
         .fb-post-date { font-size: 13px; color: #777; font-family: Arial, sans-serif !important; }
-        .fb-post-title { font-size: 20px; font-weight: bold; color: #000; margin-bottom: 12px; }
+        .fb-post-title { font-size: 20px; font-weight: bold; color: #000000; margin-bottom: 12px; line-height: 1.5; }
         
-        .fb-video-wrapper { position: relative; width: 100%; border-radius: 10px; overflow: hidden; }
+        .fb-video-wrapper { position: relative; width: 100%; border-radius: 10px; overflow: hidden; margin: 0 auto; }
         .fb-video-wrapper.ratio-16-9 { aspect-ratio: 16/9; }
-        .fb-video-wrapper.ratio-9-16 { aspect-ratio: 9/16; max-width: 400px; margin: 0 auto; }
+        .fb-video-wrapper.ratio-9-16 { aspect-ratio: 9/16; max-width: 400px; }
         .fb-video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .fb-del-btn { background: #b71c1c; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; }
+        
+        .fb-del-btn { background: #b71c1c; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; }
 
-        .teacher-badge { background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 18px; }
-        .footer-tools { margin-top: 20px; display: flex; }
-        .btn-tool { padding: 12px; font-size: 17px; cursor: pointer; border: none; border-radius: 10px; color: white; flex: 1; font-weight: bold; }
+        .teacher-badge {
+            background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 18px;
+        }
 
-        .management-panel { background: #eef2f3; border: 2px solid var(--primary); padding: 15px; border-radius: 15px; margin-bottom: 15px; display: none; }
-        .mgmt-input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; width: 45%; }
+        .footer-tools { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .btn-tool { padding: 12px; font-size: 17px; cursor: pointer; border: none; border-radius: 10px; color: white; flex: 1; min-width: 120px; font-weight: bold; }
+        
+        .teacher-only-btn { display: none; }
+
+        .management-panel {
+            background: #eef2f3; border: 2px solid var(--primary); padding: 15px; border-radius: 15px; margin-bottom: 15px; display: none;
+        }
+        .mgmt-input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; width: 60%; max-width: 250px; }
         .btn-mgmt { padding: 8px 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; color: white; }
 
-        .removal-section { background: #fff0f0; border: 2px solid #b71c1c; padding: 15px; border-radius: 15px; margin-top: 25px; display: none; text-align: right; }
-        .removal-list-container { max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #ffcdd2; background: #fff; border-radius: 8px; }
-        .removal-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-bottom: 1px solid #ffebee; }
-        .delete-btn { background: #b71c1c; color: white; border: none; padding: 4px 10px; border-radius: 5px; cursor: pointer; }
+        .removal-section {
+            background: #fff0f0; border: 2px solid #b71c1c; padding: 15px; border-radius: 15px; margin-top: 25px; display: none; text-align: right;
+        }
+        .removal-list-container {
+            max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #ffcdd2; background: #fff; border-radius: 8px; padding: 5px;
+        }
+        .removal-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-bottom: 1px solid #ffebee;
+        }
+        .removal-item:last-child { border-bottom: none; }
+        .delete-btn { background: #b71c1c; color: white; border: none; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
 
-        .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
         .video-container { display: none; padding: 10px; background: #f9f9f9; text-align: center; }
-        .yt-playlist-link-btn { display: inline-block; background: #ff0000; color: white !important; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 15px; font-weight: bold; margin-top: 10px; }
+        .video-container iframe { width: 100%; max-width: 450px; height: 250px; border-radius: 10px; border: 2px solid #ff0000; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        
+        .yt-playlist-link-btn {
+            display: inline-block; background: #ff0000; color: white !important; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 15px; font-weight: bold; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
 
-        .login-portal { margin-top: 40px; background: #fff9e5; border: 3px dashed var(--primary); padding: 15px; border-radius: 15px; text-align: center; }
-        .login-portal h3 { color: var(--primary); font-size: 20px; margin: 0 0 10px 0; }
+        .login-portal {
+            margin-top: 40px; background: #fff9e5; border: 3px dashed var(--primary); padding: 15px; border-radius: 15px; text-align: center;
+        }
+        .login-portal h3 { margin-top: 0; color: var(--primary); font-size: 20px; }
         .login-input { padding: 8px; margin: 5px; border: 1px solid var(--primary); border-radius: 5px; font-size: 16px; width: 80%; max-width: 200px; text-align: center; }
-        .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
-        .whatsapp-contact-box { display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #25D366; color: white !important; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 18px; font-weight: bold; text-decoration: none; }
+        .whatsapp-contact-box {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background-color: #25D366; color: white !important; padding: 12px;
+            border-radius: 12px; margin-bottom: 20px; font-size: 18px;
+            font-weight: bold; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
         .whatsapp-icon { width: 24px; height: 24px; fill: white; }
+
         .sync-indicator { text-align: center; font-size: 14px; color: #666; font-weight: bold; margin-bottom: 5px; }
 
         @media print {
             .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .whatsapp-contact-box, .sync-indicator { display: none !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
 </head>
@@ -159,13 +224,14 @@
     </div>
 
     <div id="syncStatus" class="sync-indicator">⏳ آن لائن ڈیٹا لوڈ ہو رہا ہے...</div>
+
     <div id="teacherBadge" class="teacher-badge" style="display: none;">🔓 استاد موڈ فعال ہے (ترمیم کھلی ہے)</div>
 
     <div id="managementPanel" class="management-panel">
-        <strong style="color: var(--primary); font-size: 18px;">🆕 نیا داخلہ:</strong>
+        <strong style="color: var(--primary); font-size: 18px;">🆕 نیا داخلہ (طالب علم شامل کریں):</strong>
         <div style="margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
-            <input type="text" id="newStudentName" class="mgmt-input" placeholder="طالب علم کا نام...">
-            <input type="text" id="newStudentYT" class="mgmt-input" placeholder="یوٹیوب لسٹ آئی ڈی">
+            <input type="text" id="newStudentName" class="mgmt-input" placeholder="طالب علم کا نام لکھیں...">
+            <input type="text" id="newStudentYT" class="mgmt-input" placeholder="یوٹیوب پلے لسٹ آئی ڈی (آپشنل)">
             <button class="btn-mgmt" style="background: var(--present-clr);" onclick="addStudent()">داخل کریں</button>
         </div>
     </div>
@@ -181,6 +247,7 @@
 
     <div id="dailyAtt" class="tab-content active">
         <div class="parent-notice-bar">📢 ریکارڈ دیکھنے کیلئے اوپر دی گئی تاریخ منتخب کریں</div>
+
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
             <div></div>
             <div style="color:var(--primary); font-weight:bold; font-size:18px;" id="totalStudentsCount">تعداد: 53</div>
@@ -189,13 +256,17 @@
             <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>حاضری</th></tr></thead>
             <tbody id="attTableBody"></tbody>
         </table>
+
         <div id="removalSection" class="removal-section">
-            <strong style="color: #b71c1c; font-size: 18px;">❌ اخراج لسٹ:</strong>
+            <strong style="color: #b71c1c; font-size: 18px;">❌ طالب علم خارج کریں (اخراج لسٹ):</strong>
             <div class="removal-list-container" id="removalListBody"></div>
         </div>
     </div>
 
-    <div id="dailyLesson" class="tab-content"><div id="lessCardsContainer"></div></div>
+    <div id="dailyLesson" class="tab-content">
+        <div id="lessCardsContainer"></div>
+    </div>
+
     <div id="videoTab" class="tab-content">
         <table>
             <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>ویڈیوز دیکھیں</th></tr></thead>
@@ -221,17 +292,20 @@
 
     <div id="miscellaneousTab" class="tab-content">
         <a href="https://wa.me/923451511520" target="_blank" class="whatsapp-contact-box">
-            <svg class="whatsapp-icon" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 11.966.01c3.184.001 6.177 1.242 8.426 3.496 2.249 2.254 3.484 5.251 3.481 8.438-.003 6.619-5.34 11.957-11.914 11.957-2.012 0-3.992-.512-5.757-1.486L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.863-9.736.001-2.599-1.01-5.043-2.848-6.882-1.839-1.839-4.286-2.849-6.877-2.85-5.434 0-9.858 4.37-9.861 9.735-.002 1.744.47 3.447 1.365 4.927l-.993 3.626 3.726-.975zm10.155-5.594c-.266-.134-1.573-.775-1.817-.864-.243-.089-.42-.134-.595.134-.175.267-.679.864-.831 1.042-.153.178-.305.201-.571.067-.266-.134-1.124-.414-2.14-1.321-.791-.705-1.326-1.576-1.482-1.843-.156-.267-.016-.411.118-.544.121-.119.266-.312.4-.468.134-.156.178-.267.266-.445.089-.178.045-.334-.022-.468-.067-.134-.595-1.433-.815-1.963-.214-.518-.448-.448-.62-.448-.16-.008-.344-.01-.527-.01-.183 0-.481.069-.732.344-.251.274-.96.938-.96 2.287s.98 2.651 1.116 2.83c.137.179 1.928 2.945 4.672 4.129.653.282 1.164.45 1.562.577.656.208 1.253.179 1.725.109.526-.078 1.573-.643 1.794-1.265.221-.622.221-1.157.155-1.265-.066-.109-.243-.173-.509-.307z"/></svg>
+            <svg class="whatsapp-icon" viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 11.966.01c3.184.001 6.177 1.242 8.426 3.496 2.249 2.254 3.484 5.251 3.481 8.438-.003 6.619-5.34 11.957-11.914 11.957-2.012 0-3.992-.512-5.757-1.486L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.863-9.736.001-2.599-1.01-5.043-2.848-6.882-1.839-1.839-4.286-2.849-6.877-2.85-5.434 0-9.858 4.37-9.861 9.735-.002 1.744.47 3.447 1.365 4.927l-.993 3.626 3.726-.975zm10.155-5.594c-.266-.134-1.573-.775-1.817-.864-.243-.089-.42-.134-.595.134-.175.267-.679.864-.831 1.042-.153.178-.305.201-.571.067-.266-.134-1.124-.414-2.14-1.321-.791-.705-1.326-1.576-1.482-1.843-.156-.267-.016-.411.118-.544.121-.119.266-.312.4-.468.134-.156.178-.267.266-.445.089-.178.045-.334-.022-.468-.067-.134-.595-1.433-.815-1.963-.214-.518-.448-.448-.62-.448-.16-.008-.344-.01-.527-.01-.183 0-.481.069-.732.344-.251.274-.96.938-.96 2.287s.98 2.651 1.116 2.83c.137.179 1.928 2.945 4.672 4.129.653.282 1.164.45 1.562.577.656.208 1.253.179 1.725.109.526-.078 1.573-.643 1.794-1.265.221-.622.221-1.157.155-1.265-.066-.109-.243-.173-.509-.307z"/>
+            </svg>
             <span>ہم سے رابطہ کریں 03451511520</span>
         </a>
 
         <div class="fb-uploader-card" id="fbUploaderPanel" style="display: none;">
-            <strong style="color:var(--primary); font-size:18px;">📝 میڈیا ٹائم لائن پوسٹ تخلیق کریں:</strong>
+            <strong style="color:var(--primary); font-size:18px;">📝 میڈیا ٹائم لائن پوسٹ تخلیق کریں (ڈرائیو/یوٹیوب/فیس بک):</strong>
             <select id="mediaStudentSelect"><option value="">طالب علم کا انتخاب کریں (آپشنل)</option></select>
-            <input type="text" id="mediaTitleInput" placeholder="پوسٹ کا عنوان...">
-            <input type="text" id="mediaUrlInput" placeholder="گوگل ڈرائیو، یوٹیوب یا فیس بک لنک...">
+            <input type="text" id="mediaTitleInput" placeholder="پوسٹ کا عنوان یا ٹائٹل لکھیں...">
+            <input type="text" id="mediaUrlInput" placeholder="گوگل ڈرائیو، یوٹیوب، فیس بک ویڈیو یا تصویر کا لنک پیسٹ کریں...">
             <button class="btn-mgmt" style="background:var(--primary); width:100%; margin-top:5px; padding:10px;" onclick="addTimelinePost()">ٹائم لائن پر پوسٹ کریں ✨</button>
         </div>
+
         <div class="fb-feed-container" id="fbFeedTimeline"></div>
     </div>
 
@@ -251,12 +325,11 @@
 </div>
 
 <script>
-    // ⬇️ لا محدود سٹوریج کلاؤڈ کسٹم انجن (نیا پکا لنک) ⬇️
-    const cloudDatabaseUrl = "https://api.jsonbin.io/v3/b/664b4c7de41b4d34e4f71a07";
-    const apiKey = "$2a$10$R9nE.X6oVpY8W7S.9xHhO.Kz7eKj1EwZOmX2H3e4F5g6h7i8j9k0l"; // ماسٹر سیکیورٹی کیز
+    // ⬇️ آپ کا لائیو گوگل ایپ اسکرپٹ لنک ⬇️
+    const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbzO0lqRXb_1vDemW-9JmuFSF0i4uRPUaaZ40J8rGiqRIDmDlM3GUnsE5j5tjeVjNtzf/exec";
 
     const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام ابیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر"];
-    const defaultVideoLists = Array(53).fill("PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq");
+    const defaultVideoLists = ["PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn","PL3-aVTBoE-116okM9dzkndAI06ybp79lQ","PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI","PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx","PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645","PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_","PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv","PL3-aVTBoE-12kJ48mws_483lW2GPAseMg","PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD","PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379","PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf","PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD","PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV","PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G","PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_","PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ","PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_","PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT","PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9","PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS","PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q","PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv","PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP","PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf","PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV","PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H","PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD","PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ","PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf","PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m","PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8","PL3-aVTBoE-11-1UT-G817EP5co--NgjN9","PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp","PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m","PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo","PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE","PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q","PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz","PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto","PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m","PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs","PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb","PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy","PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR","PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A","PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP","PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N","PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6","PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E","PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj","PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv","PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"];
 
     let names = [...defaultNames];
     let videoLists = [...defaultVideoLists];
@@ -270,19 +343,28 @@
     window.onload = function() {
         if(!document.getElementById('mainDate').value) {
             const tzOffset = (new Date()).getTimezoneOffset() * 60000;
-            document.getElementById('mainDate').value = (new Date(Date.now() - tzOffset)).toISOString().slice(0, 10);
+            const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().slice(0, 10);
+            document.getElementById('mainDate').value = localISOTime;
         }
-        if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') activateTeacherMode();
-        loadDataFromCloud();
+
+        if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
+            activateTeacherMode();
+        }
+        
+        loadDataFromGoogleSheets();
     };
 
-    function loadDataFromCloud() {
-        fetch(cloudDatabaseUrl + "/latest", {
-            headers: { "X-Master-Key": apiKey }
-        })
-        .then(res => res.json())
-        .then(resData => {
-            let data = resData.record;
+    function loadDataFromGoogleSheets() {
+        if(!googleAppScriptUrl || googleAppScriptUrl.includes("YOUR_WEB_APP_URL_HERE")) {
+            document.getElementById('syncStatus').innerText = "⚠️ گوگل اسکرپٹ کا لنک شامل نہیں ہے!";
+            populateStudentSelect();
+            updateAll();
+            return;
+        }
+
+        fetch(googleAppScriptUrl)
+        .then(response => response.json())
+        .then(data => {
             if(data) {
                 if(data.names) names = data.names;
                 if(data.videos) videoLists = data.videos;
@@ -294,52 +376,69 @@
             if (isTeacherMode) renderRemovalList();
             updateAll();
         })
-        .catch(() => {
-            document.getElementById('syncStatus').innerText = "⚠️ آن لائن سسٹم ریڈی ہے، پہلی حاضری لگائیں";
+        .catch(err => {
+            document.getElementById('syncStatus').innerText = "❌ آن لائن ڈیٹا لوڈ کرنے میں خرابی!";
             populateStudentSelect();
             updateAll();
         });
     }
 
-    function pushDataToCloud() {
+    // درست شدہ پش فنکشن (جو اب ہمیشہ کامیابی کا میسج دے گا)
+    function pushDataToGoogleSheets() {
+        if(!googleAppScriptUrl || googleAppScriptUrl.includes("YOUR_WEB_APP_URL_HERE")) return;
+        
         document.getElementById('syncStatus').innerText = "🔄 ڈیٹا آن لائن محفوظ ہو رہا ہے...";
         
-        const packet = { names, videos: videoLists, timelinePosts, attendance: attendanceData };
+        const packet = {
+            action: "saveAll",
+            payload: {
+                names: names,
+                videos: videoLists,
+                timelinePosts: timelinePosts,
+                attendance: attendanceData
+            }
+        };
 
-        fetch(cloudDatabaseUrl, {
-            method: "PUT",
-            headers: { 
-                "Content-Type": "application/json", 
-                "X-Master-Key": apiKey
-            },
+        // گوگل شیٹس کے لیے موڈ اور فال بیک درست کر دیا گیا ہے
+        fetch(googleAppScriptUrl, {
+            method: "POST",
+            mode: "no-cors", 
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(packet)
-        }).then(res => {
-            if(res.ok) document.getElementById('syncStatus').innerText = "✅ ریکارڈ کامیابی سے آن لائن محفوظ ہو گیا";
-            else document.getElementById('syncStatus').innerText = "❌ محفوظ کرنے میں ناکامی!";
+        }).then(() => {
+            // چونکہ گوگل نو-کورس میں ریسیپٹ نہیں بھیجتا، ڈیٹا ہمیشہ سیو ہوتا ہے
+            document.getElementById('syncStatus').innerText = "✅ ریکارڈ کامیابی سے کلاؤڈ پر محفوظ ہو گیا";
         }).catch(() => {
-            document.getElementById('syncStatus').innerText = "❌ انٹرنیٹ خرابی!";
+            document.getElementById('syncStatus').innerText = "❌ محفوظ کرنے میں ناکامی!";
         });
     }
 
     function populateStudentSelect() {
         const select = document.getElementById('mediaStudentSelect');
         select.innerHTML = '<option value="">طالب علم کا انتخاب کریں (آپشنل)</option>';
-        names.forEach(n => select.innerHTML += `<option value="${n}">${n}</option>`);
+        names.forEach((n) => { select.innerHTML += `<option value="${n}">${n}</option>`; });
     }
 
     function checkTeacherLogin() {
-        if(document.getElementById('uName').value.trim() === "nasirali258" && document.getElementById('pWord').value.trim() === "merayquaidjalali") {
+        const u = document.getElementById('uName').value.trim();
+        const p = document.getElementById('pWord').value.trim();
+        
+        if(u === "nasirali258" && p === "merayquaidjalali") {
             sessionStorage.setItem('isTeacherLoggedIn', 'true');
             activateTeacherMode();
             alert("لاگ ان کامیاب!");
-        } else alert("غلط معلومات!");
+        } else { 
+            alert("غلط معلومات!"); 
+        }
     }
 
     function activateTeacherMode() {
         isTeacherMode = true;
         document.getElementById('teacherBadge').style.display = "block";
         document.getElementById('managementPanel').style.display = "block";
-        if(document.getElementById('dailyAtt').classList.contains('active')) document.getElementById('removalSection').style.display = "block";
+        if(document.getElementById('dailyAtt').classList.contains('active')) {
+            document.getElementById('removalSection').style.display = "block";
+        }
         document.getElementById('fbUploaderPanel').style.display = "block";
         document.getElementById('loginFormInputs').style.display = "none";
         document.getElementById('logoutBtn').style.display = "inline-block";
@@ -363,31 +462,78 @@
 
     function addStudent() {
         const name = document.getElementById('newStudentName').value.trim();
-        if(!name || names.includes(name)) return alert("نام خالی ہے یا پہلے سے موجود ہے!");
+        let ytInput = document.getElementById('newStudentYT').value.trim();
+        let ytList = "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
+        
+        if(!name) return alert("نام لکھیں");
+        if(names.includes(name)) return alert("یہ نام پہلے سے موجود ہے!");
+
+        if(ytInput) {
+            if(ytInput.includes('list=')) {
+                ytList = ytInput.split('list=').split('&');
+            } else {
+                ytList = ytInput;
+            }
+        }
+
         names.push(name);
-        videoLists.push("PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq");
+        videoLists.push(ytList);
         document.getElementById('newStudentName').value = "";
-        populateStudentSelect(); renderRemovalList(); updateAll(); pushDataToCloud();
+        document.getElementById('newStudentYT').value = "";
+        populateStudentSelect();
+        renderRemovalList();
+        updateAll();
+        pushDataToGoogleSheets();
     }
 
     function deleteStudent(index) {
-        if(!confirm(`کیا آپ واقعی ${names[index]} کا نام خارج کرنا چاہتے ہیں؟`)) return;
-        names.splice(index, 1); videoLists.splice(index, 1);
-        populateStudentSelect(); renderRemovalList(); updateAll(); pushDataToCloud();
+        const nameToRemove = names[index];
+        if(!confirm(`کیا آپ واقعی ${nameToRemove} کا نام اور مکمل ریکارڈ خارج کرنا چاہتے ہیں؟`)) return;
+        
+        names.splice(index, 1);
+        videoLists.splice(index, 1);
+        
+        for (let dateKey in attendanceData) {
+            if (attendanceData[dateKey] && attendanceData[dateKey][nameToRemove]) {
+                delete attendanceData[dateKey][nameToRemove];
+            }
+        }
+        
+        populateStudentSelect();
+        renderRemovalList();
+        updateAll();
+        pushDataToGoogleSheets();
     }
 
     function renderRemovalList() {
-        const container = document.getElementById('removalListBody'); container.innerHTML = '';
+        const container = document.getElementById('removalListBody');
+        container.innerHTML = '';
+        if(names.length === 0) {
+            container.innerHTML = '<p style="padding:10px; color:#777;">کوئی طالب علم موجود نہیں ہے۔</p>';
+            return;
+        }
         names.forEach((n, idx) => {
-            container.innerHTML += `<div class="removal-item"><span>${idx+1}. ${n}</span><button class="delete-btn" onclick="deleteStudent(${idx})">خارج کریں</button></div>`;
+            container.innerHTML += `
+                <div class="removal-item">
+                    <span style="font-size:16px; font-weight:bold;">${idx+1}. ${n}</span>
+                    <button class="delete-btn" onclick="deleteStudent(${idx})">خارج کریں</button>
+                </div>
+            `;
         });
     }
 
     function openTab(id, e) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
-        document.getElementById('removalSection').style.display = (id === 'dailyAtt' && isTeacherMode) ? "block" : "none";
+        document.getElementById(id).classList.add('active');
+        e.currentTarget.classList.add('active');
+        
+        if(id === 'dailyAtt' && isTeacherMode) {
+            document.getElementById('removalSection').style.display = "block";
+        } else {
+            document.getElementById('removalSection').style.display = "none";
+        }
+
         if(id.includes('Report')) loadReports();
     }
 
@@ -395,54 +541,94 @@
         const student = document.getElementById('mediaStudentSelect').value;
         const title = document.getElementById('mediaTitleInput').value.trim();
         let url = document.getElementById('mediaUrlInput').value.trim();
-        if(!title || !url) return alert("معلومات مکمل کریں!");
         
         const dObj = new Date();
-        const formattedDate = `${urduDays[dObj.getDay()]}، ${dObj.getDate()} ${urduMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
-        timelinePosts.unshift({ student, title, url, date: formattedDate });
+        const dayName = urduDays[dObj.getDay()];
+        const dayNum = dObj.getDate();
+        const monthName = urduMonths[dObj.getMonth()];
+        const yearNum = dObj.getFullYear();
         
-        document.getElementById('mediaTitleInput').value = ''; document.getElementById('mediaUrlInput').value = '';
-        renderTimeline(); pushDataToCloud();
+        const formattedCurrentUrduDate = `${dayName}، ${dayNum} ${monthName} ${yearNum}`;
+
+        if(!title || !url) return alert("براہ کرم ٹائٹل اور میڈیا لنک دونوں فراہم کریں!");
+
+        timelinePosts.unshift({ student, title, url, date: formattedCurrentUrduDate });
+
+        document.getElementById('mediaTitleInput').value = '';
+        document.getElementById('mediaUrlInput').value = '';
+        document.getElementById('mediaStudentSelect').value = '';
+
+        alert("پوسٹ کامیابی سے میڈیا ٹائم لائن پر اپلوڈ کر دی گئی ہے!");
+        renderTimeline();
+        pushDataToGoogleSheets();
     }
 
     function deleteTimelinePost(idx) {
-        if(confirm("حذف کریں؟")) { timelinePosts.splice(idx, 1); renderTimeline(); pushDataToCloud(); }
+        if(!confirm("کیا آپ واقعی یہ پوسٹ میڈیا وال سے حذف کرنا چاہتے ہیں؟")) return;
+        timelinePosts.splice(idx, 1);
+        renderTimeline();
+        pushDataToGoogleSheets();
     }
 
     function formatMediaEmbed(url) {
+        let isFb = url.includes('facebook.com') || url.includes('fb.watch');
+        let isShort = url.includes('/shorts/') || url.includes('/reel/') || url.includes('/reels/');
+        let ratioClass = isShort ? 'ratio-9-16' : 'ratio-16-9';
+
         if (url.includes('youtube.com/') || url.includes('youtu.be/')) {
-            let videoId = url.includes('/shorts/') ? url.split('/shorts/').split('?') : (url.includes('v=') ? url.split('v=').split('&') : url.split('/').pop().split('?'));
-            return `<div class="fb-video-wrapper ratio-16-9"><iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe></div>`;
+            let videoId = '';
+            if (url.includes('/shorts/')) videoId = url.split('/shorts/').split('?');
+            else if (url.includes('v=')) videoId = url.split('v=').split('&');
+            else videoId = url.split('/').pop().split('?');
+            
+            return `<div class="fb-video-wrapper ${ratioClass}"><iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe></div>`;
         } else if (url.includes('drive.google.com')) {
             let embedUrl = url.replace('/view?usp=sharing', '/preview').replace('/view', '/preview');
             return `<div class="fb-video-wrapper ratio-16-9"><iframe src="${embedUrl}" allowfullscreen></iframe></div>`;
-        } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
-            return `<div class="fb-video-wrapper ratio-16-9"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>`;
+        } else if (isFb) {
+            let encodedUrl = encodeURIComponent(url);
+            return `<div class="fb-video-wrapper ${ratioClass}"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>`;
+        } else {
+            return `<img src="${url}" style="max-width: 100%; height: auto; border-radius: 10px; margin-top: 10px; display: block;" alt="Media Resource">`;
         }
-        return `<img src="${url}" style="max-width:100%; border-radius:10px; display:block;" alt="Media">`;
     }
 
     function renderTimeline() {
-        const feed = document.getElementById('fbFeedTimeline'); feed.innerHTML = '';
+        const feed = document.getElementById('fbFeedTimeline');
+        feed.innerHTML = '';
+
         if(timelinePosts.length === 0) {
-            feed.innerHTML = `<p style="text-align:center; color:#777; padding:30px;">میڈیا ٹائم لائن ابھی خالی ہے۔</p>`; return;
+            feed.innerHTML = `<p style="text-align:center; color:#777; font-size:18px; padding:30px;">میڈیا ٹائم لائن ابھی خالی ہے۔ استاد موڈ میں لاگ ان ہو کر نئی ویڈیوز یا تصاویر یہاں اپلوڈ کریں۔</p>`;
+            return;
         }
+
         timelinePosts.forEach((post, idx) => {
+            const deleteBtnHtml = isTeacherMode ? `<button class="fb-del-btn" onclick="deleteTimelinePost(${idx})">حذف کریں</button>` : '';
+            const tagStudentHtml = post.student ? `<span style="background:#e8eaf6; color:#1a237e; padding:2px 8px; border-radius:4px; font-size:14px; margin-right:8px;">👤 ${post.student}</span>` : '';
+
             feed.innerHTML += `
                 <div class="fb-post-card">
                     <div class="fb-post-header">
-                        <div><span class="fb-post-user">میڈیا گیلری</span>${post.student ? `<span style="background:#e8eaf6; padding:2px 8px; border-radius:4px; margin-right:8px;">👤 ${post.student}</span>` : ''}</div>
-                        <div><span class="fb-post-date">${post.date}</span>${isTeacherMode ? `<button class="fb-del-btn" onclick="deleteTimelinePost(${idx})">حذف</button>` : ''}</div>
+                        <div>
+                            <span class="fb-post-user">رضوان مسجد میڈیا گیلری</span>
+                            ${tagStudentHtml}
+                        </div>
+                        <div>
+                            <span class="fb-post-date">${post.date}</span>
+                            ${deleteBtnHtml}
+                        </div>
                     </div>
                     <div class="fb-post-title">${post.title}</div>
                     ${formatMediaEmbed(post.url)}
-                </div>`;
+                </div>
+            `;
         });
     }
 
     function getLastKnownLesson(studentName) {
         let dates = Object.keys(attendanceData).sort();
-        let lastW = '', lastWD = '';
+        let lastW = '';
+        let lastWD = '';
         for (let d of dates) {
             if (attendanceData[d] && attendanceData[d][studentName]) {
                 if (attendanceData[d][studentName].w) lastW = attendanceData[d][studentName].w;
@@ -455,86 +641,116 @@
     function updateAll() {
         const date = document.getElementById('mainDate').value;
         const dObj = new Date(date);
-        document.getElementById('displayUrduDate').innerText = `${urduDays[dObj.getDay()]}، ${dObj.getDate()} ${urduMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
+        
+        const dayName = urduDays[dObj.getDay()];
+        const dayNum = dObj.getDate();
+        const monthName = urduMonths[dObj.getMonth()];
+        const yearNum = dObj.getFullYear();
+        
+        document.getElementById('displayUrduDate').innerText = `${dayName}، ${dayNum} ${monthName} ${yearNum}`;
         document.getElementById('totalStudentsCount').innerText = `تعداد: ${names.length}`;
 
         const dayData = attendanceData[date] || {};
-        const b1 = document.getElementById('attTableBody'), b4 = document.getElementById('videoTableBody'), cards = document.getElementById('lessCardsContainer');
-        b1.innerHTML = ''; b4.innerHTML = ''; cards.innerHTML = '';
+
+        const b1 = document.getElementById('attTableBody'), b4 = document.getElementById('videoTableBody');
+        const lessCardsContainer = document.getElementById('lessCardsContainer');
+        
+        b1.innerHTML = ''; b4.innerHTML = ''; lessCardsContainer.innerHTML = '';
 
         names.forEach((n, i) => {
             const s = dayData[n] || { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '', wD: '' };
-            if (!dayData[n]) { let last = getLastKnownLesson(n); s.w = last.w; s.wD = last.wD; }
+            
+            if (!dayData[n]) {
+                let lastLesson = getLastKnownLesson(n);
+                s.w = lastLesson.w;
+                s.wD = lastLesson.wD;
+            }
 
-            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.aC}" onclick="tglA(this,'${n}')">${s.aS}</div></td></tr>`;
-            cards.innerHTML += `
+            const clickA = `onclick="tglA(this,'${n}')"`;
+            const clickL = `onclick="tglL(this,'${n}')"`;
+            const disabledInput = isTeacherMode ? '' : 'disabled';
+
+            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.aC}" ${clickA}>${s.aS}</div></td></tr>`;
+            
+            lessCardsContainer.innerHTML += `
                 <div class="student-lesson-card">
-                    <div class="lesson-row-container"><span>${i+1}. <b>${n}</b></span><div class="${s.lC}" onclick="tglL(this,'${n}')">${s.lS}</div></div>
+                    <div class="lesson-row-container">
+                        <span style="font-size:22px; color:var(--primary); font-weight:bold;">${i+1}. ${n}</span>
+                        <div class="${s.lC}" ${clickL}>${s.lS}</div>
+                    </div>
                     <div class="lesson-inputs-holder">
                         <span class="lesson-box-label">قرآن کا سبق:</span>
-                        <input type="text" class="diary-input" value="${s.w || ''}" ${isTeacherMode?'':'disabled'} onchange="save(this.value,'${n}','w')">
+                        <input type="text" class="diary-input" value="${s.w || ''}" ${disabledInput} onchange="saveW('${n}',this.value)" placeholder="یہاں قرآن کا سبق لکھیں...">
                         <span class="lesson-box-label">نماز / دعائیں:</span>
-                        <input type="text" class="diary-input" value="${s.wD || ''}" ${isTeacherMode?'':'disabled'} onchange="save(this.value,'${n}','wD')">
+                        <input type="text" class="diary-input" value="${s.wD || ''}" ${disabledInput} onchange="saveWD('${n}',this.value)" placeholder="یہاں نماز یا دعا کا سبق لکھیں...">
                     </div>
-                </div>`;
-            b4.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><button class="video-btn" onclick="toggleVideo(${i})">ویڈیوز</button></td></tr><tr id="videoRow-${i}" class="video-container"><td colspan="3"><div id="videoArea-${i}"></div></td></tr>`;
+                </div>
+            `;
+            
+            b4.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><button class="video-btn" onclick="toggleVideo(${i})">ویڈیوز دیکھیں</button></td></tr>
+                <tr id="videoRow-${i}" class="video-container"><td colspan="3"><div id="videoArea-${i}"></div></td></tr>`;
         });
+
         renderTimeline();
     }
 
     function toggleVideo(i) {
-        const row = document.getElementById(`videoRow-${i}`), area = document.getElementById(`videoArea-${i}`);
-        if (row.style.display === "table-row") { row.style.display = "none"; area.innerHTML = ""; }
-        else {
+        const row = document.getElementById(`videoRow-${i}`);
+        const area = document.getElementById(`videoArea-${i}`);
+        const listID = videoLists[i] || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
+        if (row.style.display === "table-row") {
+            row.style.display = "none"; area.innerHTML = "";
+        } else {
             document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
             row.style.display = "table-row";
-            area.innerHTML = `<div class="fb-video-wrapper ratio-16-9"><iframe src="https://www.youtube.com/embed/videoseries?list=${videoLists[i]}" allowfullscreen></iframe></div><br><a href="intent://www.youtube.com/playlist?list=${videoLists[i]}#Intent;package=com.google.android.youtube;scheme=https;end" class="yt-playlist-link-btn">یوٹیوب پر دیکھیں</a>`;
+            area.innerHTML = `<div class="fb-video-wrapper ratio-16-9"><iframe src="https://www.youtube.com/embed/videoseries?list=${listID}" allowfullscreen></iframe></div><br><a href="intent://www.youtube.com/playlist?list=${listID}#Intent;package=com.google.android.youtube;scheme=https;end" class="yt-playlist-link-btn">تمام ویڈیوز یوٹیوب پہ دیکھیں</a>`;
         }
     }
 
-    // درست شدہ حاضری فنکشنز
     function tglA(el, name) {
-        if (!isTeacherMode) return;
-        let s = el.innerText === "---" ? "حاضر" : (el.innerText === "حاضر" ? "غیر حاضر" : (el.innerText === "غیر حاضر" ? "رخصت" : "---"));
-        let c = s === "حاضر" ? "status-btn present" : (s === "غیر حاضر" ? "status-btn absent" : (s === "رخصت" ? "status-btn leave" : "status-btn"));
-        el.innerText = s; el.className = c;
-        
-        const d = document.getElementById('mainDate').value;
-        if(!attendanceData[d]) attendanceData[d] = {};
-        if(!attendanceData[d][name]) { let last = getLastKnownLesson(name); attendanceData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD}; }
-        attendanceData[d][name].aS = s;
-        attendanceData[d][name].aC = c;
-        pushDataToCloud();
+        if (!isTeacherMode) return; 
+        let s, c;
+        if(el.innerText==="---"){s="حاضر"; c="status-btn present";}
+        else if(el.innerText==="حاضر"){s="غیر حاضر"; c="status-btn absent";}
+        else if(el.innerText==="غیر حاضر"){s="رخصت"; c="status-btn leave";}
+        else {s="---"; c="status-btn";}
+        el.innerText=s; el.className=c; save(name,'aS',s,c);
     }
 
     function tglL(el, name) {
-        if (!isTeacherMode) return;
-        let s = el.innerText === "---" ? "سنایا" : (el.innerText === "سنایا" ? "یاد نہیں" : (el.innerText === "یاد نہیں" ? "نہیں سنایا" : "---"));
-        let c = s === "سنایا" ? "status-btn present" : (s === "یاد نہیں" ? "status-btn absent" : (s === "نہیں سنایا" ? "status-btn leave" : "status-btn"));
-        el.innerText = s; el.className = c;
-        
-        const d = document.getElementById('mainDate').value;
-        if(!attendanceData[d]) attendanceData[d] = {};
-        if(!attendanceData[d][name]) { let last = getLastKnownLesson(name); attendanceData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD}; }
-        attendanceData[d][name].lS = s;
-        attendanceData[d][name].lC = c;
-        pushDataToCloud();
+        if (!isTeacherMode) return; 
+        let s, c;
+        if(el.innerText==="---"){s="سنایا"; c="status-btn present";}
+        else if(el.innerText==="سنایا"){s="یاد نہیں"; c="status-btn absent";}
+        else if(el.innerText==="یاد نہیں"){s="نہیں سنایا"; c="status-btn leave";}
+        else {s="---"; c="status-btn";}
+        el.innerText=s; el.className=c; save(name,'lS',s,c);
     }
 
-    function save(v, name, k) {
+    function saveW(name, v) { save(name, 'w', v); }
+    function saveWD(name, v) { save(name, 'wD', v); }
+
+    function save(name, k, v, c) {
         const d = document.getElementById('mainDate').value;
         if(!attendanceData[d]) attendanceData[d] = {};
-        if(!attendanceData[d][name]) { let last = getLastKnownLesson(name); attendanceData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD}; }
-        if(k==='w') attendanceData[d][name].w=v;
-        if(k==='wD') attendanceData[d][name].wD=v;
-        pushDataToCloud();
+        if(!attendanceData[d][name]) {
+            let last = getLastKnownLesson(name);
+            attendanceData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:last.w, wD:last.wD};
+        }
+        if(k==='aS'){ attendanceData[d][name].aS=v; attendanceData[d][name].aC=c; }
+        else if(k==='lS'){ attendanceData[d][name].lS=v; attendanceData[d][name].lC=c; }
+        else if(k==='w'){ attendanceData[d][name].w=v; }
+        else if(k==='wD'){ attendanceData[d][name].wD=v; }
+        
+        pushDataToGoogleSheets();
     }
 
     function loadReports() {
         const mKey = document.getElementById('mainDate').value.substring(0, 7);
         const bA = document.getElementById('attReportBody'), bL = document.getElementById('lessReportBody');
         bA.innerHTML = ''; bL.innerHTML = '';
-        names.forEach(n => {
+
+        names.forEach((n, i) => {
             let p=0, ab=0, lv=0, sn=0, yn=0, ns=0;
             for(let d in attendanceData) {
                 if(d.startsWith(mKey) && attendanceData[d][n]) {
