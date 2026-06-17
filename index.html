@@ -112,7 +112,7 @@
         .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; width: 40%; }
         
         .three-dots-btn {
-            display: inline-block;
+            display: none;
             cursor: pointer;
             color: #b38728;
             font-weight: bold;
@@ -399,11 +399,9 @@
         const todayStr = getTodayDateString();
         document.getElementById('mainDate').value = todayStr;
         
-        // فوری طور پر ڈیفالٹ نام سکرین پر لوڈ کریں تاکہ بلینک نہ رہے
         document.getElementById('totalStudentsCount').innerText = "تعداد: " + names.length;
         updateAll();
         
-        // اب بیک گراؤنڈ میں کلاؤڈ ڈیٹا کھینچیں
         fetchFromSupabase(); 
         openTab('dailyAtt');
     };
@@ -519,13 +517,15 @@
 
             const tdName = document.createElement('td');
             tdName.className = 'student-name';
-            tdName.innerHTML = `${name} <span class="three-dots-btn" id="dots-${index}" onclick="toggleLessonInputs(${index})">...</span>`;
+            
+            // ڈاٹس کا ڈسپلے استاد لاگ ان پر منحصر ہے
+            const dotsStyle = isTeacher ? 'display: inline-block;' : 'display: none;';
+            tdName.innerHTML = `${name} <span class="three-dots-btn" id="dots-${index}" style="${dotsStyle}" onclick="toggleLessonInputs(${index})">...</span>`;
             tr.appendChild(tdName);
 
             const tdStatus = document.createElement('td');
             const btn = document.createElement('button');
             
-            // اگر ڈیٹا بیس میں حاضری موجود ہے تو رنگ دکھائے ورنہ بٹن بالکل سادہ خالی رہے گا
             if (studentRecord) {
                 btn.className = `status-btn ${studentRecord.status}`;
                 if (studentRecord.status === 'present') btn.innerText = 'حاضر';
@@ -538,7 +538,6 @@
 
             if (isTeacher) {
                 btn.onclick = function() {
-                    // اگر اس تاریخ کا اریے موجود نہیں تو نیا بنائیں
                     if (!attendanceData[dateStr]) {
                         attendanceData[dateStr] = names.map(() => ({ status: '', surah: '', ayat: '', statusLesson: '' }));
                     }
@@ -635,7 +634,7 @@
             inpSurah.type = 'text';
             inpSurah.className = 'diary-input';
             inpSurah.value = record.surah || '';
-            inpSurah.placeholder = 'مثال: سورہ البقرہ...';
+            inpSurah.placeholder = ''; // مثالیں ختم کر دی گئیں
             if (!isTeacher) inpSurah.disabled = true;
             else {
                 inpSurah.onchange = function() {
@@ -652,7 +651,7 @@
             inpAyat.type = 'text';
             inpAyat.className = 'diary-input';
             inpAyat.value = record.ayat || '';
-            inpAyat.placeholder = 'مثال: 1 سے 5 تک...';
+            inpAyat.placeholder = ''; // مثالیں ختم کر دی گئیں
             if (!isTeacher) inpAyat.disabled = true;
             else {
                 inpAyat.onchange = function() {
@@ -914,7 +913,8 @@
         const u = document.getElementById('uName').value;
         const p = document.getElementById('pWord').value;
 
-        if (u === 'nasir' && p === 'ali') {
+        // یوزر نیم اور پاس ورڈ اپڈیٹ کر دیا گیا ہے
+        if (u === 'nasirali258' && p === 'merayquaidjalali') {
             isTeacher = true;
             document.getElementById('teacherBadge').style.display = 'block';
             document.getElementById('managementPanel').style.display = 'block';
