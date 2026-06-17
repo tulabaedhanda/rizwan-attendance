@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>آل ان ون رجسٹر - رضوان مسجد</title>
+    <!-- Supabase CDN JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
@@ -250,8 +251,14 @@
         .login-input { padding: 8px; margin: 5px; border: 1px solid var(--primary); border-radius: 5px; font-size: 16px; width: 80%; max-width: 200px; text-align: center; }
         .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
+        /* Sync Button Style Royal Golden Frame */
+        .sync-cloud-btn {
+            background: linear-gradient(45deg, #4B0082, #311b92); color: white; border: 3px solid transparent; border-image: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c) 1; padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: none; width: 85%; max-width: 300px; transition: transform 0.2s;
+        }
+        .sync-cloud-btn:active { transform: scale(0.98); }
+
         @media print {
-            .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .three-dots-btn { display: none !important; }
+            .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .three-dots-btn, .sync-cloud-btn { display: none !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
@@ -360,6 +367,10 @@
             <input type="password" id="pWord" class="login-input" placeholder="پاس ورڈ">
             <button class="login-submit" onclick="checkTeacherLogin()">لاگ ان</button>
         </div>
+        <center>
+            <button id="syncCloudBtn" class="sync-cloud-btn" onclick="syncToSupabase()">ڈیٹا کلاؤڈ پر بھیجیں 📤</button>
+        </center>
+        <br>
         <button class="login-submit" id="logoutBtn" style="display:none; background:#b71c1c;" onclick="teacherLogout()">لاگ آؤٹ</button>
     </div>
 </div>
@@ -409,8 +420,13 @@
         document.getElementById('displayUrduDate').innerText = formatUrdu;
     }
 
-    // Cloud Data Syncing Logic
+    // Cloud Data Syncing Logic via Explicit Button Click
     async function syncToSupabase() {
+        const btn = document.getElementById('syncCloudBtn');
+        const originalText = btn.innerText;
+        btn.innerText = "بھیجا جا رہا ہے...⏳";
+        btn.disabled = true;
+
         try {
             const payload = {
                 names: names,
@@ -422,9 +438,18 @@
                 .from('masjid_backup')
                 .upsert([{ id: 1, data: payload, updated_at: new Date() }]);
             
-            if (error) console.error("Supabase Sync Error:", error);
+            if (error) {
+                console.error("Supabase Sync Error:", error);
+                alert("ڈیٹا بھیجنے میں خرابی آئی ہے!");
+            } else {
+                alert("مبارک ہو! تمام حاضری، سبق اور میڈیا ریکارڈ کلاؤڈ پر محفوظ ہو گیا ہے اور اب والدین لائیو دیکھ سکتے ہیں۔ ✨");
+            }
         } catch (e) {
             console.error("Cloud Connection Failed:", e);
+            alert("انٹرنیٹ کنکشن کا مسئلہ ہے!");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
         }
     }
 
@@ -527,7 +552,6 @@
                     
                     localStorage.setItem(storageKey, JSON.stringify(attendanceData));
                     updateAll();
-                    syncToSupabase();
                 };
             }
             tdStatus.appendChild(btn);
@@ -585,7 +609,6 @@
                     
                     localStorage.setItem(storageKey, JSON.stringify(attendanceData));
                     updateAll();
-                    syncToSupabase();
                 };
             }
             rowTop.appendChild(statusBtn);
@@ -605,7 +628,6 @@
                 inpSurah.onchange = function() {
                     record.surah = inpSurah.value;
                     localStorage.setItem(storageKey, JSON.stringify(attendanceData));
-                    syncToSupabase();
                 };
             }
             inputsHolder.appendChild(inpSurah);
@@ -621,7 +643,6 @@
                 inpAyat.onchange = function() {
                     record.ayat = inpAyat.value;
                     localStorage.setItem(storageKey, JSON.stringify(attendanceData));
-                    syncToSupabase();
                 };
             }
             inputsHolder.appendChild(inpAyat);
@@ -771,7 +792,7 @@
     function extractYoutubeId(url) {
         let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         let match = url.match(regExp);
-        return (match && match.length === 11) ? match : null;
+        return (match && match[2].length === 11) ? match[2] : null;
     }
 
     function populateStudentDropdowns() {
@@ -806,8 +827,7 @@
         document.getElementById('mediaUrlInput').value = '';
         
         updateAll();
-        syncToSupabase();
-        alert("پوسٹ کامیابی کے ساتھ لائیو ٹائم لائن پر اپلوڈ کر دی گئی ہے!");
+        alert("پوسٹ محفوظ کر لی گئی ہے! کلاؤڈ پر بھیجنے کیلئے نیچے 'ڈیٹا کلاؤڈ پر بھیجیں' کا بٹن دبائیں۔");
     }
 
     function deleteTimelinePost(id) {
@@ -816,7 +836,6 @@
             timelinePosts = timelinePosts.filter(p => p.id !== id);
             localStorage.setItem(timelineStorageKey, JSON.stringify(timelinePosts));
             updateAll();
-            syncToSupabase();
         }
     }
 
@@ -838,7 +857,6 @@
         nameInput.value = '';
         ytInput.value = '';
         updateAll();
-        syncToSupabase();
         renderRemovalList();
     }
 
@@ -871,7 +889,6 @@
             localStorage.setItem(storageKey, JSON.stringify(attendanceData));
 
             updateAll();
-            syncToSupabase();
             renderRemovalList();
         }
     }
@@ -886,6 +903,7 @@
             document.getElementById('managementPanel').style.display = 'block';
             document.getElementById('removalSection').style.display = 'block';
             document.getElementById('fbUploaderPanel').style.display = 'block';
+            document.getElementById('syncCloudBtn').style.display = 'inline-block'; // Show Explicit Upload Button
             document.getElementById('loginFormInputs').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'inline-block';
             
@@ -906,6 +924,7 @@
         document.getElementById('managementPanel').style.display = 'none';
         document.getElementById('removalSection').style.display = 'none';
         document.getElementById('fbUploaderPanel').style.display = 'none';
+        document.getElementById('syncCloudBtn').style.display = 'none'; // Hide Upload Button
         document.getElementById('loginFormInputs').style.display = 'block';
         document.getElementById('logoutBtn').style.display = 'none';
 
@@ -954,7 +973,7 @@
     function triggerImport() { document.getElementById('importFileInput').click(); }
 
     function uploadBackup(event) {
-        const file = event.target.files;
+        const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -974,7 +993,6 @@
                     alert("بیک اپ ٹائم لائن سمیت کامیابی سے بحال ہو گیا ہے۔");
                     updateAll();
                     renderRemovalList();
-                    syncToSupabase();
                 }
             } catch (err) { alert("فائل پڑھنے میں غلطی!"); }
         };
