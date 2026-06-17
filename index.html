@@ -249,6 +249,7 @@
         .login-portal h3 { margin-top: 0; color: var(--primary); font-size: 20px; }
         .login-input { padding: 8px; margin: 5px; border: 1px solid var(--primary); border-radius: 5px; font-size: 16px; width: 80%; max-width: 200px; text-align: center; }
         .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        .logout-btn-style { display:none; background:#b71c1c; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
         @media print {
             .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .three-dots-btn { display: none !important; }
@@ -348,7 +349,7 @@
 
     <div class="footer-tools">
         <button class="btn-tool" style="background:#311b92" onclick="window.print()">پرنٹ نکالیں</button>
-        <button class="btn-tool teacher-only-btn" style="background:var(--primary); display:none;" id="syncSupabaseBtn" onclick="syncAllToSupabase()">سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀</button>
+        <button class="btn-tool teacher-only-btn" style="background:var(--primary);" id="syncSupabaseBtn" onclick="syncAllToSupabase()">سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀</button>
         <button class="btn-tool teacher-only-btn" style="background:var(--present-clr)" id="importBtn" onclick="triggerImport()">ڈیٹا لوڈ کریں (Restore)</button>
         <button class="btn-tool teacher-only-btn" style="background:var(--primary)" id="exportBtn" onclick="downloadBackup()">بیک اپ (Backup)</button>
         <input type="file" id="importFileInput" style="display:none" onchange="uploadBackup(event)">
@@ -361,7 +362,7 @@
             <input type="password" id="pWord" class="login-input" placeholder="پاس ورد">
             <button class="login-submit" onclick="checkTeacherLogin()">لاگ ان</button>
         </div>
-        <button class="login-submit" id="logoutBtn" style="display:none; background:#b71c1c;" onclick="teacherLogout()">لاگ آؤٹ</button>
+        <button id="logoutBtn" class="logout-btn-style" onclick="teacherLogout()">لاگ آؤٹ</button>
     </div>
 </div>
 
@@ -388,8 +389,7 @@
 
     window.onload = async function() {
         if (!localStorage.getItem(storageKey)) {
-            const embeddedAttendance = {"2026-05-18":{"آذان فاروق":{"aS":"حاضر","aC":"status-btn present","lS":"نہیں سنایا","lC":"status-btn leave","w":"","wD":""}}};
-            localStorage.setItem(storageKey, JSON.stringify(embeddedAttendance));
+            localStorage.setItem(storageKey, JSON.stringify({}));
         }
         
         let today = new Date();
@@ -494,7 +494,7 @@
         let finalPlaylist = newPlaylist.trim();
         
         if (finalPlaylist.includes('list=')) {
-            finalPlaylist = finalPlaylist.split('list=').pop().split('&')[0];
+            finalPlaylist = finalPlaylist.split('list=').pop().split('&');
         }
 
         if (trimmedName !== oldName) {
@@ -529,7 +529,7 @@
 
         if(ytInput) {
             if(ytInput.includes('list=')) {
-                ytList = ytInput.split('list=').pop().split('&')[0];
+                ytList = ytInput.split('list=').pop().split('&');
             } else { ytList = ytInput; }
         }
 
@@ -607,7 +607,7 @@
 
     function formatMediaEmbed(url) {
         if (url.includes('youtube.com/watch') || url.includes('youtu.be')) {
-            let videoId = url.includes('v=') ? url.split('v=').pop().split('&')[0] : url.split('/').pop();
+            let videoId = url.includes('v=') ? url.split('v=').pop().split('&') : url.split('/').pop();
             return `<div class="fb-video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
         } else if (url.includes('drive.google.com')) {
             let embedUrl = url.replace('/view?usp=sharing', '/preview').replace('/view', '/preview');
@@ -709,49 +709,77 @@
         localStorage.setItem(storageKey, JSON.stringify(data));
     }
 
+    // الٹی میٹ اسمارٹ سنک تکنیک: اب ہمیں سپابیس کے کسی انڈیکس پر انحصار کرنے کی کوئی ضرورت نہیں!
     async function syncAllToSupabase() {
         if (!isTeacherMode) return;
         const btn = document.getElementById('syncSupabaseBtn');
         btn.innerText = "بھیجا جا رہا ہے... ⏳"; btn.disabled = true;
 
         let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        let recordsToUpsert = [];
+        let successCount = 0;
+        let failCount = 0;
 
-        for (let date in data) {
-            for (let name in data[date]) {
-                const r = data[date][name];
-                recordsToUpsert.push({
-                    date: date,
-                    student_name: name,
-                    attendance_status: r.aS || '---',
-                    attendance_class: r.aC || 'status-btn',
-                    lesson_status: r.lS || '---',
-                    lesson_class: r.lC || 'status-btn',
-                    quran_lesson: r.w || '',
-                    prayer_lesson: r.wD || ''
+        try {
+            // 1. پہلے سے موجود ڈیٹا بیس کا سارا ڈیٹا ایک بار پڑھ لیں تاکہ موازنہ کیا جا سکے
+            const { data: existingRecords, error: fetchError } = await _supabase
+                .from('attendance_records')
+                .select('id, date, student_name');
+
+            if (fetchError) throw fetchError;
+
+            // ایک نقشہ (Map) بنائیں گے تاکہ تلاش سیکنڈوں میں ہو
+            let recordMap = {};
+            if (existingRecords) {
+                existingRecords.forEach(r => {
+                    recordMap[`${r.date}_${r.student_name}`] = r.id;
                 });
             }
-        }
 
-        if (recordsToUpsert.length === 0) {
-            alert("بھیجنے کے لیے کوئی ریکارڈ نہیں ہے!");
-            btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀"; btn.disabled = false;
-            return;
-        }
+            // 2. ریکارڈز کو ایک ایک کر کے فکسڈ طریقے سے میچ کریں
+            for (let date in data) {
+                for (let name in data[date]) {
+                    const r = data[date][name];
+                    const rowKey = `${date}_${name}`;
+                    
+                    const payload = {
+                        date: date,
+                        student_name: name,
+                        attendance_status: r.aS || '---',
+                        attendance_class: r.aC || 'status-btn',
+                        lesson_status: r.lS || '---',
+                        lesson_class: r.lC || 'status-btn',
+                        quran_lesson: r.w || '',
+                        prayer_lesson: r.wD || ''
+                    };
 
-        // فائنل اپ گریڈ: سپابیس کے آفیشل SDK کو سادہ آبجیکٹ بھیجیں گے بغیر پیچیدہ ہیڈرز کے
-        try {
-            const { data: resData, error: resError } = await _supabase
-                .from('attendance_records')
-                .upsert(recordsToUpsert, { onConflict: 'date,student_name' });
+                    if (recordMap[rowKey]) {
+                        // اگر یہ ریکارڈ پہلے سے موجود ہے تو اس کی مخصوص ID کے ساتھ اپڈیٹ کریں
+                        const { error: updateError } = await _supabase
+                            .from('attendance_records')
+                            .update(payload)
+                            .eq('id', recordMap[rowKey]);
+                        
+                        if (updateError) failCount++; else successCount++;
+                    } else {
+                        // اگر بالکل نیا ریکارڈ ہے تو انسرٹ کریں
+                        const { error: insertError } = await _supabase
+                            .from('attendance_records')
+                            .insert([payload]);
+                        
+                        if (insertError) failCount++; else successCount++;
+                    }
+                }
+            }
 
-            if (resError) throw resError;
+            if (failCount === 0) {
+                alert(`الحمدللہ! سارا ریکارڈ کامیابی کے ساتھ آن لائن منتقل ہو گیا ہے۔ ✨`);
+            } else {
+                alert(`سلوٹ مکمل: ${successCount} ریکارڈز محفوظ ہوئے، جبکہ ${failCount} میں عارضی رکاوٹ آئی۔ بقایا دوبارہ سنک کریں۔`);
+            }
 
-            alert(`الحمدللہ! آپ کا سارا ریکارڈ سپابیس پر لائیو محفوظ ہو چکا ہے۔ ✨`);
         } catch (err) {
-            console.error("Supabase Sync Error Detailed:", err);
-            // موبائل پر اصل خرابی دکھانے کے لیے الرٹ میں سسٹم کا پیغام پاس کیا گیا ہے
-            alert("سپابیس سرور کی خرابی: " + (err.message || JSON.stringify(err)) + "\n\nاگر یہ ایرر برقرار رہے تو کالمز کے نام چیک کریں۔");
+            console.error("حتمی لوپ سنک خرابی:", err);
+            alert("سسٹم ایرر: " + (err.message || "نیٹ ورک یا سپابیس سیشن کا مسئلہ۔"));
         } finally {
             btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀";
             btn.disabled = false;
@@ -784,9 +812,11 @@
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
         a.download = 'rizwan_masjid_full_backup.txt'; a.click();
     }
+    
     function triggerImport() { document.getElementById('importFileInput').click(); }
+    
     function uploadBackup(event) {
-        const file = event.target.files[0];
+        const file = event.target.files;
         if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
