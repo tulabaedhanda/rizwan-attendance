@@ -1,11 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>آل ان ون رجسٹر - رضوان مسجد</title>
-    <!-- Supabase CDN JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
@@ -112,6 +110,21 @@
         
         .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; width: 40%; }
         
+        /* تھری ڈاٹ بٹن کا ڈیزائن */
+        .three-dots-btn {
+            display: none;
+            cursor: pointer;
+            color: #b38728;
+            font-weight: bold;
+            font-size: 20px;
+            padding: 0 8px;
+            user-select: none;
+            transition: color 0.2s;
+        }
+        .three-dots-btn:hover {
+            color: var(--primary);
+        }
+
         .status-btn { 
             width: 90px; padding: 6px 0; cursor: pointer; font-weight: bold; 
             border-radius: 6px; background: #eee; border: 1px solid #ccc; 
@@ -239,7 +252,7 @@
         .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
         @media print {
-            .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar { display: none !important; }
+            .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .three-dots-btn { display: none !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
@@ -358,7 +371,7 @@
     const SUPABASE_KEY = "sb_publishable_-cLr-36g9uX75Q4UnSJApQ_OO99EWZt";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام ابیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر"];
+    const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام امیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر"];
     const defaultVideoLists = ["PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn","PL3-aVTBoE-116okM9dzkndAI06ybp79lQ","PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI","PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx","PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645","PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_","PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv","PL3-aVTBoE-12kJ48mws_483lW2GPAseMg","PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD","PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379","PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf","PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD","PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV","PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G","PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_","PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ","PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_","PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT","PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9","PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS","PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q","PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv","PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP","PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf","PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV","PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H","PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD","PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ","PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf","PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m","PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8","PL3-aVTBoE-11-1UT-G817EP5co--NgjN9","PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp","PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m","PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo","PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE","PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q","PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz","PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto","PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m","PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs","PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb","PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy","PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR","PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A","PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP","PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N","PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6","PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E","PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj","PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv","PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"];
 
     const storageKey = 'rizwan_masjid_final_v3';
@@ -446,6 +459,10 @@
         document.getElementById('logoutBtn').style.display = "inline-block";
         document.getElementById('portalTitle').innerText = "🧔 ناصر علی (استاد)";
         document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'inline-block');
+        
+        // تھری ڈاٹ بٹن شو کرنا
+        document.querySelectorAll('.three-dots-btn').forEach(btn => btn.style.display = 'inline-block');
+        
         renderRemovalList();
         updateAll();
     }
@@ -461,6 +478,55 @@
         document.getElementById('logoutBtn').style.display = "none";
         document.getElementById('portalTitle').innerText = "🔐 استاد پورٹل لاگ ان";
         document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'none');
+        
+        // تھری ڈاٹ بٹن چھپانا
+        document.querySelectorAll('.three-dots-btn').forEach(btn => btn.style.display = 'none');
+        
+        updateAll();
+    }
+
+    // نام اور پلے لسٹ ایڈٹ کرنے کا فنکشن
+    function editStudentInfo(index) {
+        if (!isTeacherMode) return;
+        const oldName = names[index];
+        const oldPlaylist = videoLists[index] || "";
+
+        const newName = prompt(`طالب علم کا نیا نام لکھیں (تبدیلی نہ کرنی ہو تو ایسے ہی رہنے دیں):`, oldName);
+        if (newName === null) return; // Cancelled
+        const trimmedName = newName.trim();
+        if (!trimmedName) return alert("نام خالی نہیں ہو سکتا!");
+
+        const newPlaylist = prompt(`یوٹیوب پلے لسٹ آئی ڈی ایڈ کریں یا تبدیل کریں:`, oldPlaylist);
+        if (newPlaylist === null) return; // Cancelled
+        let finalPlaylist = newPlaylist.trim();
+        if (finalPlaylist.includes('list=')) {
+            finalPlaylist = finalPlaylist.split('list=').split('&');
+        }
+
+        // اگر نام تبدیل ہوا ہے تو پرانے لوکل ڈیٹا اور سپابیس کو بھی سنبھالیں
+        if (trimmedName !== oldName) {
+            if (names.includes(trimmedName)) return alert("یہ نام پہلے سے موجود ہے!");
+            
+            // لوکل اسٹوریج میں اٹینڈنس ریکارڈ اپڈیٹ کریں
+            let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            for (let date in data) {
+                if (data[date][oldName]) {
+                    data[date][trimmedName] = data[date][oldName];
+                    delete data[date][oldName];
+                }
+            }
+            localStorage.setItem(storageKey, JSON.stringify(data));
+            names[index] = trimmedName;
+        }
+
+        videoLists[index] = finalPlaylist || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
+
+        localStorage.setItem(namesStorageKey, JSON.stringify(names));
+        localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
+
+        alert("طالب علم کی معلومات کامیابی سے اپڈیٹ ہو گئی ہیں!");
+        populateStudentSelect();
+        renderRemovalList();
         updateAll();
     }
 
@@ -474,7 +540,7 @@
 
         if(ytInput) {
             if(ytInput.includes('list=')) {
-                ytList = ytInput.split('list=')[1].split('&')[0];
+                ytList = ytInput.split('list=').split('&');
             } else {
                 ytList = ytInput;
             }
@@ -575,7 +641,7 @@
 
         if (url.includes('youtube.com/watch') || url.includes('youtu.be')) {
             let videoId = '';
-            if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
+            if (url.includes('v=')) videoId = url.split('v=').split('&');
             else videoId = url.split('/').pop();
             return `<div class="fb-video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
         } else if (url.includes('drive.google.com')) {
@@ -649,8 +715,17 @@
             const clickA = `onclick="tglA(this,'${n}')"`;
             const clickL = `onclick="tglL(this,'${n}')"`;
             const disabledInput = isTeacherMode ? '' : 'disabled';
+            const dotDisplay = isTeacherMode ? 'inline-block' : 'none';
 
-            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><div class="${s.aC}" ${clickA}>${s.aS}</div></td></tr>`;
+            // حاضری ٹیبل میں نام کے ساتھ ۳ ڈاٹس (...) کا اضافہ
+            b1.innerHTML += `<tr>
+                <td>${i+1}</td>
+                <td class="student-name">
+                    ${n} 
+                    <span class="three-dots-btn" style="display: ${dotDisplay};" onclick="editStudentInfo(${i})">⁝</span>
+                </td>
+                <td><div class="${s.aC}" ${clickA}>${s.aS}</div></td>
+            </tr>`;
             
             lessCardsContainer.innerHTML += `
                 <div class="student-lesson-card">
@@ -777,7 +852,7 @@
     function triggerImport() { document.getElementById('importFileInput').click(); }
 
     function uploadBackup(event) {
-        const file = event.target.files[0];
+        const file = event.target.files;
         if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
