@@ -112,7 +112,7 @@
         .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; width: 40%; }
         
         .three-dots-btn {
-            display: none;
+            display: inline-block;
             cursor: pointer;
             color: #b38728;
             font-weight: bold;
@@ -129,6 +129,7 @@
             width: 90px; padding: 6px 0; cursor: pointer; font-weight: bold; 
             border-radius: 6px; background: #eee; border: 1px solid #ccc; 
             display: inline-block; text-align: center; font-size: 16px;
+            color: #333;
         }
         
         .present { background-color: var(--present-clr) !important; color: white !important; }
@@ -376,7 +377,6 @@
 </div>
 
 <script>
-    // Supabase Configuration Live Added
     const SUPABASE_URL = "https://pbczufuovargnvbcbnvs.supabase.co";
     const SUPABASE_KEY = "sb_publishable_-cLr-36g9uX75Q4UnSJApQ_OO99EWZt";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -398,7 +398,12 @@
     window.onload = function() {
         const todayStr = getTodayDateString();
         document.getElementById('mainDate').value = todayStr;
-        updateUrduDateDisplay(todayStr);
+        
+        // فوری طور پر ڈیفالٹ نام سکرین پر لوڈ کریں تاکہ بلینک نہ رہے
+        document.getElementById('totalStudentsCount').innerText = "تعداد: " + names.length;
+        updateAll();
+        
+        // اب بیک گراؤنڈ میں کلاؤڈ ڈیٹا کھینچیں
         fetchFromSupabase(); 
         openTab('dailyAtt');
     };
@@ -420,7 +425,6 @@
         document.getElementById('displayUrduDate').innerText = formatUrdu;
     }
 
-    // Cloud Data Syncing Logic via Explicit Button Click
     async function syncToSupabase() {
         const btn = document.getElementById('syncCloudBtn');
         const originalText = btn.innerText;
@@ -442,7 +446,7 @@
                 console.error("Supabase Sync Error:", error);
                 alert("ڈیٹا بھیجنے میں خرابی آئی ہے!");
             } else {
-                alert("مبارک ہو! تمام حاضری، سبق اور میڈیا ریکارڈ کلاؤڈ پر محفوظ ہو گیا ہے اور اب والدین لائیو دیکھ سکتے ہیں۔ ✨");
+                alert("مبارک ہو! تمام ریکارڈ کلاؤڈ پر محفوظ ہو گیا ہے۔ ✨");
             }
         } catch (e) {
             console.error("Cloud Connection Failed:", e);
@@ -463,7 +467,7 @@
             
             if (data && data.data) {
                 const cloudData = data.data;
-                if (cloudData.names) {
+                if (cloudData.names && cloudData.names.length > 0) {
                     names = cloudData.names;
                     localStorage.setItem(namesStorageKey, JSON.stringify(names));
                 }
@@ -491,24 +495,6 @@
         updateUrduDateDisplay(currentDate);
         document.getElementById('totalStudentsCount').innerText = "تعداد: " + names.length;
 
-        if (!attendanceData[currentDate]) {
-            attendanceData[currentDate] = names.map(() => ({
-                status: 'present',
-                surah: '',
-                ayat: '',
-                statusLesson: 'سنایا'
-            }));
-        } else if (attendanceData[currentDate].length < names.length) {
-            while (attendanceData[currentDate].length < names.length) {
-                attendanceData[currentDate].push({
-                    status: 'present',
-                    surah: '',
-                    ayat: '',
-                    statusLesson: 'سنایا'
-                });
-            }
-        }
-
         renderAttendanceTable(currentDate);
         renderLessonCards(currentDate);
         renderVideoTable();
@@ -521,10 +507,10 @@
     function renderAttendanceTable(dateStr) {
         const tbody = document.getElementById('attTableBody');
         tbody.innerHTML = '';
-        const dayData = attendanceData[dateStr];
+        const dayData = attendanceData[dateStr] || [];
 
         names.forEach((name, index) => {
-            const studentRecord = dayData[index] || { status: 'present' };
+            const studentRecord = dayData[index];
             const tr = document.createElement('tr');
 
             const tdNum = document.createElement('td');
@@ -538,17 +524,35 @@
 
             const tdStatus = document.createElement('td');
             const btn = document.createElement('button');
-            btn.className = `status-btn ${studentRecord.status}`;
             
-            if (studentRecord.status === 'present') btn.innerText = 'حاضر';
-            else if (studentRecord.status === 'absent') btn.innerText = 'غیر حاضر';
-            else btn.innerText = 'رخصت';
+            // اگر ڈیٹا بیس میں حاضری موجود ہے تو رنگ دکھائے ورنہ بٹن بالکل سادہ خالی رہے گا
+            if (studentRecord) {
+                btn.className = `status-btn ${studentRecord.status}`;
+                if (studentRecord.status === 'present') btn.innerText = 'حاضر';
+                else if (studentRecord.status === 'absent') btn.innerText = 'غیر حاضر';
+                else btn.innerText = 'رخصت';
+            } else {
+                btn.className = `status-btn`;
+                btn.innerText = '---';
+            }
 
             if (isTeacher) {
                 btn.onclick = function() {
-                    if (studentRecord.status === 'present') studentRecord.status = 'absent';
-                    else if (studentRecord.status === 'absent') studentRecord.status = 'leave';
-                    else studentRecord.status = 'present';
+                    // اگر اس تاریخ کا اریے موجود نہیں تو نیا بنائیں
+                    if (!attendanceData[dateStr]) {
+                        attendanceData[dateStr] = names.map(() => ({ status: '', surah: '', ayat: '', statusLesson: '' }));
+                    }
+                    
+                    let currentRec = attendanceData[dateStr][index];
+                    if(!currentRec) {
+                        currentRec = { status: '', surah: '', ayat: '', statusLesson: '' };
+                        attendanceData[dateStr][index] = currentRec;
+                    }
+
+                    if (!currentRec.status || currentRec.status === '') currentRec.status = 'present';
+                    else if (currentRec.status === 'present') currentRec.status = 'absent';
+                    else if (currentRec.status === 'absent') currentRec.status = 'leave';
+                    else currentRec.status = '';
                     
                     localStorage.setItem(storageKey, JSON.stringify(attendanceData));
                     updateAll();
@@ -557,11 +561,6 @@
             tdStatus.appendChild(btn);
             tr.appendChild(tdStatus);
             tbody.innerHTML += tr.outerHTML;
-        });
-
-        names.forEach((_, i) => {
-            const dots = document.getElementById(`dots-${i}`);
-            if(dots) dots.style.display = 'inline';
         });
     }
 
@@ -580,10 +579,10 @@
     function renderLessonCards(dateStr) {
         const container = document.getElementById('lessCardsContainer');
         container.innerHTML = '';
-        const dayData = attendanceData[dateStr];
+        const dayData = attendanceData[dateStr] || [];
 
         names.forEach((name, index) => {
-            const record = dayData[index];
+            const record = dayData[index] || { statusLesson: '', surah: '', ayat: '' };
             const card = document.createElement('div');
             card.className = 'student-lesson-card';
             card.id = `lesson-card-${index}`;
@@ -595,17 +594,31 @@
             const statusBtn = document.createElement('button');
             statusBtn.className = `status-btn`;
             statusBtn.style.width = '100px';
-            statusBtn.innerText = record.statusLesson || 'سنایا';
             
-            if(statusBtn.innerText === 'سنایا') statusBtn.classList.add('present');
-            else if(statusBtn.innerText === 'یاد نہیں') statusBtn.classList.add('absent');
-            else statusBtn.classList.add('leave');
+            if (record.statusLesson) {
+                statusBtn.innerText = record.statusLesson;
+                if(record.statusLesson === 'سنایا') statusBtn.classList.add('present');
+                else if(record.statusLesson === 'یاد نہیں') statusBtn.classList.add('absent');
+                else statusBtn.classList.add('leave');
+            } else {
+                statusBtn.innerText = '---';
+            }
 
             if (isTeacher) {
                 statusBtn.onclick = function() {
-                    if (record.statusLesson === 'سنایا') record.statusLesson = 'یاد نہیں';
-                    else if (record.statusLesson === 'یاد نہیں') record.statusLesson = 'نہیں سنایا';
-                    else record.statusLesson = 'سنایا';
+                    if (!attendanceData[dateStr]) {
+                        attendanceData[dateStr] = names.map(() => ({ status: '', surah: '', ayat: '', statusLesson: '' }));
+                    }
+                    if(!attendanceData[dateStr][index]) {
+                        attendanceData[dateStr][index] = { status: '', surah: '', ayat: '', statusLesson: '' };
+                    }
+                    
+                    let rec = attendanceData[dateStr][index];
+
+                    if (!rec.statusLesson || rec.statusLesson === '') rec.statusLesson = 'سنایا';
+                    else if (rec.statusLesson === 'سنایا') rec.statusLesson = 'یاد نہیں';
+                    else if (rec.statusLesson === 'یاد نہیں') rec.statusLesson = 'نہیں سنایا';
+                    else rec.statusLesson = '';
                     
                     localStorage.setItem(storageKey, JSON.stringify(attendanceData));
                     updateAll();
@@ -626,7 +639,9 @@
             if (!isTeacher) inpSurah.disabled = true;
             else {
                 inpSurah.onchange = function() {
-                    record.surah = inpSurah.value;
+                    if (!attendanceData[dateStr]) attendanceData[dateStr] = names.map(() => ({ status: '', surah: '', ayat: '', statusLesson: '' }));
+                    if (!attendanceData[dateStr][index]) attendanceData[dateStr][index] = { status: '', surah: '', ayat: '', statusLesson: '' };
+                    attendanceData[dateStr][index].surah = inpSurah.value;
                     localStorage.setItem(storageKey, JSON.stringify(attendanceData));
                 };
             }
@@ -641,7 +656,9 @@
             if (!isTeacher) inpAyat.disabled = true;
             else {
                 inpAyat.onchange = function() {
-                    record.ayat = inpAyat.value;
+                    if (!attendanceData[dateStr]) attendanceData[dateStr] = names.map(() => ({ status: '', surah: '', ayat: '', statusLesson: '' }));
+                    if (!attendanceData[dateStr][index]) attendanceData[dateStr][index] = { status: '', surah: '', ayat: '', statusLesson: '' };
+                    attendanceData[dateStr][index].ayat = inpAyat.value;
                     localStorage.setItem(storageKey, JSON.stringify(attendanceData));
                 };
             }
@@ -721,7 +738,7 @@
             let goodCount = 0, badCount = 0, skipCount = 0;
             for (let date in attendanceData) {
                 if (date.startsWith(currentMonth) && attendanceData[date][index]) {
-                    const lst = attendanceData[date][index].statusLesson || 'سنایا';
+                    const lst = attendanceData[date][index].statusLesson;
                     if (lst === 'سنایا') goodCount++;
                     else if (lst === 'یاد نہیں') badCount++;
                     else if (lst === 'نہیں سنایا') skipCount++;
@@ -903,7 +920,7 @@
             document.getElementById('managementPanel').style.display = 'block';
             document.getElementById('removalSection').style.display = 'block';
             document.getElementById('fbUploaderPanel').style.display = 'block';
-            document.getElementById('syncCloudBtn').style.display = 'inline-block'; // Show Explicit Upload Button
+            document.getElementById('syncCloudBtn').style.display = 'inline-block';
             document.getElementById('loginFormInputs').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'inline-block';
             
@@ -924,7 +941,7 @@
         document.getElementById('managementPanel').style.display = 'none';
         document.getElementById('removalSection').style.display = 'none';
         document.getElementById('fbUploaderPanel').style.display = 'none';
-        document.getElementById('syncCloudBtn').style.display = 'none'; // Hide Upload Button
+        document.getElementById('syncCloudBtn').style.display = 'none';
         document.getElementById('loginFormInputs').style.display = 'block';
         document.getElementById('logoutBtn').style.display = 'none';
 
