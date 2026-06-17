@@ -28,15 +28,15 @@
 
         .container { 
             max-width: 100%; margin: auto; 
-            background: rgba(255, 250, 235, 0.92); 
-            backdrop-filter: blur(15px) saturate(180%);
-            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            background: rgba(255, 250, 230, 0.80); 
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
             padding: 15px; border-radius: 20px; 
-            border: 6px solid transparent;
+            border: 5px solid transparent;
             border-image: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c) 1;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 
-                        0 0 25px rgba(218, 165, 32, 0.5), 
-                        inset 0 0 20px rgba(255, 215, 0, 0.25);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 
+                        0 0 20px rgba(218, 165, 32, 0.4), 
+                        inset 0 0 20px rgba(255, 215, 0, 0.3);
         }
 
         .header-section { text-align: center; margin: -15px -15px 20px -15px; position: relative; }
@@ -104,18 +104,9 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.9); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        th { padding: 10px 5px; border: 1px solid #e0d8c8; text-align: center; font-size: 18px; background-color: var(--primary); color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        
-        /* امام حسین رجسٹر والا خوبصورت ہاف وائٹ / لائٹ امبر رنگ ٹیبل کے خانوں کیلئے */
-        td { 
-            padding: 10px 5px; 
-            border: 1px solid #e0d8c8; 
-            text-align: center; 
-            font-size: 18px; 
-            background-color: #fdfbf7 !important; 
-            color: #000000;
-        }
+        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.85); border-radius: 10px; overflow: hidden; }
+        th, td { padding: 10px 5px; border: 1px solid #ddd; text-align: center; font-size: 18px; }
+        th { background-color: var(--primary); color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         
         .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; width: 40%; }
         
@@ -146,14 +137,14 @@
         .report-count { font-weight: 900; font-family: Arial, sans-serif !important; font-size: 24px; }
 
         .student-lesson-card {
-            background: rgba(255, 255, 255, 0.92); border: 2px solid #b38728; border-radius: 12px;
-            padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.85); border: 2px solid #b38728; border-radius: 12px;
+            padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .lesson-row-container {
             display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px;
         }
         .lesson-inputs-holder {
-            display: flex; flex-direction: column; gap: 5px; width: 100%; margin-top: 5px; border-top: 1px dashed #e0d8c8; padding-top: 5px;
+            display: flex; flex-direction: column; gap: 5px; width: 100%; margin-top: 5px; border-top: 1px dashed #ccc; padding-top: 5px;
         }
         .lesson-box-label {
             font-size: 14px; color: #4B0082; font-weight: bold; text-align: right; margin-top: 2px;
@@ -167,7 +158,7 @@
         }
 
         .fb-uploader-card {
-            background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .fb-uploader-card select, .fb-uploader-card input {
             width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box;
@@ -176,7 +167,7 @@
             display: flex; flex-direction: column; gap: 20px; max-height: 700px; overflow-y: auto; padding: 5px;
         }
         .fb-post-card {
-            background: rgba(255, 255, 255, 0.95); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: right; position: relative;
+            background: rgba(255, 255, 255, 0.9); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: right; position: relative;
         }
         .fb-post-header {
             display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 12px;
@@ -377,7 +368,7 @@
 
 <script>
     const SUPABASE_URL = "https://pbczufuovargnvbcbnvs.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiY3p1ZnVvdmFyZ252YmNibnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE6MzIyOTIsImV4cCI6MjA5NzIwODI5Mn0.1MIN7MZXc4rCvXyhoZ0j5B-nkbqly1UgtGnOfknmNUo";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiY3p1ZnVvdmFyZ252YmNibnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzIyOTIsImV4cCI6MjA5NzIwODI5Mn0.1MIN7MZXc4rCvXyhoZ0j5B-nkbqly1UgtGnOfknmNUo";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام امیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر"];
@@ -718,6 +709,7 @@
         localStorage.setItem(storageKey, JSON.stringify(data));
     }
 
+    // الٹی میٹ اسمارٹ سنک تکنیک: اب ہمیں سپابیس کے کسی انڈیکس پر انحصار کرنے کی کوئی ضرورت نہیں!
     async function syncAllToSupabase() {
         if (!isTeacherMode) return;
         const btn = document.getElementById('syncSupabaseBtn');
@@ -728,11 +720,14 @@
         let failCount = 0;
 
         try {
+            // 1. پہلے سے موجود ڈیٹا بیس کا سارا ڈیٹا ایک بار پڑھ لیں تاکہ موازنہ کیا جا سکے
             const { data: existingRecords, error: fetchError } = await _supabase
-                .from('attendance_records').select('id, date, student_name');
+                .from('attendance_records')
+                .select('id, date, student_name');
 
             if (fetchError) throw fetchError;
 
+            // ایک نقشہ (Map) بنائیں گے تاکہ تلاش سیکنڈوں میں ہو
             let recordMap = {};
             if (existingRecords) {
                 existingRecords.forEach(r => {
@@ -740,6 +735,7 @@
                 });
             }
 
+            // 2. ریکارڈز کو ایک ایک کر کے فکسڈ طریقے سے میچ کریں
             for (let date in data) {
                 for (let name in data[date]) {
                     const r = data[date][name];
@@ -757,13 +753,18 @@
                     };
 
                     if (recordMap[rowKey]) {
+                        // اگر یہ ریکارڈ پہلے سے موجود ہے تو اس کی مخصوص ID کے ساتھ اپڈیٹ کریں
                         const { error: updateError } = await _supabase
-                            .from('attendance_records').update(payload).eq('id', recordMap[rowKey]);
+                            .from('attendance_records')
+                            .update(payload)
+                            .eq('id', recordMap[rowKey]);
                         
                         if (updateError) failCount++; else successCount++;
                     } else {
+                        // اگر بالکل نیا ریکارڈ ہے تو انسرٹ کریں
                         const { error: insertError } = await _supabase
-                            .from('attendance_records').insert([payload]);
+                            .from('attendance_records')
+                            .insert([payload]);
                         
                         if (insertError) failCount++; else successCount++;
                     }
@@ -778,7 +779,7 @@
 
         } catch (err) {
             console.error("حتمی لوپ سنک خرابی:", err);
-            alert("سسٹم ایرر: " + (err.message || "نیٹ ورک یا samples سیشن کا مسئلہ۔"));
+            alert("سسٹم ایرر: " + (err.message || "نیٹ ورک یا سپابیس سیشن کا مسئلہ۔"));
         } finally {
             btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀";
             btn.disabled = false;
