@@ -295,7 +295,7 @@
 
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
             <div></div>
-            <div style="color:var(--primary); font-weight:bold; font-size:18px;" id="totalStudentsCount">تعداد: 53</div>
+            <div style="color:var(--primary); font-weight:bold; font-size:18px;" id="totalStudentsCount">تعداد: لوڈ ہو رہا ہے...</div>
         </div>
         <table>
             <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>حاضری</th></tr></thead>
@@ -349,10 +349,8 @@
 
     <div class="footer-tools">
         <button class="btn-tool" style="background:#311b92" onclick="window.print()">پرنٹ نکالیں</button>
-        <button class="btn-tool teacher-only-btn" style="background:var(--primary);" id="syncSupabaseBtn" onclick="syncAllToSupabase()">سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀</button>
-        <button class="btn-tool teacher-only-btn" style="background:var(--present-clr)" id="importBtn" onclick="triggerImport()">ڈیٹا لوڈ کریں (Restore)</button>
-        <button class="btn-tool teacher-only-btn" style="background:var(--primary)" id="exportBtn" onclick="downloadBackup()">بیک اپ (Backup)</button>
-        <input type="file" id="importFileInput" style="display:none" onchange="uploadBackup(event)">
+        <button class="btn-tool teacher-only-btn" id="syncSupabaseBtn" onclick="forceFullSync()">سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀</button>
+        <button class="btn-tool teacher-only-btn" style="background:var(--present-clr)" id="exportBtn" onclick="downloadBackup()">بیک اپ (Backup)</button>
     </div>
 
     <div class="login-portal" id="loginPortalSection">
@@ -371,50 +369,48 @@
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiY3p1ZnVvdmFyZ252YmNibnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzIyOTIsImV4cCI6MjA5NzIwODI5Mn0.1MIN7MZXc4rCvXyhoZ0j5B-nkbqly1UgtGnOfknmNUo";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام امیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر","احسن علی","عادل اخلاص","شہیر جیلانی","ولید جیلانی","عبدالرافع جیلانی","محمد اقرار","محمد آریان","محمد ارسلان","محمد عبیداللہ","حرم فاطمہ","حناء بی بی"];
-                          
-    const defaultVideoLists = ["PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn","PL3-aVTBoE-116okM9dzkndAI06ybp79lQ","PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI","PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx","PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645","PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_","PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv","PL3-aVTBoE-12kJ48mws_483lW2GPAseMg","PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD","PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379","PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf","PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD","PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV","PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G","PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_","PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ","PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_","PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT","PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9","PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS","PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q","PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv","PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP","PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf","PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV","PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H","PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD","PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ","PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf","PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m","PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8","PL3-aVTBoE-11-1UT-G817EP5co--NgjN9","PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp","PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m","PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo","PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE","PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q","PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz","PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto","PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m","PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs","PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb","PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy","PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR","PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A","PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP","PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N","PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6","PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E","PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj","PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv","PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F"];
+    const defaultNames = ["آذان فاروق","ابراہیم رفعت","ابراہیم طاہر","اسماعیل رفعت","اسماعیل مشتاق","ام امیہا","انتشال زہراء","ایشال زہراء","ایمان فاروق","ایمان نیاز","ثانیہ امیر","جنت فاطمہ","حسن عمران","حسن نواز","حسین نواز","حمیر مرتضی","حنظلہ دلدار","ذکاء اللّٰه","رفیع الدین","ریحان نثار","زرمینہ بی بی","سائرہ سخاوت","سمیع مصطفى","شعیب نثار","صائم حفیظ","صائم سلیم","صالحہ بی بی","صالقہ بی بی","صفی الدین","عبد الاحد","عبد الرافع","عبداللّٰه سخاوت","عتیق الرحمن","عثمان امیر","علی رضا","غلام مصطفی","کشف دلدار","کمیل حیدر","محمد اویس","محمد سالار","محمد شاہزیب","محمد شہروز","محمد علی","محمد علیان","مریم بی بی","وہاب شعیب","حسن سجاد","آمنہ نور","علیزہ سخاوت","شاہ زین","حیدر علی","محمد سبحان","کیف نذیر", "احسن علی", "عادل اخلاص", "شہیر جیلانی", "ولید جیلانی", "عبدالرافع جیلانی", "محمد اقرار", "محمد آریان", "محمد ارسلان", "محمد عبیداللہ", "حرم فاطمہ", "حناء بی بی"];
+    const defaultVideoLists = ["PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-11I-dxV6o1UXwgIFPRXkEXn","PL3-aVTBoE-116okM9dzkndAI06ybp79lQ","PL3-aVTBoE-132ZMX-mk5vTVXfJGm7ZpCI","PL3-aVTBoE-13HbeQDta-WgN6UCMtDaXnx","PL3-aVTBoE-13S8S7Z42-9e52w7Ks4Y645","PL3-aVTBoE-10LOF3wH29nVJy_z_ZcTT-_","PL3-aVTBoE-10uMiKkEpxdf_wO-cpExXQv","PL3-aVTBoE-12kJ48mws_483lW2GPAseMg","PL3-aVTBoE-12cZWNYrBxXNDoxFpx4XbTD","PL3-aVTBoE-12LFhwrxVAgCOMOlVZRK379","PL3-aVTBoE-12bjR2eUArJPDqbS2vkZBQf","PL3-aVTBoE-11QvZDF-_jwI_yOq2vQNtnD","PL3-aVTBoE-13JVsu7728Jxzbj2katGkdV","PL3-aVTBoE-13auyD56OpAAIjrY5L_1f_G","PL3-aVTBoE-1049tZW2AzOraW4XmbhlNO_","PL3-aVTBoE-10PHAdbSqQW8MP_nFdMEkJZ","PL3-aVTBoE-13CpELdAA_26ClCnxoyTIJ_","PL3-aVTBoE-10q3jlNdQ4KztV9I5zvuCKT","PL3-aVTBoE-124jrdE48SzAf6GHc3sq4q9","PL3-aVTBoE-11y3dD7JFN6HJc_An8x9XVS","PL3-aVTBoE-10vAnRBbMXvsI9DAZArW3_Q","PL3-aVTBoE-13f_pq-gSKiY1_G5BXb_tPv","PL3-aVTBoE-12TNBoA1oTPgXi7jhAXyEtP","PL3-aVTBoE-10DpwBhDu5oJpxfFUcdX5tf","PL3-aVTBoE-13qsm1We9aL2JI_OkhzBtFV","PL3-aVTBoE-12qMK71AmhM_zlurqw9a37H","PL3-aVTBoE-11ZeN0ePZB83u-91eUO4wnD","PL3-aVTBoE-104y5ypg7AfE85ty-E3rfNQ","PL3-aVTBoE-13R_W3iVSrbxeL7hgt_Xbrf","PL3-aVTBoE-106x49EWkOZdGO7GmfIFk5m","PL3-aVTBoE-11KB4p4adPbjue1ZZh3j2L8","PL3-aVTBoE-11-1UT-G817EP5co--NgjN9","PL3-aVTBoE-13s6Ur9_EdVM7E_VI5G8lAp","PL3-aVTBoE-12pU_-rD23ounV_3c0_Ee9m","PL3-aVTBoE-13fmrnqw7XfRPGkJ3EC-nCo","PL3-aVTBoE-136WqvkP5K4axIxTk8wTSlE","PL3-aVTBoE-127YnIL_VJJyoHixG83Ao2Q","PL3-aVTBoE-12Zd0QYZL7WE0IHEsWixybz","PL3-aVTBoE-11P74NvbqUHVU9rHyfq2Xto","PL3-aVTBoE-12jZPvqa72fmdRChwzEwL2m","PL3-aVTBoE-13Gr62Q9sQPHnbXTcCRtZAs","PL3-aVTBoE-11jjDAg9VmTLpPBSXosoEHb","PL3-aVTBoE-11GP0Evq-iWJJFFSkJ55JNy","PL3-aVTBoE-12DMJM8l37V5cKyVY2hU_KR","PL3-aVTBoE-12olv_OVrzovITzUtYTeV6A","PL3-aVTBoE-11nwdciLCM0jxjY1rrlAplP","PL3-aVTBoE-11adfI9GmkLvzYRSAhrMp1N","PL3-aVTBoE-11HdKsPMwQItjKclBnpWpL6","PL3-aVTBoE-13KqmIV5TuSiqywa7K_eV7E","PL3-aVTBoE-12G-gdeOlMehOIYJLV_dFfj","PL3-aVTBoE-10awhIYlCl1iJR5oxraUpTv","PL3-aVTBoE-12mg-Ux_l22Z9zgmInU4q-F","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq","PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq"];
 
-    const storageKey = 'rizwan_masjid_final_v3';
-    const namesStorageKey = 'rizwan_masjid_names';
-    const videoStorageKey = 'rizwan_masjid_videos';
-    const timelineStorageKey = 'rizwan_masjid_timeline_posts';
-
-    let names = JSON.parse(localStorage.getItem(namesStorageKey)) || defaultNames;
-    let videoLists = JSON.parse(localStorage.getItem(videoStorageKey)) || defaultVideoLists;
-    let timelinePosts = JSON.parse(localStorage.getItem(timelineStorageKey)) || [];
+    let names = [...defaultNames];
+    let videoLists = [...defaultVideoLists];
+    let timelinePosts = [];
+    let globalData = {}; 
     let isTeacherMode = false;
 
     const urduMonths = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
     const urduDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
 
     window.onload = async function() {
-        if (!localStorage.getItem(storageKey)) {
-            localStorage.setItem(storageKey, JSON.stringify({}));
-        }
-        
         let today = new Date();
         let yyyy = today.getFullYear();
         let mm = String(today.getMonth() + 1).padStart(2, '0');
         let dd = String(today.getDate()).padStart(2, '0');
         document.getElementById('mainDate').value = `${yyyy}-${mm}-${dd}`;
         
-        if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
-            activateTeacherMode();
-        }
-        populateStudentSelect();
+        if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') { activateTeacherMode(); }
+        
         await fetchSupabaseData();
     };
 
     async function fetchSupabaseData() {
         try {
+            const { data: settingsData } = await _supabase.from('masjid_settings').select('*').eq('id', 1).single();
+            if (settingsData) {
+                if(settingsData.names) names = JSON.parse(settingsData.names);
+                if(settingsData.videos) videoLists = JSON.parse(settingsData.videos);
+                if(settingsData.timeline) timelinePosts = JSON.parse(settingsData.timeline);
+            } else {
+                await syncSettingsToSupabase(); 
+            }
+
             const { data, error } = await _supabase.from('attendance_records').select('*');
             if (error) throw error;
             if (data && data.length > 0) {
-                let localData = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                globalData = {};
                 data.forEach(row => {
-                    if (!localData[row.date]) localData[row.date] = {};
-                    localData[row.date][row.student_name] = {
+                    if (!globalData[row.date]) globalData[row.date] = {};
+                    globalData[row.date][row.student_name] = {
                         aS: row.attendance_status || '---',
                         aC: row.attendance_class || 'status-btn',
                         lS: row.lesson_status || '---',
@@ -423,12 +419,22 @@
                         wD: row.prayer_lesson || ''
                     };
                 });
-                localStorage.setItem(storageKey, JSON.stringify(localData));
             }
+            populateStudentSelect();
+            if(isTeacherMode) renderRemovalList();
             updateAll();
         } catch (err) {
             console.error("Supabase ڈیٹا لوڈنگ ایرر:", err);
+            populateStudentSelect();
             updateAll();
+        }
+    }
+
+    async function syncSettingsToSupabase() {
+        const payload = { id: 1, names: JSON.stringify(names), videos: JSON.stringify(videoLists), timeline: JSON.stringify(timelinePosts) };
+        const { data } = await _supabase.from('masjid_settings').update(payload).eq('id', 1).select();
+        if(!data || data.length === 0) {
+            await _supabase.from('masjid_settings').insert([payload]);
         }
     }
 
@@ -480,7 +486,7 @@
         updateAll();
     }
 
-    function editStudentInfo(index) {
+    async function editStudentInfo(index) {
         if (!isTeacherMode) return;
         const oldName = names[index];
         const oldPlaylist = videoLists[index] || "";
@@ -494,33 +500,30 @@
         if (newPlaylist === null) return;
         let finalPlaylist = newPlaylist.trim();
         
-        if (finalPlaylist.includes('list=')) {
-            finalPlaylist = finalPlaylist.split('list=').pop().split('&');
-        }
+        if (finalPlaylist.includes('list=')) { finalPlaylist = finalPlaylist.split('list=').pop().split('&'); }
 
         if (trimmedName !== oldName) {
             if (names.includes(trimmedName)) return alert("یہ نام پہلے سے موجود ہے!");
-            let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-            for (let date in data) {
-                if (data[date][oldName]) {
-                    data[date][trimmedName] = data[date][oldName];
-                    delete data[date][oldName];
+            for (let date in globalData) {
+                if (globalData[date][oldName]) {
+                    globalData[date][trimmedName] = globalData[date][oldName];
+                    delete globalData[date][oldName];
+                    await _supabase.from('attendance_records').delete().eq('date', date).eq('student_name', oldName);
+                    await saveAndSyncRecord(trimmedName, null, null, null, date); 
                 }
             }
-            localStorage.setItem(storageKey, JSON.stringify(data));
             names[index] = trimmedName;
         }
 
         videoLists[index] = finalPlaylist || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
-        localStorage.setItem(namesStorageKey, JSON.stringify(names));
-        localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
-
+        await syncSettingsToSupabase();
+        
         populateStudentSelect();
         renderRemovalList();
         updateAll();
     }
 
-    function addStudent() {
+    async function addStudent() {
         const name = document.getElementById('newStudentName').value.trim();
         let ytInput = document.getElementById('newStudentYT').value.trim();
         let ytList = "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
@@ -529,15 +532,14 @@
         if(names.includes(name)) return alert("یہ نام پہلے سے موجود ہے!");
 
         if(ytInput) {
-            if(ytInput.includes('list=')) {
-                ytList = ytInput.split('list=').pop().split('&');
-            } else { ytList = ytInput; }
+            if(ytInput.includes('list=')) { ytList = ytInput.split('list=').pop().split('&'); } 
+            else { ytList = ytInput; }
         }
 
         names.push(name);
         videoLists.push(ytList);
-        localStorage.setItem(namesStorageKey, JSON.stringify(names));
-        localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
+        await syncSettingsToSupabase();
+        
         document.getElementById('newStudentName').value = "";
         document.getElementById('newStudentYT').value = "";
         populateStudentSelect();
@@ -545,13 +547,12 @@
         updateAll();
     }
 
-    function deleteStudent(index) {
+    async function deleteStudent(index) {
         const nameToRemove = names[index];
         if(!confirm(`کیا آپ واقعی ${nameToRemove} کو خارج کرنا چاہتے ہیں؟`)) return;
         names.splice(index, 1);
         videoLists.splice(index, 1);
-        localStorage.setItem(namesStorageKey, JSON.stringify(names));
-        localStorage.setItem(videoStorageKey, JSON.stringify(videoLists));
+        await syncSettingsToSupabase();
         populateStudentSelect();
         renderRemovalList();
         updateAll();
@@ -584,7 +585,7 @@
         if(id.includes('Report')) loadReports();
     }
 
-    function addTimelinePost() {
+    async function addTimelinePost() {
         const student = document.getElementById('mediaStudentSelect').value;
         const title = document.getElementById('mediaTitleInput').value.trim();
         let url = document.getElementById('mediaUrlInput').value.trim();
@@ -593,16 +594,17 @@
 
         if(!title || !url) return alert("براہ کرم لنک فراہم کریں!");
         timelinePosts.unshift({ student, title, url, date: formattedCurrentUrduDate });
-        localStorage.setItem(timelineStorageKey, JSON.stringify(timelinePosts));
+        await syncSettingsToSupabase();
+        
         document.getElementById('mediaTitleInput').value = '';
         document.getElementById('mediaUrlInput').value = '';
         renderTimeline();
     }
 
-    function deleteTimelinePost(idx) {
+    async function deleteTimelinePost(idx) {
         if(!confirm("حذف کریں؟")) return;
         timelinePosts.splice(idx, 1);
-        localStorage.setItem(timelineStorageKey, JSON.stringify(timelinePosts));
+        await syncSettingsToSupabase();
         renderTimeline();
     }
 
@@ -636,6 +638,16 @@
         });
     }
 
+    function getLatestLesson(targetDate, name, type) {
+        let dates = Object.keys(globalData).sort((a, b) => b.localeCompare(a));
+        for(let d of dates) {
+            if (d < targetDate && globalData[d][name] && globalData[d][name][type]) {
+                return globalData[d][name][type];
+            }
+        }
+        return '';
+    }
+
     function updateAll() {
         const date = document.getElementById('mainDate').value;
         if(!date) return;
@@ -643,20 +655,31 @@
         document.getElementById('displayUrduDate').innerText = `${urduDays[dObj.getDay()]}، ${dObj.getDate()} ${urduMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
         document.getElementById('totalStudentsCount').innerText = `تعداد: ${names.length}`;
 
-        const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        const dayData = data[date] || {};
+        const dayData = globalData[date] || {};
         const b1 = document.getElementById('attTableBody'), b4 = document.getElementById('videoTableBody'), lessCardsContainer = document.getElementById('lessCardsContainer');
         b1.innerHTML = ''; b4.innerHTML = ''; lessCardsContainer.innerHTML = '';
 
         names.forEach((n, i) => {
-            const s = dayData[n] || { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '', wD: '' };
+            let s = dayData[n];
+            let currentW = '', currentWD = '';
+            
+            if (s) {
+                currentW = s.w || '';
+                currentWD = s.wD || '';
+            } else {
+                s = { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '', wD: '' };
+            }
+
+            if (!currentW) currentW = getLatestLesson(date, n, 'w');
+            if (!currentWD) currentWD = getLatestLesson(date, n, 'wD');
+
             b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n} <span class="three-dots-btn" style="display:${isTeacherMode?'inline-block':'none'}" onclick="editStudentInfo(${i})">⁝</span></td><td><div class="${s.aC}" onclick="tglA(this,'${n}')">${s.aS}</div></td></tr>`;
             lessCardsContainer.innerHTML += `
                 <div class="student-lesson-card">
                     <div class="lesson-row-container"><span>${i+1}. ${n}</span><div class="${s.lC}" onclick="tglL(this,'${n}')">${s.lS}</div></div>
                     <div class="lesson-inputs-holder">
-                        <input type="text" class="diary-input" value="${s.w || ''}" ${isTeacherMode?'':'disabled'} onchange="saveW('${n}',this.value)" placeholder="قرآن کا سبق...">
-                        <input type="text" class="diary-input" value="${s.wD || ''}" ${isTeacherMode?'':'disabled'} onchange="saveWD('${n}',this.value)" placeholder="دعا / نماز...">
+                        <input type="text" class="diary-input" value="${currentW}" ${isTeacherMode?'':'disabled'} onchange="saveW('${n}',this.value)" placeholder="قرآن کا سبق...">
+                        <input type="text" class="diary-input" value="${currentWD}" ${isTeacherMode?'':'disabled'} onchange="saveWD('${n}',this.value)" placeholder="دعا / نماز...">
                     </div>
                 </div>`;
             b4.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><button class="video-btn" onclick="toggleVideo(${i})">ویڈیوز</button></td></tr><tr id="videoRow-${i}" class="video-container"><td colspan="3"><div id="videoArea-${i}"></div></td></tr>`;
@@ -682,7 +705,7 @@
         else if(el.innerText==="حاضر"){s="غیر حاضر"; c="status-btn absent";}
         else if(el.innerText==="غیر حاضر"){s="رخصت"; c="status-btn leave";}
         else {s="---"; c="status-btn";}
-        el.innerText=s; el.className=c; saveLocalOnly(name,'aS',s,c);
+        el.innerText=s; el.className=c; saveAndSyncRecord(name,'aS',s,c);
     }
 
     function tglL(el, name) {
@@ -692,112 +715,95 @@
         else if(el.innerText==="سنایا"){s="یاد نہیں"; c="status-btn absent";}
         else if(el.innerText==="یاد نہیں"){s="نہیں سنایا"; c="status-btn leave";}
         else {s="---"; c="status-btn";}
-        el.innerText=s; el.className=c; saveLocalOnly(name,'lS',s,c);
+        el.innerText=s; el.className=c; saveAndSyncRecord(name,'lS',s,c);
     }
 
-    function saveW(name, v) { saveLocalOnly(name, 'w', v); }
-    function saveWD(name, v) { saveLocalOnly(name, 'wD', v); }
+    function saveW(name, v) { saveAndSyncRecord(name, 'w', v); }
+    function saveWD(name, v) { saveAndSyncRecord(name, 'wD', v); }
 
-    function saveLocalOnly(name, k, v, c) {
-        const d = document.getElementById('mainDate').value;
-        let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        if(!data[d]) data[d] = {};
-        if(!data[d][name]) data[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:'', wD:''};
-        if(k==='aS'){ data[d][name].aS=v; data[d][name].aC=c; }
-        else if(k==='lS'){ data[d][name].lS=v; data[d][name].lC=c; }
-        else if(k==='w'){ data[d][name].w=v; }
-        else if(k==='wD'){ data[d][name].wD=v; }
-        localStorage.setItem(storageKey, JSON.stringify(data));
+    async function saveAndSyncRecord(name, k, v, c, forceDate = null) {
+        const d = forceDate || document.getElementById('mainDate').value;
+        
+        if(!globalData[d]) globalData[d] = {};
+        if(!globalData[d][name]) globalData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:'', wD:''};
+        
+        if(k==='aS'){ globalData[d][name].aS=v; globalData[d][name].aC=c; }
+        else if(k==='lS'){ globalData[d][name].lS=v; globalData[d][name].lC=c; }
+        else if(k==='w'){ globalData[d][name].w=v; }
+        else if(k==='wD'){ globalData[d][name].wD=v; }
+
+        const r = globalData[d][name];
+        const payload = {
+            date: d,
+            student_name: name,
+            attendance_status: r.aS,
+            attendance_class: r.aC,
+            lesson_status: r.lS,
+            lesson_class: r.lC,
+            quran_lesson: r.w,
+            prayer_lesson: r.wD
+        };
+
+        const { data, error } = await _supabase
+            .from('attendance_records')
+            .update(payload)
+            .eq('date', d)
+            .eq('student_name', name)
+            .select();
+            
+        if (!data || data.length === 0) {
+            await _supabase.from('attendance_records').insert([payload]);
+        }
     }
 
-    // الٹی میٹ اسمارٹ سنک تکنیک: اب ہمیں سپابیس کے کسی انڈیکس پر انحصار کرنے کی کوئی ضرورت نہیں!
-    async function syncAllToSupabase() {
+    // نیا سنک فنکشن (جو غلطی سے ایچ ٹی ایم ایل میں تھا)
+    async function forceFullSync() {
         if (!isTeacherMode) return;
         const btn = document.getElementById('syncSupabaseBtn');
-        btn.innerText = "بھیجا جا رہا ہے... ⏳"; btn.disabled = true;
-
-        let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        let successCount = 0;
-        let failCount = 0;
+        if(btn) {
+            btn.innerText = "اپ لوڈ ہو رہا ہے... ⏳"; 
+            btn.disabled = true;
+        }
 
         try {
-            // 1. پہلے سے موجود ڈیٹا بیس کا سارا ڈیٹا ایک بار پڑھ لیں تاکہ موازنہ کیا جا سکے
-            const { data: existingRecords, error: fetchError } = await _supabase
-                .from('attendance_records')
-                .select('id, date, student_name');
-
-            if (fetchError) throw fetchError;
-
-            // ایک نقشہ (Map) بنائیں گے تاکہ تلاش سیکنڈوں میں ہو
-            let recordMap = {};
-            if (existingRecords) {
-                existingRecords.forEach(r => {
-                    recordMap[`${r.date}_${r.student_name}`] = r.id;
-                });
-            }
-
-            // 2. ریکارڈز کو ایک ایک کر کے فکسڈ طریقے سے میچ کریں
-            for (let date in data) {
-                for (let name in data[date]) {
-                    const r = data[date][name];
-                    const rowKey = `${date}_${name}`;
+            for (const date in globalData) {
+                for (const student in globalData[date]) {
+                    const r = globalData[date][student];
                     
-                    const payload = {
+                    await _supabase.from('attendance_records').upsert({
                         date: date,
-                        student_name: name,
-                        attendance_status: r.aS || '---',
-                        attendance_class: r.aC || 'status-btn',
-                        lesson_status: r.lS || '---',
-                        lesson_class: r.lC || 'status-btn',
-                        quran_lesson: r.w || '',
-                        prayer_lesson: r.wD || ''
-                    };
-
-                    if (recordMap[rowKey]) {
-                        // اگر یہ ریکارڈ پہلے سے موجود ہے تو اس کی مخصوص ID کے ساتھ اپڈیٹ کریں
-                        const { error: updateError } = await _supabase
-                            .from('attendance_records')
-                            .update(payload)
-                            .eq('id', recordMap[rowKey]);
-                        
-                        if (updateError) failCount++; else successCount++;
-                    } else {
-                        // اگر بالکل نیا ریکارڈ ہے تو انسرٹ کریں
-                        const { error: insertError } = await _supabase
-                            .from('attendance_records')
-                            .insert([payload]);
-                        
-                        if (insertError) failCount++; else successCount++;
-                    }
+                        student_name: student,
+                        attendance_status: r.aS,
+                        attendance_class: r.aC,
+                        lesson_status: r.lS,
+                        lesson_class: r.lC,
+                        quran_lesson: r.w,
+                        prayer_lesson: r.wD
+                    });
                 }
             }
-
-            if (failCount === 0) {
-                alert(`الحمدللہ! سارا ریکارڈ کامیابی کے ساتھ آن لائن منتقل ہو گیا ہے۔ ✨`);
-            } else {
-                alert(`سلوٹ مکمل: ${successCount} ریکارڈز محفوظ ہوئے، جبکہ ${failCount} میں عارضی رکاوٹ آئی۔ بقایا دوبارہ سنک کریں۔`);
-            }
-
+            alert("کامیاب! سارا ریکارڈ Supabase پر اپ ڈیٹ ہو گیا ہے۔");
         } catch (err) {
-            console.error("حتمی لوپ سنک خرابی:", err);
-            alert("سسٹم ایرر: " + (err.message || "نیٹ ورک یا سپابیس سیشن کا مسئلہ۔"));
+            console.error("Sync Error:", err);
+            alert("اپ لوڈنگ میں مسئلہ آیا، انٹرنیٹ کنکشن چیک کریں۔");
         } finally {
-            btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀";
-            btn.disabled = false;
+            if(btn) {
+                btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀"; 
+                btn.disabled = false;
+            }
         }
     }
 
     function loadReports() {
-        const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
         const mKey = document.getElementById('mainDate').value.substring(0, 7);
         const bA = document.getElementById('attReportBody'), bL = document.getElementById('lessReportBody');
         bA.innerHTML = ''; bL.innerHTML = '';
 
         names.forEach((n) => {
             let p=0, ab=0, lv=0, sn=0, yn=0, ns=0;
-            for(let d in data) {
-                if(d.startsWith(mKey) && data[d][n]) {
-                    const r = data[d][n];
+            for(let d in globalData) {
+                if(d.startsWith(mKey) && globalData[d][n]) {
+                    const r = globalData[d][n];
                     if(r.aS==="حاضر") p++; else if(r.aS==="غیر حاضر") ab++; else if(r.aS==="رخصت") lv++;
                     if(r.lS==="سنایا") sn++; else if(r.lS==="یاد نہیں") yn++; else if(r.lS==="نہیں سنایا") ns++;
                 }
@@ -808,29 +814,10 @@
     }
 
     function downloadBackup() {
-        const backupData = { attendance: JSON.parse(localStorage.getItem(storageKey) || '{}'), names, videos: videoLists, timelinePosts };
+        const backupData = { attendance: globalData, names, videos: videoLists, timelinePosts };
         const blob = new Blob([JSON.stringify(backupData)], {type:'text/plain'});
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
         a.download = 'rizwan_masjid_full_backup.txt'; a.click();
-    }
-    
-    function triggerImport() { document.getElementById('importFileInput').click(); }
-    
-    function uploadBackup(event) {
-        const file = event.target.files;
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const importedData = JSON.parse(e.target.result);
-                if (importedData.attendance) {
-                    names = importedData.names || names;
-                    localStorage.setItem(storageKey, JSON.stringify(importedData.attendance));
-                    alert("بیک اپ بحال ہو گیا ہے۔"); updateAll();
-                }
-            } catch (err) { alert("غلط فائل!"); }
-        };
-        reader.readAsText(file);
     }
 </script>
 </body>
