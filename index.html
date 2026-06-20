@@ -382,16 +382,25 @@
     const urduDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
 
     window.onload = async function() {
-        let today = new Date();
-        let yyyy = today.getFullYear();
-        let mm = String(today.getMonth() + 1).padStart(2, '0');
-        let dd = String(today.getDate()).padStart(2, '0');
-        document.getElementById('mainDate').value = `${yyyy}-${mm}-${dd}`;
-        
-        if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') { activateTeacherMode(); }
-        
-        await fetchSupabaseData();
-    };
+
+    let today = new Date();
+    let yyyy = today.getFullYear();
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let dd = String(today.getDate()).padStart(2, '0');
+
+    document.getElementById('mainDate').value =
+        `${yyyy}-${mm}-${dd}`;
+
+    if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
+        activateTeacherMode();
+    }
+
+    await fetchSupabaseData();
+
+    setInterval(() => {
+        fetchSupabaseData();
+    }, 30000);
+};
 
     async function fetchSupabaseData() {
         try {
@@ -431,12 +440,26 @@
     }
 
     async function syncSettingsToSupabase() {
-        const payload = { id: 1, names: JSON.stringify(names), videos: JSON.stringify(videoLists), timeline: JSON.stringify(timelinePosts) };
-        const { data } = await _supabase.from('masjid_settings').update(payload).eq('id', 1).select();
-        if(!data || data.length === 0) {
-            await _supabase.from('masjid_settings').insert([payload]);
-        }
+
+    const payload = {
+        id: 1,
+        names: JSON.stringify(names),
+        videos: JSON.stringify(videoLists),
+        timeline: JSON.stringify(timelinePosts)
+    };
+
+    const { error } = await _supabase
+        .from('masjid_settings')
+        .upsert({
+            id: 1,
+            ...payload
+        });
+
+    if (error) {
+        console.error(error);
+        throw error;
     }
+}
 
     function populateStudentSelect() {
         const select = document.getElementById('mediaStudentSelect');
@@ -500,7 +523,7 @@
         if (newPlaylist === null) return;
         let finalPlaylist = newPlaylist.trim();
         
-        if (finalPlaylist.includes('list=')) { finalPlaylist = finalPlaylist.split('list=').pop().split('&'); }
+        if (finalPlaylist.includes('list=')) { finalPlaylist = finalPlaylist.split('list=').pop().split('&')[0]; }
 
         if (trimmedName !== oldName) {
             if (names.includes(trimmedName)) return alert("یہ نام پہلے سے موجود ہے!");
@@ -532,7 +555,7 @@
         if(names.includes(name)) return alert("یہ نام پہلے سے موجود ہے!");
 
         if(ytInput) {
-            if(ytInput.includes('list=')) { ytList = ytInput.split('list=').pop().split('&'); } 
+            if(ytInput.includes('list=')) { ytList = ytInput.split('list=').pop().split('&')[0]; } 
             else { ytList = ytInput; }
         }
 
@@ -751,39 +774,58 @@ function toggleVideo(i) {
     function saveWD(name, v) { saveAndSyncRecord(name, 'wD', v); }
 
     async function saveAndSyncRecord(name, k, v, c, forceDate = null) {
-        const d = forceDate || document.getElementById('mainDate').value;
-        
-        if(!globalData[d]) globalData[d] = {};
-        if(!globalData[d][name]) globalData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:'', wD:''};
-        
-        if(k==='aS'){ globalData[d][name].aS=v; globalData[d][name].aC=c; }
-        else if(k==='lS'){ globalData[d][name].lS=v; globalData[d][name].lC=c; }
-        else if(k==='w'){ globalData[d][name].w=v; }
-        else if(k==='wD'){ globalData[d][name].wD=v; }
 
-        const r = globalData[d][name];
-        const payload = {
-            date: d,
-            student_name: name,
-            attendance_status: r.aS,
-            attendance_class: r.aC,
-            lesson_status: r.lS,
-            lesson_class: r.lC,
-            quran_lesson: r.w,
-            prayer_lesson: r.wD
+    const d = forceDate || document.getElementById('mainDate').value;
+
+    if (!globalData[d]) globalData[d] = {};
+
+    if (!globalData[d][name]) {
+        globalData[d][name] = {
+            aS: '---',
+            aC: 'status-btn',
+            lS: '---',
+            lC: 'status-btn',
+            w: '',
+            wD: ''
         };
-
-        const { data, error } = await _supabase
-            .from('attendance_records')
-            .update(payload)
-            .eq('date', d)
-            .eq('student_name', name)
-            .select();
-            
-        if (!data || data.length === 0) {
-            await _supabase.from('attendance_records').insert([payload]);
-        }
     }
+
+    if (k === 'aS') {
+        globalData[d][name].aS = v;
+        globalData[d][name].aC = c;
+    } else if (k === 'lS') {
+        globalData[d][name].lS = v;
+        globalData[d][name].lC = c;
+    } else if (k === 'w') {
+        globalData[d][name].w = v;
+    } else if (k === 'wD') {
+        globalData[d][name].wD = v;
+    }
+
+    const r = globalData[d][name];
+
+    const payload = {
+        date: d,
+        student_name: name,
+        attendance_status: r.aS,
+        attendance_class: r.aC,
+        lesson_status: r.lS,
+        lesson_class: r.lC,
+        quran_lesson: r.w,
+        prayer_lesson: r.wD
+    };
+
+    const { error } = await _supabase
+        .from('attendance_records')
+        .upsert(payload, {
+            onConflict: 'date,student_name'
+        });
+
+    if (error) {
+        console.error(error);
+        alert(error.message);
+    }
+}
 
     // نیا سنک فنکشن (جو غلطی سے ایچ ٹی ایم ایل میں تھا)
     async function forceFullSync() {
@@ -795,23 +837,41 @@ function toggleVideo(i) {
         }
 
         try {
-            for (const date in globalData) {
-                for (const student in globalData[date]) {
-                    const r = globalData[date][student];
-                    
-                    await _supabase.from('attendance_records').upsert({
-                        date: date,
-                        student_name: student,
-                        attendance_status: r.aS,
-                        attendance_class: r.aC,
-                        lesson_status: r.lS,
-                        lesson_class: r.lC,
-                        quran_lesson: r.w,
-                        prayer_lesson: r.wD
-                    });
-                }
-            }
-            alert("کامیاب! سارا ریکارڈ Supabase پر اپ ڈیٹ ہو گیا ہے۔");
+          const recordsToUpload = [];
+
+for (const date in globalData) {
+
+    for (const student in globalData[date]) {
+
+        const r = globalData[date][student];
+
+        recordsToUpload.push({
+            date: date,
+            student_name: student,
+            attendance_status: r.aS,
+            attendance_class: r.aC,
+            lesson_status: r.lS,
+            lesson_class: r.lC,
+            quran_lesson: r.w,
+            prayer_lesson: r.wD
+        });
+    }
+}
+
+const { error } = await _supabase
+    .from('attendance_records')
+    .upsert(recordsToUpload, {
+        onConflict: 'date,student_name'
+    });
+
+if (error) throw error;
+
+await syncSettingsToSupabase();
+await fetchSupabaseData();
+
+
+
+alert("کامیاب! سارا ریکارڈ Supabase پر اپ ڈیٹ ہو گیا ہے۔");
         } catch (err) {
             console.error("Sync Error:", err);
             alert("اپ لوڈنگ میں مسئلہ آیا، انٹرنیٹ کنکشن چیک کریں۔");
