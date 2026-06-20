@@ -687,16 +687,45 @@
         renderTimeline();
     }
 
-    function toggleVideo(i) {
-        const row = document.getElementById(`videoRow-${i}`), area = document.getElementById(`videoArea-${i}`);
-        const listID = videoLists[i] || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
-        if (row.style.display === "table-row") { row.style.display = "none"; area.innerHTML = ""; } 
-        else {
-            document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
-            row.style.display = "table-row";
-            area.innerHTML = `<iframe height="250" src="https://www.youtube.com/embed/videoseries?list=${listID}" frameborder="0" allowfullscreen></iframe>`;
-        }
+function toggleVideo(i) {
+
+    const row = document.getElementById(`videoRow-${i}`);
+    const area = document.getElementById(`videoArea-${i}`);
+
+    const listID = videoLists[i] || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
+
+    if (row.style.display === "table-row") {
+
+        row.style.display = "none";
+        area.innerHTML = "";
+
+    } else {
+
+        document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
+
+        row.style.display = "table-row";
+
+        area.innerHTML = `
+            <iframe
+                height="250"
+                src="https://www.youtube.com/embed/videoseries?list=${listID}"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+
+            <br>
+
+            <a
+                href="https://www.youtube.com/playlist?list=${listID}"
+                target="_blank"
+                class="yt-playlist-link-btn">
+
+                📺 ساری ویڈیوز یوٹیوب پر دیکھیں
+
+            </a>
+        `;
     }
+}
 
     function tglA(el, name) {
         if (!isTeacherMode) return; 
@@ -794,24 +823,70 @@
         }
     }
 
-    function loadReports() {
-        const mKey = document.getElementById('mainDate').value.substring(0, 7);
-        const bA = document.getElementById('attReportBody'), bL = document.getElementById('lessReportBody');
-        bA.innerHTML = ''; bL.innerHTML = '';
+   function loadReports() {
+    const selectedDate = document.getElementById('mainDate').value;
 
-        names.forEach((n) => {
-            let p=0, ab=0, lv=0, sn=0, yn=0, ns=0;
-            for(let d in globalData) {
-                if(d.startsWith(mKey) && globalData[d][n]) {
-                    const r = globalData[d][n];
-                    if(r.aS==="حاضر") p++; else if(r.aS==="غیر حاضر") ab++; else if(r.aS==="رخصت") lv++;
-                    if(r.lS==="سنایا") sn++; else if(r.lS==="یاد نہیں") yn++; else if(r.lS==="نہیں سنایا") ns++;
-                }
+    const dateObj = new Date(selectedDate);
+    const selectedYear = dateObj.getFullYear();
+    const selectedMonth = dateObj.getMonth();
+
+    const monthKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
+
+    // اوپر رپورٹ ہیڈنگ
+    document.querySelectorAll('.monthTitle').forEach(el => {
+        el.innerText = `${urduMonths[selectedMonth]} ${selectedYear}`;
+    });
+
+    const bA = document.getElementById('attReportBody');
+    const bL = document.getElementById('lessReportBody');
+
+    bA.innerHTML = '';
+    bL.innerHTML = '';
+
+    names.forEach((n) => {
+
+        let p = 0;
+        let ab = 0;
+        let lv = 0;
+
+        let sn = 0;
+        let yn = 0;
+        let ns = 0;
+
+        for (let d in globalData) {
+
+            // صرف منتخب مہینے کا ریکارڈ
+            if (d.startsWith(monthKey) && globalData[d][n]) {
+
+                const r = globalData[d][n];
+
+                if (r.aS === "حاضر") p++;
+                else if (r.aS === "غیر حاضر") ab++;
+                else if (r.aS === "رخصت") lv++;
+
+                if (r.lS === "سنایا") sn++;
+                else if (r.lS === "یاد نہیں") yn++;
+                else if (r.lS === "نہیں سنایا") ns++;
             }
-            bA.innerHTML += `<tr><td class="student-name">${n}</td><td class="report-count" style="color:var(--present-clr)">${p}</td><td class="report-count" style="color:var(--absent-clr)">${ab}</td><td class="report-count" style="color:var(--leave-clr)">${lv}</td></tr>`;
-            bL.innerHTML += `<tr><td class="student-name">${n}</td><td class="report-count" style="color:var(--present-clr)">${sn}</td><td class="report-count" style="color:var(--absent-clr)">${yn}</td><td class="report-count" style="color:var(--leave-clr)">${ns}</td></tr>`;
-        });
-    }
+        }
+
+        bA.innerHTML += `
+        <tr>
+            <td class="student-name">${n}</td>
+            <td class="report-count" style="color:var(--present-clr)">${p}</td>
+            <td class="report-count" style="color:var(--absent-clr)">${ab}</td>
+            <td class="report-count" style="color:var(--leave-clr)">${lv}</td>
+        </tr>`;
+
+        bL.innerHTML += `
+        <tr>
+            <td class="student-name">${n}</td>
+            <td class="report-count" style="color:var(--present-clr)">${sn}</td>
+            <td class="report-count" style="color:var(--absent-clr)">${yn}</td>
+            <td class="report-count" style="color:var(--leave-clr)">${ns}</td>
+        </tr>`;
+    });
+}
 
     function downloadBackup() {
         const backupData = { attendance: globalData, names, videos: videoLists, timelinePosts };
