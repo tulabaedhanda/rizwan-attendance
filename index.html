@@ -251,6 +251,42 @@
         .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
         .logout-btn-style { display:none; background:#b71c1c; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
+        .class-time-box{
+            width:80%;
+            max-width:500px;
+            margin:12px auto;
+            padding:12px;
+            min-height:50px;
+
+            background:rgba(255,255,255,0.9);
+
+            border:3px solid #b38728;
+            border-radius:15px;
+
+            text-align:center;
+            font-size:20px;
+            font-weight:bold;
+            color:#4B0082;
+
+            box-shadow:
+                0 0 10px rgba(218,165,32,0.4),
+                inset 0 0 8px rgba(255,215,0,0.2);
+        }
+
+        .class-time-editor{
+            text-align:center;
+            margin-bottom:12px;
+        }
+
+        .class-time-editor input{
+            width:80%;
+            max-width:500px;
+            padding:8px;
+            border:2px solid #b38728;
+            border-radius:10px;
+            font-size:18px;
+        }
+
         @media print {
             .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .three-dots-btn { display: none !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -270,10 +306,26 @@
         <input type="date" id="mainDate" onchange="updateAll()">
     </div>
 
+<div id="classTimeBox" class="class-time-box"></div>
+
+<div id="classTimeEditor" class="class-time-editor" style="display:none;">
+    <input
+        type="text"
+        id="classTimeInput"
+        placeholder="کلاس ٹائم لکھیں">
+
+    <button
+        class="btn-mgmt"
+        style="background:#b38728;margin-top:5px;"
+        onclick="saveClassTime()">
+        محفوظ کریں
+    </button>
+</div>
+
     <div id="teacherBadge" class="teacher-badge" style="display: none;">🔓 استاد موڈ فعال ہے (ترمیم کھلی ہے)</div>
 
     <div id="managementPanel" class="management-panel">
-        <strong style="color: var(--primary); font-size: 18px;">🆕 نیا داخلہ (طالب علم شامل کریں):</strong>
+        <strong style="color: var(--primary); font-size: 18px;">🆕 نیا داخلہ (ط طالب علم شامل کریں):</strong>
         <div style="margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
             <input type="text" id="newStudentName" class="mgmt-input" placeholder="طالب علم کا نام لکھیں...">
             <input type="text" id="newStudentYT" class="mgmt-input" placeholder="یوٹیوب پلے لسٹ آئی ڈی (آپشنل)">
@@ -377,6 +429,7 @@
     let timelinePosts = [];
     let globalData = {}; 
     let isTeacherMode = false;
+    let classTime = "";
 
     const urduMonths = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
     const urduDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
@@ -409,6 +462,18 @@
                 if(settingsData.names) names = JSON.parse(settingsData.names);
                 if(settingsData.videos) videoLists = JSON.parse(settingsData.videos);
                 if(settingsData.timeline) timelinePosts = JSON.parse(settingsData.timeline);
+                
+                classTime = settingsData.class_time || "";
+
+                document.getElementById('classTimeBox').innerText =
+                classTime;
+
+                const inp =
+                document.getElementById('classTimeInput');
+
+                if(inp){
+                    inp.value = classTime;
+                }
             } else {
                 await syncSettingsToSupabase(); 
             }
@@ -445,7 +510,8 @@
         id: 1,
         names: JSON.stringify(names),
         videos: JSON.stringify(videoLists),
-        timeline: JSON.stringify(timelinePosts)
+        timeline: JSON.stringify(timelinePosts),
+        class_time: classTime
     };
 
     const { error } = await _supabase
@@ -481,6 +547,7 @@
         isTeacherMode = true;
         document.getElementById('teacherBadge').style.display = "block";
         document.getElementById('managementPanel').style.display = "block";
+        document.getElementById('classTimeEditor').style.display = 'block';
         if(document.getElementById('dailyAtt').classList.contains('active')) {
             document.getElementById('removalSection').style.display = "block";
         }
@@ -499,6 +566,7 @@
         sessionStorage.removeItem('isTeacherLoggedIn');
         document.getElementById('teacherBadge').style.display = "none";
         document.getElementById('managementPanel').style.display = "none";
+        document.getElementById('classTimeEditor').style.display = 'none';
         document.getElementById('removalSection').style.display = "none";
         document.getElementById('fbUploaderPanel').style.display = "none";
         document.getElementById('loginFormInputs').style.display = "block";
@@ -523,7 +591,7 @@
         if (newPlaylist === null) return;
         let finalPlaylist = newPlaylist.trim();
         
-        if (finalPlaylist.includes('list=')) { finalPlaylist = finalPlaylist.split('list=').pop().split('&')[0]; }
+        if (finalPlaylist.includes('list=')) { finalPlaylist = finalPlaylist.split('list=').pop().split('&'); }
 
         if (trimmedName !== oldName) {
             if (names.includes(trimmedName)) return alert("یہ نام پہلے سے موجود ہے!");
@@ -555,7 +623,7 @@
         if(names.includes(name)) return alert("یہ نام پہلے سے موجود ہے!");
 
         if(ytInput) {
-            if(ytInput.includes('list=')) { ytList = ytInput.split('list=').pop().split('&')[0]; } 
+            if(ytInput.includes('list=')) { ytList = ytInput.split('list=').pop().split('&'); } 
             else { ytList = ytInput; }
         }
 
@@ -946,6 +1014,20 @@ alert("کامیاب! سارا ریکارڈ Supabase پر اپ ڈیٹ ہو گیا
             <td class="report-count" style="color:var(--leave-clr)">${ns}</td>
         </tr>`;
     });
+}
+
+async function saveClassTime(){
+
+    classTime =
+    document.getElementById('classTimeInput')
+    .value.trim();
+
+    document.getElementById('classTimeBox')
+    .innerText = classTime;
+
+    await syncSettingsToSupabase();
+
+    alert('کلاس ٹائم محفوظ ہو گیا');
 }
 
     function downloadBackup() {
