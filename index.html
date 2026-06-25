@@ -15,6 +15,8 @@
             --present-clr: #1b5e20;
             --absent-clr: #b71c1c;
             --leave-clr: #ef6c00;
+            --gold-gradient: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --gold-glow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(218, 165, 32, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.3);
         }
 
         body { 
@@ -33,10 +35,8 @@
             -webkit-backdrop-filter: blur(12px) saturate(180%);
             padding: 15px; border-radius: 20px; 
             border: 5px solid transparent;
-            border-image: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c) 1;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 
-                        0 0 20px rgba(218, 165, 32, 0.4), 
-                        inset 0 0 20px rgba(255, 215, 0, 0.3);
+            border-image: var(--gold-gradient) 1;
+            box-shadow: var(--gold-glow);
         }
 
         .header-section { text-align: center; margin: -15px -15px 20px -15px; position: relative; }
@@ -140,6 +140,41 @@
             background: rgba(255, 255, 255, 0.85); border: 2px solid #b38728; border-radius: 12px;
             padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
+        .former-student-card{
+            background:rgba(255,255,255,0.35);
+            border:2px solid transparent;
+            border-image:var(--gold-gradient) 1;
+            border-radius:15px;
+            padding:15px;
+            margin-bottom:15px;
+            box-shadow:var(--gold-glow);
+            backdrop-filter:blur(8px);
+            text-align: right;
+        }
+        .former-student-name{
+            color:var(--primary);
+            font-size:24px;
+            font-weight:bold;
+            margin-bottom:10px;
+        }
+        .former-student-line{
+            font-size:18px;
+            margin-bottom:6px;
+            color:#111;
+        }
+        .restore-btn{
+            background:#1b5e20;
+            color:white;
+            border:none;
+            border-radius:10px;
+            padding:8px 18px;
+            font-size:17px;
+            font-weight:bold;
+            cursor:pointer;
+            margin-top:10px;
+        }
+
         .lesson-row-container {
             display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px;
         }
@@ -160,8 +195,8 @@
         .fb-uploader-card {
             background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .fb-uploader-card select, .fb-uploader-card input {
-            width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box;
+        .fb-uploader-card select, .fb-uploader-card input, .fb-uploader-card textarea {
+            width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; font-family: inherit;
         }
         .fb-feed-container {
             display: flex; flex-direction: column; gap: 20px; max-height: 700px; overflow-y: auto; padding: 5px;
@@ -192,15 +227,29 @@
             width: 100%; 
             display: block;
         }
-        .fb-video-wrapper iframe { 
-            width: 100%; 
-            height: 100%; 
-            min-height: 500px; 
-            border: none; 
-            display: block; 
-        }
         
-        .fb-post-media img { width: 100%; height: auto; display: block; margin: 0 auto; }
+        /* New CSS for media matching requirements */
+        .timeline-media,
+        .timeline-image,
+        .timeline-video,
+        .timeline iframe{
+            width:100%;
+            height:auto !important;
+            max-width:100%;
+            object-fit:contain;
+            display:block;
+        }
+
+        .timeline-text-post{
+            background:#fff;
+            padding:18px;
+            margin-top:12px;
+            border-radius:12px;
+            font-size:20px;
+            line-height:1.9;
+            white-space:pre-wrap;
+            text-align:right;
+        }
         
         .fb-del-btn {
             background: #b71c1c; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold;
@@ -220,20 +269,6 @@
         }
         .mgmt-input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; width: 60%; max-width: 250px; }
         .btn-mgmt { padding: 8px 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; color: white; }
-
-        .removal-section {
-            background: rgba(255, 240, 240, 0.9); border: 2px solid #b71c1c; padding: 15px; border-radius: 15px; margin-top: 25px; display: none; text-align: right;
-        }
-        .removal-list-container {
-            max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #ffcdd2; background: #fff; border-radius: 8px; padding: 5px;
-        }
-        .removal-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-bottom: 1px solid #ffebee;
-        }
-        .removal-item:last-child { border-bottom: none; }
-        .delete-btn {
-            background: #b71c1c; color: white; border: none; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold;
-        }
 
         .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
         .video-container { display: none; padding: 10px; background: rgba(249, 249, 249, 0.9); text-align: center; }
@@ -288,7 +323,7 @@
         }
 
         @media print {
-            .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .removal-section, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .three-dots-btn { display: none !important; }
+            .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .three-dots-btn { display: none !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
@@ -325,7 +360,7 @@
     <div id="teacherBadge" class="teacher-badge" style="display: none;">🔓 استاد موڈ فعال ہے (ترمیم کھلی ہے)</div>
 
     <div id="managementPanel" class="management-panel">
-        <strong style="color: var(--primary); font-size: 18px;">🆕 نیا داخلہ (ط طالب علم شامل کریں):</strong>
+        <strong style="color: var(--primary); font-size: 18px;">🆕 نیا داخلہ (طالب علم شامل کریں):</strong>
         <div style="margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
             <input type="text" id="newStudentName" class="mgmt-input" placeholder="طالب علم کا نام لکھیں...">
             <input type="text" id="newStudentYT" class="mgmt-input" placeholder="یوٹیوب پلے لسٹ آئی ڈی (آپشنل)">
@@ -340,6 +375,7 @@
         <button class="tab-btn" onclick="openTab('attReport', event)">حاضری رپورٹ</button>
         <button class="tab-btn" onclick="openTab('lessReport', event)">سبق رپورٹ</button>
         <button class="tab-btn" onclick="openTab('miscellaneousTab', event)">متفرق</button>
+        <button class="tab-btn" onclick="openTab('formerStudentsTab', event)">سابقہ طلباء</button>
     </div>
 
     <div id="dailyAtt" class="tab-content active">
@@ -353,11 +389,6 @@
             <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>حاضری</th></tr></thead>
             <tbody id="attTableBody"></tbody>
         </table>
-
-        <div id="removalSection" class="removal-section">
-            <strong style="color: #b71c1c; font-size: 18px;">❌ طالب علم خارج کریں (اخراج لسٹ):</strong>
-            <div class="removal-list-container" id="removalListBody"></div>
-        </div>
     </div>
 
     <div id="dailyLesson" class="tab-content">
@@ -393,10 +424,17 @@
             <select id="mediaStudentSelect"><option value="">طالب علم کا انتخاب کریں (آپشنل)</option></select>
             <input type="text" id="mediaTitleInput" placeholder="پوسٹ کا عنوان یا ٹائٹل لکھیں...">
             <input type="text" id="mediaUrlInput" placeholder="گوگل ڈرائیو، یوٹیوب یا فیس بک ویڈیو کا لنک پیسٹ کریں...">
+            <textarea id="timelineText" placeholder="صرف پیغام بھی لکھ سکتے ہیں..." rows="4"></textarea>
             <button class="btn-mgmt" style="background:var(--primary); width:100%; margin-top:5px; padding:10px;" onclick="addTimelinePost()">ٹائم لائن پر پوسٹ کریں ✨</button>
         </div>
 
         <div class="fb-feed-container" id="fbFeedTimeline"></div>
+    </div>
+
+    <div id="formerStudentsTab" class="tab-content">
+        <div id="formerStudentsCount" style="text-align:center; font-size:20px; font-weight:bold; color:var(--primary); margin-bottom:15px;"></div>
+        <div style="text-align:center; font-size:24px; font-weight:bold; color:var(--primary); margin-bottom:15px;">سابقہ طلباء</div>
+        <div id="formerStudentsContainer"></div>
     </div>
 
     <div class="footer-tools">
@@ -416,6 +454,15 @@
     </div>
 </div>
 
+<div id="studentMenuModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.45); z-index:2000;">
+    <div style="background:white; width:90%; max-width:320px; margin:120px auto; padding:15px; border-radius:15px; text-align:center;">
+        <input type="hidden" id="menuStudentIndex">
+        <button class="btn-mgmt" style="background:var(--primary); width:100%; margin-bottom:10px;" onclick="menuEditStudent()">✏️ ترمیم کریں</button>
+        <button class="btn-mgmt" style="background:#ef6c00; width:100%; margin-bottom:10px;" onclick="menuMoveFormer()">📦 سابقہ میں منتقل کریں</button>
+        <button class="btn-mgmt" style="background:#b71c1c; width:100%;" onclick="closeStudentMenu()">بند کریں</button>
+    </div>
+</div>
+
 <script>
     const SUPABASE_URL = "https://pbczufuovargnvbcbnvs.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiY3p1ZnVvdmFyZ252YmNibnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzIyOTIsImV4cCI6MjA5NzIwODI5Mn0.1MIN7MZXc4rCvXyhoZ0j5B-nkbqly1UgtGnOfknmNUo";
@@ -430,30 +477,38 @@
     let globalData = {}; 
     let isTeacherMode = false;
     let classTime = "";
+    
+    let formerStudents = [];
+    window.studentJoinDates = {};
 
     const urduMonths = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
     const urduDays = ["اتوار", "پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ"];
 
-    window.onload = async function() {
-
-    let today = new Date();
-    let yyyy = today.getFullYear();
-    let mm = String(today.getMonth() + 1).padStart(2, '0');
-    let dd = String(today.getDate()).padStart(2, '0');
-
-    document.getElementById('mainDate').value =
-        `${yyyy}-${mm}-${dd}`;
-
-    if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
-        activateTeacherMode();
+    function formatUrduDate(dateString){
+        if(!dateString || dateString==='-') return '-';
+        const d = new Date(dateString);
+        return `${d.getDate()} ${urduMonths[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    await fetchSupabaseData();
+    window.onload = async function() {
 
-    setInterval(() => {
-        fetchSupabaseData();
-    }, 30000);
-};
+        let today = new Date();
+        let yyyy = today.getFullYear();
+        let mm = String(today.getMonth() + 1).padStart(2, '0');
+        let dd = String(today.getDate()).padStart(2, '0');
+
+        document.getElementById('mainDate').value = `${yyyy}-${mm}-${dd}`;
+
+        if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
+            activateTeacherMode();
+        }
+
+        await fetchSupabaseData();
+
+        setInterval(() => {
+            fetchSupabaseData();
+        }, 30000);
+    };
 
     async function fetchSupabaseData() {
         try {
@@ -463,17 +518,14 @@
                 if(settingsData.videos) videoLists = JSON.parse(settingsData.videos);
                 if(settingsData.timeline) timelinePosts = JSON.parse(settingsData.timeline);
                 
+                if(settingsData.former_students) formerStudents = JSON.parse(settingsData.former_students);
+                if(settingsData.student_join_dates) window.studentJoinDates = JSON.parse(settingsData.student_join_dates);
+
                 classTime = settingsData.class_time || "";
 
-                document.getElementById('classTimeBox').innerText =
-                classTime;
-
-                const inp =
-                document.getElementById('classTimeInput');
-
-                if(inp){
-                    inp.value = classTime;
-                }
+                document.getElementById('classTimeBox').innerText = classTime;
+                const inp = document.getElementById('classTimeInput');
+                if(inp){ inp.value = classTime; }
             } else {
                 await syncSettingsToSupabase(); 
             }
@@ -495,7 +547,6 @@
                 });
             }
             populateStudentSelect();
-            if(isTeacherMode) renderRemovalList();
             updateAll();
         } catch (err) {
             console.error("Supabase ڈیٹا لوڈنگ ایرر:", err);
@@ -506,26 +557,25 @@
 
     async function syncSettingsToSupabase() {
 
-    const payload = {
-        id: 1,
-        names: JSON.stringify(names),
-        videos: JSON.stringify(videoLists),
-        timeline: JSON.stringify(timelinePosts),
-        class_time: classTime
-    };
-
-    const { error } = await _supabase
-        .from('masjid_settings')
-        .upsert({
+        const payload = {
             id: 1,
-            ...payload
-        });
+            names: JSON.stringify(names),
+            videos: JSON.stringify(videoLists),
+            timeline: JSON.stringify(timelinePosts),
+            former_students: JSON.stringify(formerStudents),
+            student_join_dates: JSON.stringify(window.studentJoinDates || {}),
+            class_time: classTime
+        };
 
-    if (error) {
-        console.error(error);
-        throw error;
+        const { error } = await _supabase
+            .from('masjid_settings')
+            .upsert(payload);
+
+        if (error) {
+            console.error(error);
+            throw error;
+        }
     }
-}
 
     function populateStudentSelect() {
         const select = document.getElementById('mediaStudentSelect');
@@ -548,16 +598,12 @@
         document.getElementById('teacherBadge').style.display = "block";
         document.getElementById('managementPanel').style.display = "block";
         document.getElementById('classTimeEditor').style.display = 'block';
-        if(document.getElementById('dailyAtt').classList.contains('active')) {
-            document.getElementById('removalSection').style.display = "block";
-        }
         document.getElementById('fbUploaderPanel').style.display = "block";
         document.getElementById('loginFormInputs').style.display = "none";
         document.getElementById('logoutBtn').style.display = "inline-block";
         document.getElementById('portalTitle').innerText = "🧔 ناصر علی (استاد)";
         document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'inline-block');
         document.querySelectorAll('.three-dots-btn').forEach(btn => btn.style.display = 'inline-block');
-        renderRemovalList();
         updateAll();
     }
 
@@ -567,7 +613,6 @@
         document.getElementById('teacherBadge').style.display = "none";
         document.getElementById('managementPanel').style.display = "none";
         document.getElementById('classTimeEditor').style.display = 'none';
-        document.getElementById('removalSection').style.display = "none";
         document.getElementById('fbUploaderPanel').style.display = "none";
         document.getElementById('loginFormInputs').style.display = "block";
         document.getElementById('logoutBtn').style.display = "none";
@@ -597,10 +642,30 @@
             if (names.includes(trimmedName)) return alert("یہ نام پہلے سے موجود ہے!");
             for (let date in globalData) {
                 if (globalData[date][oldName]) {
-                    globalData[date][trimmedName] = globalData[date][oldName];
+                    const oldRecord = globalData[date][oldName];
+                    globalData[date][trimmedName] = oldRecord;
                     delete globalData[date][oldName];
-                    await _supabase.from('attendance_records').delete().eq('date', date).eq('student_name', oldName);
-                    await saveAndSyncRecord(trimmedName, null, null, null, date); 
+
+                    await _supabase
+                    .from('attendance_records')
+                    .upsert({
+                        date: date,
+                        student_name: trimmedName,
+                        attendance_status: oldRecord.aS,
+                        attendance_class: oldRecord.aC,
+                        lesson_status: oldRecord.lS,
+                        lesson_class: oldRecord.lC,
+                        quran_lesson: oldRecord.w,
+                        prayer_lesson: oldRecord.wD
+                    }, {
+                        onConflict: 'date,student_name'
+                    });
+
+                    await _supabase
+                    .from('attendance_records')
+                    .delete()
+                    .eq('date', date)
+                    .eq('student_name', oldName);
                 }
             }
             names[index] = trimmedName;
@@ -610,7 +675,6 @@
         await syncSettingsToSupabase();
         
         populateStudentSelect();
-        renderRemovalList();
         updateAll();
     }
 
@@ -629,38 +693,17 @@
 
         names.push(name);
         videoLists.push(ytList);
+
+        const today = document.getElementById('mainDate').value;
+        if(!window.studentJoinDates) window.studentJoinDates = {};
+        window.studentJoinDates[name] = today;
+
         await syncSettingsToSupabase();
         
         document.getElementById('newStudentName').value = "";
         document.getElementById('newStudentYT').value = "";
         populateStudentSelect();
-        renderRemovalList();
         updateAll();
-    }
-
-    async function deleteStudent(index) {
-        const nameToRemove = names[index];
-        if(!confirm(`کیا آپ واقعی ${nameToRemove} کو خارج کرنا چاہتے ہیں؟`)) return;
-        names.splice(index, 1);
-        videoLists.splice(index, 1);
-        await syncSettingsToSupabase();
-        populateStudentSelect();
-        renderRemovalList();
-        updateAll();
-    }
-
-    function renderRemovalList() {
-        const container = document.getElementById('removalListBody');
-        container.innerHTML = '';
-        if(names.length === 0) return;
-        names.forEach((n, idx) => {
-            container.innerHTML += `
-                <div class="removal-item">
-                    <span style="font-size:16px; font-weight:bold;">${idx+1}. ${n}</span>
-                    <button class="delete-btn" onclick="deleteStudent(${idx})">خارج کریں</button>
-                </div>
-            `;
-        });
     }
 
     function openTab(id, e) {
@@ -668,11 +711,6 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         e.currentTarget.classList.add('active');
-        if(id === 'dailyAtt' && isTeacherMode) {
-            document.getElementById('removalSection').style.display = "block";
-        } else {
-            document.getElementById('removalSection').style.display = "none";
-        }
         if(id.includes('Report')) loadReports();
     }
 
@@ -680,15 +718,29 @@
         const student = document.getElementById('mediaStudentSelect').value;
         const title = document.getElementById('mediaTitleInput').value.trim();
         let url = document.getElementById('mediaUrlInput').value.trim();
+        const text = document.getElementById('timelineText').value.trim();
         const dObj = new Date();
         const formattedCurrentUrduDate = `${urduDays[dObj.getDay()]}، ${dObj.getDate()} ${urduMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
 
-        if(!title || !url) return alert("براہ کرم لنک فراہم کریں!");
-        timelinePosts.unshift({ student, title, url, date: formattedCurrentUrduDate });
+        if(!title) return alert("براہ کرم عنوان لکھیں!");
+        
+        if(!url && !text){
+            alert('لنک یا پیغام درج کریں');
+            return;
+        }
+
+        timelinePosts.unshift({ 
+            student, 
+            title, 
+            text,
+            url: url || "", 
+            date: formattedCurrentUrduDate 
+        });
         await syncSettingsToSupabase();
         
         document.getElementById('mediaTitleInput').value = '';
         document.getElementById('mediaUrlInput').value = '';
+        document.getElementById('timelineText').value = '';
         renderTimeline();
     }
 
@@ -702,13 +754,15 @@
     function formatMediaEmbed(url) {
         if (url.includes('youtube.com/watch') || url.includes('youtu.be')) {
             let videoId = url.includes('v=') ? url.split('v=').pop().split('&') : url.split('/').pop();
-            return `<div class="fb-video-wrapper"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
+            return `<iframe src="https://www.youtube.com/embed/${videoId}" style="width:100%; min-height:250px; border:none; border-radius:12px;" allowfullscreen></iframe>`;
         } else if (url.includes('drive.google.com')) {
             let embedUrl = url.replace('/view?usp=sharing', '/preview').replace('/view', '/preview');
-            return `<div class="fb-video-wrapper"><iframe src="${embedUrl}" frameborder="0" allowfullscreen></iframe></div>`;
+            return `<iframe src="${embedUrl}" style="width:100%; min-height:250px; border:none; border-radius:12px;" allowfullscreen></iframe>`;
         } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
-            return `<div class="fb-video-wrapper"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0" frameborder="0" allowfullscreen="true"></iframe></div>`;
-        } else { return `<img src="${url}">`; }
+            return `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0" style="width:100%; min-height:250px; border:none; border-radius:12px;" allowfullscreen="true"></iframe>`;
+        } else { 
+            return `<img src="${url}" class="timeline-media" loading="lazy">`; 
+        }
     }
 
     function renderTimeline() {
@@ -724,7 +778,18 @@
                         <div><span class="fb-post-date">${post.date}</span> ${delBtn}</div>
                     </div>
                     <div class="fb-post-title">${post.title}</div>
-                    <div class="fb-post-media">${formatMediaEmbed(post.url)}</div>
+                    
+                    ${post.text ? `
+                    <div class="timeline-text-post">
+                        ${post.text}
+                    </div>
+                    ` : ''}
+
+                    ${post.url ? `
+                    <div class="fb-post-media">
+                        ${formatMediaEmbed(post.url)}
+                    </div>
+                    ` : ''}
                 </div>`;
         });
     }
@@ -764,7 +829,7 @@
             if (!currentW) currentW = getLatestLesson(date, n, 'w');
             if (!currentWD) currentWD = getLatestLesson(date, n, 'wD');
 
-            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n} <span class="three-dots-btn" style="display:${isTeacherMode?'inline-block':'none'}" onclick="editStudentInfo(${i})">⁝</span></td><td><div class="${s.aC}" onclick="tglA(this,'${n}')">${s.aS}</div></td></tr>`;
+            b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n} <span class="three-dots-btn" style="display:${isTeacherMode?'inline-block':'none'}" onclick="openStudentMenu(${i})">⁝</span></td><td><div class="${s.aC}" onclick="tglA(this,'${n}')">${s.aS}</div></td></tr>`;
             lessCardsContainer.innerHTML += `
                 <div class="student-lesson-card">
                     <div class="lesson-row-container"><span>${i+1}. ${n}</span><div class="${s.lC}" onclick="tglL(this,'${n}')">${s.lS}</div></div>
@@ -776,47 +841,28 @@
             b4.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><button class="video-btn" onclick="toggleVideo(${i})">ویڈیوز</button></td></tr><tr id="videoRow-${i}" class="video-container"><td colspan="3"><div id="videoArea-${i}"></div></td></tr>`;
         });
         renderTimeline();
+        renderFormerStudents();
+        loadReports();
     }
 
-function toggleVideo(i) {
+    function toggleVideo(i) {
+        const row = document.getElementById(`videoRow-${i}`);
+        const area = document.getElementById(`videoArea-${i}`);
+        const listID = videoLists[i] || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
 
-    const row = document.getElementById(`videoRow-${i}`);
-    const area = document.getElementById(`videoArea-${i}`);
-
-    const listID = videoLists[i] || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
-
-    if (row.style.display === "table-row") {
-
-        row.style.display = "none";
-        area.innerHTML = "";
-
-    } else {
-
-        document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
-
-        row.style.display = "table-row";
-
-        area.innerHTML = `
-            <iframe
-                height="250"
-                src="https://www.youtube.com/embed/videoseries?list=${listID}"
-                frameborder="0"
-                allowfullscreen>
-            </iframe>
-
-            <br>
-
-            <a
-                href="https://www.youtube.com/playlist?list=${listID}"
-                target="_blank"
-                class="yt-playlist-link-btn">
-
-                📺 ساری ویڈیوز یوٹیوب پر دیکھیں
-
-            </a>
-        `;
+        if (row.style.display === "table-row") {
+            row.style.display = "none";
+            area.innerHTML = "";
+        } else {
+            document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
+            row.style.display = "table-row";
+            area.innerHTML = `
+                <iframe height="250" src="https://www.youtube.com/embed/videoseries?list=${listID}" frameborder="0" allowfullscreen></iframe>
+                <br>
+                <a href="https://www.youtube.com/playlist?list=${listID}" target="_blank" class="yt-playlist-link-btn">📺 ساری ویڈیوز یوٹیوب پر دیکھیں</a>
+            `;
+        }
     }
-}
 
     function tglA(el, name) {
         if (!isTeacherMode) return; 
@@ -842,200 +888,251 @@ function toggleVideo(i) {
     function saveWD(name, v) { saveAndSyncRecord(name, 'wD', v); }
 
     async function saveAndSyncRecord(name, k, v, c, forceDate = null) {
+        const d = forceDate || document.getElementById('mainDate').value;
+        if (!globalData[d]) globalData[d] = {};
+        if (!globalData[d][name]) {
+            globalData[d][name] = { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '', wD: '' };
+        }
 
-    const d = forceDate || document.getElementById('mainDate').value;
+        if (k === 'aS') { globalData[d][name].aS = v; globalData[d][name].aC = c; } 
+        else if (k === 'lS') { globalData[d][name].lS = v; globalData[d][name].lC = c; } 
+        else if (k === 'w') { globalData[d][name].w = v; } 
+        else if (k === 'wD') { globalData[d][name].wD = v; }
 
-    if (!globalData[d]) globalData[d] = {};
-
-    if (!globalData[d][name]) {
-        globalData[d][name] = {
-            aS: '---',
-            aC: 'status-btn',
-            lS: '---',
-            lC: 'status-btn',
-            w: '',
-            wD: ''
+        const r = globalData[d][name];
+        const payload = {
+            date: d, student_name: name, attendance_status: r.aS, attendance_class: r.aC,
+            lesson_status: r.lS, lesson_class: r.lC, quran_lesson: r.w, prayer_lesson: r.wD
         };
+
+        const { error } = await _supabase.from('attendance_records').upsert(payload, { onConflict: 'date,student_name' });
+        if (error) { console.error(error); alert(error.message); }
     }
 
-    if (k === 'aS') {
-        globalData[d][name].aS = v;
-        globalData[d][name].aC = c;
-    } else if (k === 'lS') {
-        globalData[d][name].lS = v;
-        globalData[d][name].lC = c;
-    } else if (k === 'w') {
-        globalData[d][name].w = v;
-    } else if (k === 'wD') {
-        globalData[d][name].wD = v;
-    }
-
-    const r = globalData[d][name];
-
-    const payload = {
-        date: d,
-        student_name: name,
-        attendance_status: r.aS,
-        attendance_class: r.aC,
-        lesson_status: r.lS,
-        lesson_class: r.lC,
-        quran_lesson: r.w,
-        prayer_lesson: r.wD
-    };
-
-    const { error } = await _supabase
-        .from('attendance_records')
-        .upsert(payload, {
-            onConflict: 'date,student_name'
-        });
-
-    if (error) {
-        console.error(error);
-        alert(error.message);
-    }
-}
-
-    // نیا سنک فنکشن (جو غلطی سے ایچ ٹی ایم ایل میں تھا)
     async function forceFullSync() {
         if (!isTeacherMode) return;
         const btn = document.getElementById('syncSupabaseBtn');
-        if(btn) {
-            btn.innerText = "اپ لوڈ ہو رہا ہے... ⏳"; 
-            btn.disabled = true;
-        }
+        if(btn) { btn.innerText = "اپ لوڈ ہو رہا ہے... ⏳"; btn.disabled = true; }
 
         try {
-          const recordsToUpload = [];
+            const recordsToUpload = [];
+            for (const date in globalData) {
+                for (const student in globalData[date]) {
+                    const r = globalData[date][student];
+                    recordsToUpload.push({
+                        date: date, student_name: student, attendance_status: r.aS, attendance_class: r.aC,
+                        lesson_status: r.lS, lesson_class: r.lC, quran_lesson: r.w, prayer_lesson: r.wD
+                    });
+                }
+            }
+            const { error } = await _supabase.from('attendance_records').upsert(recordsToUpload, { onConflict: 'date,student_name' });
+            if (error) throw error;
+            await syncSettingsToSupabase();
+            await fetchSupabaseData();
+            alert("کامیاب! سارا ریکارڈ Supabase پر اپ ڈیٹ ہو گیا ہے۔");
+        } catch (err) {
+            console.error("Sync Error:", err); alert("اپ لوڈنگ میں مسئلہ آیا، انٹرنیٹ کنکشن چیک کریں۔");
+        } finally {
+            if(btn) { btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀"; btn.disabled = false; }
+        }
+    }
 
-for (const date in globalData) {
+    function loadReports() {
+        const selectedDate = document.getElementById('mainDate').value;
+        const dateObj = new Date(selectedDate);
+        const selectedYear = dateObj.getFullYear();
+        const selectedMonth = dateObj.getMonth();
+        const monthKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
 
-    for (const student in globalData[date]) {
+        document.querySelectorAll('.monthTitle').forEach(el => { el.innerText = `${urduMonths[selectedMonth]} ${selectedYear}`; });
+        const bA = document.getElementById('attReportBody');
+        const bL = document.getElementById('lessReportBody');
+        bA.innerHTML = ''; bL.innerHTML = '';
 
-        const r = globalData[date][student];
-
-        recordsToUpload.push({
-            date: date,
-            student_name: student,
-            attendance_status: r.aS,
-            attendance_class: r.aC,
-            lesson_status: r.lS,
-            lesson_class: r.lC,
-            quran_lesson: r.w,
-            prayer_lesson: r.wD
+        names.forEach((n) => {
+            let p = 0, ab = 0, lv = 0;
+            let sn = 0, yn = 0, ns = 0;
+            for (let d in globalData) {
+                if (d.startsWith(monthKey) && globalData[d][n]) {
+                    const r = globalData[d][n];
+                    if (r.aS === "حاضر") p++; else if (r.aS === "غیر حاضر") ab++; else if (r.aS === "رخصت") lv++;
+                    if (r.lS === "سنایا") sn++; else if (r.lS === "یاد نہیں") yn++; else if (r.lS === "نہیں سنایا") ns++;
+                }
+            }
+            bA.innerHTML += `<tr><td class="student-name">${n}</td><td class="report-count" style="color:var(--present-clr)">${p}</td><td class="report-count" style="color:var(--absent-clr)">${ab}</td><td class="report-count" style="color:var(--leave-clr)">${lv}</td></tr>`;
+            bL.innerHTML += `<tr><td class="student-name">${n}</td><td class="report-count" style="color:var(--present-clr)">${sn}</td><td class="report-count" style="color:var(--absent-clr)">${yn}</td><td class="report-count" style="color:var(--leave-clr)">${ns}</td></tr>`;
         });
     }
-}
 
-const { error } = await _supabase
-    .from('attendance_records')
-    .upsert(recordsToUpload, {
-        onConflict: 'date,student_name'
-    });
-
-if (error) throw error;
-
-await syncSettingsToSupabase();
-await fetchSupabaseData();
-
-
-
-alert("کامیاب! سارا ریکارڈ Supabase پر اپ ڈیٹ ہو گیا ہے۔");
-        } catch (err) {
-            console.error("Sync Error:", err);
-            alert("اپ لوڈنگ میں مسئلہ آیا، انٹرنیٹ کنکشن چیک کریں۔");
-        } finally {
-            if(btn) {
-                btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀"; 
-                btn.disabled = false;
-            }
-        }
+    async function saveClassTime(){
+        classTime = document.getElementById('classTimeInput').value.trim();
+        document.getElementById('classTimeBox').innerText = classTime;
+        await syncSettingsToSupabase();
+        alert('کلاس ٹائم محفوظ ہو گیا');
     }
 
-   function loadReports() {
-    const selectedDate = document.getElementById('mainDate').value;
-
-    const dateObj = new Date(selectedDate);
-    const selectedYear = dateObj.getFullYear();
-    const selectedMonth = dateObj.getMonth();
-
-    const monthKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
-
-    // اوپر رپورٹ ہیڈنگ
-    document.querySelectorAll('.monthTitle').forEach(el => {
-        el.innerText = `${urduMonths[selectedMonth]} ${selectedYear}`;
-    });
-
-    const bA = document.getElementById('attReportBody');
-    const bL = document.getElementById('lessReportBody');
-
-    bA.innerHTML = '';
-    bL.innerHTML = '';
-
-    names.forEach((n) => {
-
-        let p = 0;
-        let ab = 0;
-        let lv = 0;
-
-        let sn = 0;
-        let yn = 0;
-        let ns = 0;
-
-        for (let d in globalData) {
-
-            // صرف منتخب مہینے کا ریکارڈ
-            if (d.startsWith(monthKey) && globalData[d][n]) {
-
-                const r = globalData[d][n];
-
-                if (r.aS === "حاضر") p++;
-                else if (r.aS === "غیر حاضر") ab++;
-                else if (r.aS === "رخصت") lv++;
-
-                if (r.lS === "سنایا") sn++;
-                else if (r.lS === "یاد نہیں") yn++;
-                else if (r.lS === "نہیں سنایا") ns++;
-            }
-        }
-
-        bA.innerHTML += `
-        <tr>
-            <td class="student-name">${n}</td>
-            <td class="report-count" style="color:var(--present-clr)">${p}</td>
-            <td class="report-count" style="color:var(--absent-clr)">${ab}</td>
-            <td class="report-count" style="color:var(--leave-clr)">${lv}</td>
-        </tr>`;
-
-        bL.innerHTML += `
-        <tr>
-            <td class="student-name">${n}</td>
-            <td class="report-count" style="color:var(--present-clr)">${sn}</td>
-            <td class="report-count" style="color:var(--absent-clr)">${yn}</td>
-            <td class="report-count" style="color:var(--leave-clr)">${ns}</td>
-        </tr>`;
-    });
-}
-
-async function saveClassTime(){
-
-    classTime =
-    document.getElementById('classTimeInput')
-    .value.trim();
-
-    document.getElementById('classTimeBox')
-    .innerText = classTime;
-
-    await syncSettingsToSupabase();
-
-    alert('کلاس ٹائم محفوظ ہو گیا');
-}
-
     function downloadBackup() {
-        const backupData = { attendance: globalData, names, videos: videoLists, timelinePosts };
+        const backupData = { attendance: globalData, names, videos: videoLists, timelinePosts, formerStudents, studentJoinDates: window.studentJoinDates || {} };
         const blob = new Blob([JSON.stringify(backupData)], {type:'text/plain'});
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
         a.download = 'rizwan_masjid_full_backup.txt'; a.click();
     }
+
+    function renderFormerStudents(){
+        const countEl = document.getElementById('formerStudentsCount');
+        if(countEl) countEl.innerText = `سابقہ طلباء: ${formerStudents.length}`;
+        
+        const container = document.getElementById('formerStudentsContainer');
+        if(!container) return;
+        container.innerHTML = '';
+
+        if(formerStudents.length === 0){
+            container.innerHTML = `
+            <div style="text-align:center; font-size:20px; padding:30px; color:#666;">
+                ابھی کوئی سابقہ طالب علم موجود نہیں
+            </div>`;
+            return;
+        }
+
+        formerStudents.forEach((student, index) => {
+            let restoreBtn = '';
+            if(isTeacherMode){
+                restoreBtn = `
+                <button class="restore-btn" onclick="restoreStudent(${index})">
+                    ♻️ ری سٹور کریں
+                </button>
+
+                <button
+                    class="btn-mgmt"
+                    style="background:#b71c1c;margin-right:8px;"
+                    onclick="deleteFormerStudent(${index})">
+                    🗑️ مستقل حذف
+                </button>`;
+            }
+
+            container.innerHTML += `
+            <div class="former-student-card">
+                <div class="former-student-name">👤 ${student.name}</div>
+                <div class="former-student-line">🏷️ حیثیت: سابقہ طالب علم</div>
+                <div class="former-student-line">📅 چھوڑنے کی تاریخ: ${formatUrduDate(student.formerDate)}</div>
+                <div class="former-student-line">📖 آخری حاضری: ${formatUrduDate(student.lastAttendance)}</div>
+                <div class="former-student-line">⏳ مدت تعلیم: ${student.studyPeriod || '-'}</div>
+                <button class="video-btn" onclick="showFormerPlaylist(${index})">🎥 ویڈیوز دیکھیں</button>
+                <div id="formerVideo${index}" style="margin-top:10px;"></div>
+                ${restoreBtn}
+            </div>`;
+        });
+    }
+
+    function showFormerPlaylist(index){
+        const student = formerStudents[index];
+        const container = document.getElementById(`formerVideo${index}`);
+        if(container.innerHTML !== ''){
+            container.innerHTML = '';
+            return;
+        }
+
+        const playlist = student.playlist || 'PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq';
+
+        container.innerHTML = `
+        <iframe width="100%" height="250" src="https://www.youtube.com/embed/videoseries?list=${playlist}" frameborder="0" allowfullscreen></iframe>
+        <br>
+        <a href="intent://www.youtube.com/playlist?list=${playlist}#Intent;package=com.google.android.youtube;scheme=https;end" class="yt-playlist-link-btn">مکمل Playlist یوٹیوب پر دیکھیں</a>
+        `;
+    }
+
+    async function moveToFormerStudent(index){
+        const studentName = names[index];
+        if(!confirm(`${studentName} کو سابقہ طلباء میں منتقل کرنا ہے؟`)) return;
+
+        const today = document.getElementById('mainDate').value;
+        let lastAttendance = '-';
+        const allDates = Object.keys(globalData).sort().reverse();
+
+        for(const d of allDates){
+            if(globalData[d] && globalData[d][studentName] && globalData[d][studentName].aS === 'حاضر'){
+                lastAttendance = d;
+                break;
+            }
+        }
+
+        const joinDate = window.studentJoinDates ? window.studentJoinDates[studentName] : null;
+        let studyPeriod = joinDate ? `${formatUrduDate(joinDate)} تا ${formatUrduDate(today)}` : '-';
+
+        formerStudents.push({
+            name: studentName,
+            playlist: videoLists[index] || '',
+            formerDate: today,
+            lastAttendance: lastAttendance,
+            studyPeriod: studyPeriod,
+            joinDate: joinDate || ''
+        });
+
+        names.splice(index,1);
+        videoLists.splice(index,1);
+
+        await syncSettingsToSupabase();
+        populateStudentSelect();
+        updateAll();
+        alert('سابقہ طلباء میں منتقل کر دیا گیا');
+    }
+
+    async function restoreStudent(index){
+        const student = formerStudents[index];
+        names.push(student.name);
+        videoLists.push(student.playlist || '');
+
+        if(student.joinDate){
+            if(!window.studentJoinDates) window.studentJoinDates = {};
+            window.studentJoinDates[student.name] = student.joinDate;
+        }
+
+        formerStudents.splice(index,1);
+        await syncSettingsToSupabase();
+        populateStudentSelect();
+        updateAll();
+        alert('طالب علم بحال کر دیا گیا');
+    }
+
+    async function deleteFormerStudent(index){
+        if(!isTeacherMode) return;
+
+        const student = formerStudents[index];
+
+        if(!confirm(`کیا "${student.name}" کو سابقہ ریکارڈ سے مستقل حذف کرنا ہے؟`)){
+            return;
+        }
+
+        formerStudents.splice(index, 1);
+
+        await syncSettingsToSupabase();
+
+        renderFormerStudents();
+
+        alert('سابقہ ریکارڈ سے مستقل حذف کر دیا گیا');
+    }
+
+    function openStudentMenu(index){
+        document.getElementById('menuStudentIndex').value = index;
+        document.getElementById('studentMenuModal').style.display = 'block';
+    }
+
+    function closeStudentMenu(){
+        document.getElementById('studentMenuModal').style.display = 'none';
+    }
+
+    function menuEditStudent(){
+        const index = document.getElementById('menuStudentIndex').value;
+        closeStudentMenu();
+        editStudentInfo(index);
+    }
+
+    function menuMoveFormer(){
+        const index = document.getElementById('menuStudentIndex').value;
+        closeStudentMenu();
+        moveToFormerStudent(index);
+    }
+
 </script>
 </body>
 </html>
