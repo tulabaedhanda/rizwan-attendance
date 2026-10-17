@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>آل ان ون رجسٹر - رضوان مسجد</title>
+    <!-- موبائل ایپ (PWA) کا لنک شامل کر دیا گیا ہے -->
+    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
@@ -433,7 +435,6 @@ transform:scale(1.02);
 
     <div class="date-picker-container">
         <label for="mainDate" style="color: var(--primary); font-weight: bold; font-size: 16px; margin-left: 5px;">تاریخ منتخب کریں:</label>
-        <!-- آٹو ریفریش ختم کرنے کے لیے onchange کو اپڈیٹ کیا گیا ہے -->
         <input type="date" id="mainDate" onchange="handleDateChange()">
     </div>
 
@@ -569,7 +570,8 @@ transform:scale(1.02);
     <div class="login-portal" id="loginPortalSection">
         <h3 id="portalTitle">🔐 استاد پورٹل لاگ ان</h3>
         <div id="loginFormInputs">
-            <input type="text" id="uName" class="login-input" placeholder="یوزر نیم">
+            <!-- اب یہاں نیا یوزر نیم اور پاسورڈ درج کیا جائے گا -->
+            <input type="text" id="uName" class="login-input" placeholder="ای میل ایڈریس">
             <input type="password" id="pWord" class="login-input" placeholder="پاس ورد">
             <button class="login-submit" onclick="checkTeacherLogin()">لاگ ان</button>
         </div>
@@ -750,14 +752,41 @@ transform:scale(1.02);
         names.forEach((n) => { select.innerHTML += `<option value="${n}">${n}</option>`; });
     }
 
-    function checkTeacherLogin() {
-        const u = document.getElementById('uName').value;
-        const p = document.getElementById('pWord').value;
-        if(u === "nasirali258" && p === "merayquaidjalali") {
+    // نیا اور محفوظ لاگ ان فنکشن
+    async function checkTeacherLogin() {
+        const u = document.getElementById('uName').value.trim();
+        const p = document.getElementById('pWord').value.trim();
+        
+        if(!u || !p) {
+            return alert("ای میل اور پاسورڈ درج کریں!");
+        }
+
+        const btn = document.querySelector('.login-submit');
+        btn.innerText = "لاگ ان ہو رہا ہے... ⏳";
+        btn.disabled = true;
+
+        try {
+            const { data, error } = await _supabase.auth.signInWithPassword({
+                email: u,
+                password: p
+            });
+
+            if (error) throw error;
+
             sessionStorage.setItem('isTeacherLoggedIn', 'true');
             activateTeacherMode();
             alert("لاگ ان کامیاب!");
-        } else { alert("غلط معلومات!"); }
+            
+            document.getElementById('uName').value = "";
+            document.getElementById('pWord').value = "";
+
+        } catch (err) {
+            console.error("Login Error:", err);
+            alert("غلط ای میل یا پاسورڈ!");
+        } finally {
+            btn.innerText = "لاگ ان";
+            btn.disabled = false;
+        }
     }
 
     function activateTeacherMode() {
