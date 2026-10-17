@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>آل ان ون رجسٹر - رضوان مسجد</title>
-    <!-- موبائل ایپ (PWA) کا لنک شامل کر دیا گیا ہے -->
+    <!-- موبائل ایپ (PWA) کا لنک -->
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -51,10 +51,7 @@
             box-shadow: 0 0 10px rgba(255,215,0,0.5);
         }
 
-        .date-picker-container {
-            text-align: center; margin: 10px 0 15px 0;
-        }
-        
+        .date-picker-container { text-align: center; margin: 10px 0 15px 0; }
         .date-picker-container input[type="date"] {
             padding: 8px 15px; font-size: 16px; font-weight: bold;
             border: 2px solid var(--primary); border-radius: 10px;
@@ -67,7 +64,6 @@
             font-size: 16px; margin-bottom: 12px;
         }
 
-        /* نیا ڈائینامک نوٹس بار */
         #unsavedNotice {
             display: none;
             background-color: #ffcdd2; color: #b71c1c; border: 2px dashed #e53935;
@@ -77,70 +73,32 @@
         @keyframes blinker { 50% { opacity: 0.7; } }
 
         .tabs { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 6px; 
-            margin-bottom: 20px; 
-            background: rgba(75, 0, 130, 0.1);
-            padding: 6px;
-            border-radius: 14px;
-            border: 1px solid rgba(75, 0, 130, 0.2);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; background: rgba(75, 0, 130, 0.1);
+            padding: 6px; border-radius: 14px; border: 1px solid rgba(75, 0, 130, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn { 
-            flex: 1; 
-            min-width: 85px; 
-            padding: 10px 4px; 
-            cursor: pointer; 
-            border: 1px solid transparent; 
-            background: transparent; 
-            font-size: 17px; 
-            font-weight: bold; 
-            color: var(--primary); 
-            border-radius: 10px;
-            text-align: center;
-            transition: all 0.25s ease;
+            flex: 1; min-width: 85px; padding: 10px 4px; cursor: pointer; border: 1px solid transparent; 
+            background: transparent; font-size: 17px; font-weight: bold; color: var(--primary); border-radius: 10px;
+            text-align: center; transition: all 0.25s ease;
         }
-        .tab-btn:hover {
-            background: rgba(75, 0, 130, 0.15);
-            color: #311b92;
-        }
-        .tab-btn.active { 
-            background: var(--primary); 
-            color: white !important; 
-            border-color: #311b92;
-            box-shadow: 0 4px 12px rgba(75, 0, 130, 0.3);
-        }
-        
+        .tab-btn:hover { background: rgba(75, 0, 130, 0.15); color: #311b92; }
+        .tab-btn.active { background: var(--primary); color: white !important; border-color: #311b92; box-shadow: 0 4px 12px rgba(75, 0, 130, 0.3); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
         table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.85); border-radius: 10px; overflow: hidden; }
         th, td { padding: 10px 5px; border: 1px solid #ddd; text-align: center; font-size: 18px; }
         th { background-color: var(--primary); color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        
         .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; width: 40%; }
         
         .three-dots-btn {
-            display: none;
-            cursor: pointer;
-            color: #b38728;
-            font-weight: bold;
-            font-size: 20px;
-            padding: 0 8px;
-            user-select: none;
-            transition: color 0.2s;
+            display: none; cursor: pointer; color: #b38728; font-weight: bold; font-size: 20px; padding: 0 8px; user-select: none; transition: color 0.2s;
         }
-        .three-dots-btn:hover {
-            color: var(--primary);
-        }
+        .three-dots-btn:hover { color: var(--primary); }
 
         .status-btn { 
-            width: 90px; padding: 6px 0; cursor: pointer; font-weight: bold; 
-            border-radius: 6px; background: #eee; border: 1px solid #ccc; 
-            display: inline-block; text-align: center; font-size: 16px;
+            width: 90px; padding: 6px 0; cursor: pointer; font-weight: bold; border-radius: 6px; background: #eee; border: 1px solid #ccc; display: inline-block; text-align: center; font-size: 16px;
         }
-        
         .present { background-color: var(--present-clr) !important; color: white !important; }
         .absent { background-color: var(--absent-clr) !important; color: white !important; }
         .leave { background-color: var(--leave-clr) !important; color: white !important; }
@@ -148,60 +106,22 @@
         .report-count { font-weight: 900; font-family: Arial, sans-serif !important; font-size: 24px; }
 
         .student-lesson-card {
-            background: rgba(255, 255, 255, 0.85); border: 2px solid #b38728; border-radius: 12px;
-            padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.85); border: 2px solid #b38728; border-radius: 12px; padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .former-student-card{
-            background:rgba(255,255,255,0.35);
-            border:2px solid transparent;
-            border-image:var(--gold-gradient) 1;
-            border-radius:15px;
-            padding:15px;
-            margin-bottom:15px;
-            box-shadow:var(--gold-glow);
-            backdrop-filter:blur(8px);
-            text-align: right;
+            background:rgba(255,255,255,0.35); border:2px solid transparent; border-image:var(--gold-gradient) 1; border-radius:15px; padding:15px; margin-bottom:15px; box-shadow:var(--gold-glow); backdrop-filter:blur(8px); text-align: right;
         }
-        .former-student-name{
-            color:var(--primary);
-            font-size:24px;
-            font-weight:bold;
-            margin-bottom:10px;
-        }
-        .former-student-line{
-            font-size:18px;
-            margin-bottom:6px;
-            color:#111;
-        }
-        .restore-btn{
-            background:#1b5e20;
-            color:white;
-            border:none;
-            border-radius:10px;
-            padding:8px 18px;
-            font-size:17px;
-            font-weight:bold;
-            cursor:pointer;
-            margin-top:10px;
-        }
+        .former-student-name{ color:var(--primary); font-size:24px; font-weight:bold; margin-bottom:10px; }
+        .former-student-line{ font-size:18px; margin-bottom:6px; color:#111; }
+        .restore-btn{ background:#1b5e20; color:white; border:none; border-radius:10px; padding:8px 18px; font-size:17px; font-weight:bold; cursor:pointer; margin-top:10px; }
 
-        .lesson-row-container {
-            display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px;
-        }
-        .lesson-inputs-holder {
-            display: flex; flex-direction: column; gap: 5px; width: 100%; margin-top: 5px; border-top: 1px dashed #ccc; padding-top: 5px;
-        }
-        .lesson-box-label {
-            font-size: 14px; color: #4B0082; font-weight: bold; text-align: right; margin-top: 2px;
-        }
+        .lesson-row-container { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; }
+        .lesson-inputs-holder { display: flex; flex-direction: column; gap: 5px; width: 100%; margin-top: 5px; border-top: 1px dashed #ccc; padding-top: 5px; }
         .diary-input { 
-            width: 95%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; 
-            font-size: 17px; background: #fff; color: #000000 !important; font-weight: bold;
+            width: 95%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; font-size: 17px; background: #fff; color: #000000 !important; font-weight: bold;
         }
-        .diary-input:disabled { 
-            background: rgba(240, 240, 240, 0.5); color: #000000 !important; border: 1px solid #ddd; cursor: not-allowed; 
-        }
+        .diary-input:disabled { background: rgba(240, 240, 240, 0.5); color: #000000 !important; border: 1px solid #ddd; cursor: not-allowed; }
 
         .fb-uploader-card {
             background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -209,215 +129,60 @@
         .fb-uploader-card select, .fb-uploader-card input, .fb-uploader-card textarea {
             width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; font-family: inherit;
         }
-        .fb-feed-container {
-            display: flex; flex-direction: column; gap: 20px; max-height: 700px; overflow-y: auto; padding: 5px;
-        }
+        .fb-feed-container { display: flex; flex-direction: column; gap: 20px; max-height: 700px; overflow-y: auto; padding: 5px; }
         .fb-post-card {
             background: rgba(255, 255, 255, 0.9); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: right; position: relative;
         }
-        .fb-post-header {
-            display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 12px;
-        }
+        .fb-post-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 12px; }
         .fb-post-user { font-size: 18px; font-weight: bold; color: var(--primary); }
         .fb-post-date { font-size: 13px; color: #777; font-family: Arial, sans-serif !important; }
         .fb-post-title { font-size: 20px; font-weight: bold; color: #000000; margin-bottom: 12px; line-height: 1.5; }
         
         .fb-post-media { 
-            width: 100%; 
-            border-radius: 10px; 
-            border: 3px solid #b38728; 
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.15); 
-            overflow: hidden; 
-            margin-bottom: 5px; 
-            position: relative; 
-            background: #fdfbf7;
+            width: 100%; border-radius: 10px; border: 3px solid #b38728; box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.15); overflow: hidden; margin-bottom: 5px; position: relative; background: #fdfbf7;
         }
         
-        .fb-video-wrapper { 
-            position: relative; 
-            width: 100%; 
-            display: block;
-        }
-        
-        .timeline-media,
-        .timeline-image,
-        .timeline-video,
-        .timeline iframe{
-            width:100%;
-            height:auto !important;
-            max-width:100%;
-            object-fit:contain;
-            display:block;
-        }
+        .timeline-text-post{ background:#fff; padding:18px; margin-top:12px; border-radius:12px; font-size:20px; line-height:1.9; white-space:pre-wrap; text-align:right; }
+        .fb-del-btn { background: #b71c1c; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; }
 
-        .timeline-text-post{
-            background:#fff;
-            padding:18px;
-            margin-top:12px;
-            border-radius:12px;
-            font-size:20px;
-            line-height:1.9;
-            white-space:pre-wrap;
-            text-align:right;
-        }
-        
-        .fb-del-btn {
-            background: #b71c1c; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold;
-        }
-
-        .teacher-badge {
-            background: rgba(232, 245, 233, 0.9); color: #2e7d32; border: 2px solid #4caf50; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 18px;
-        }
+        .teacher-badge { background: rgba(232, 245, 233, 0.9); color: #2e7d32; border: 2px solid #4caf50; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 18px; }
 
         .footer-tools { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
         .btn-tool { padding: 12px; font-size: 17px; cursor: pointer; border: none; border-radius: 10px; color: white; flex: 1; min-width: 120px; font-weight: bold; }
-        
         .teacher-only-btn { display: none; }
 
-        .management-panel {
-            background: rgba(238, 242, 243, 0.9); border: 2px solid #b38728; padding: 15px; border-radius: 15px; margin-bottom: 15px; display: none;
-        }
+        .management-panel { background: rgba(238, 242, 243, 0.9); border: 2px solid #b38728; padding: 15px; border-radius: 15px; margin-bottom: 15px; display: none; }
         .mgmt-input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; width: 60%; max-width: 250px; }
         .btn-mgmt { padding: 8px 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; color: white; }
 
         .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
         .video-container { display: none; padding: 10px; background: rgba(249, 249, 249, 0.9); text-align: center; }
         .video-container iframe { width: 100%; max-width: 450px; height: 250px; border-radius: 10px; border: 2px solid #ff0000; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        
-        .yt-playlist-link-btn {
-            display: inline-block; background: #ff0000; color: white !important; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 15px; font-weight: bold; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+        .yt-playlist-link-btn { display: inline-block; background: #ff0000; color: white !important; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 15px; font-weight: bold; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-        .login-portal {
-            margin-top: 40px; background: rgba(255, 249, 229, 0.9); border: 3px dashed var(--primary); padding: 15px; border-radius: 15px; text-align: center;
-        }
+        .login-portal { margin-top: 40px; background: rgba(255, 249, 229, 0.9); border: 3px dashed var(--primary); padding: 15px; border-radius: 15px; text-align: center; }
         .login-portal h3 { margin-top: 0; color: var(--primary); font-size: 20px; }
         .login-input { padding: 8px; margin: 5px; border: 1px solid var(--primary); border-radius: 5px; font-size: 16px; width: 80%; max-width: 200px; text-align: center; }
         .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
         .logout-btn-style { display:none; background:#b71c1c; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        
+        .forgot-pass-link { display: inline-block; margin-top: 12px; color: var(--primary); font-weight: bold; font-size: 15px; text-decoration: underline; cursor: pointer; }
 
-        .class-time-box{
-            width:80%;
-            max-width:500px;
-            margin:12px auto;
-            padding:12px;
-            min-height:50px;
-
-            background:rgba(255,255,255,0.9);
-
-            border:3px solid #b38728;
-            border-radius:15px;
-
-            text-align:center;
-            font-size:20px;
-            font-weight:bold;
-            color:#4B0082;
-
-            box-shadow:
-                0 0 10px rgba(218,165,32,0.4),
-                inset 0 0 8px rgba(255,215,0,0.2);
-        }
-
-        .class-time-editor{
-            text-align:center;
-            margin-bottom:12px;
-        }
-
-        .class-time-editor input{
-            width:80%;
-            max-width:500px;
-            padding:8px;
-            border:2px solid #b38728;
-            border-radius:10px;
-            font-size:18px;
-        }
+        .class-time-box{ width:80%; max-width:500px; margin:12px auto; padding:12px; min-height:50px; background:rgba(255,255,255,0.9); border:3px solid #b38728; border-radius:15px; text-align:center; font-size:20px; font-weight:bold; color:#4B0082; box-shadow: 0 0 10px rgba(218,165,32,0.4), inset 0 0 8px rgba(255,215,0,0.2); }
+        .class-time-editor{ text-align:center; margin-bottom:12px; }
+        .class-time-editor input{ width:80%; max-width:500px; padding:8px; border:2px solid #b38728; border-radius:10px; font-size:18px; }
 
 /* ===== سبق ہسٹری ===== */
+.history-btn{ margin-top:8px; width:100%; padding:8px; border:none; border-radius:8px; background:#4B0082; color:#fff; font-size:17px; font-weight:bold; cursor:pointer; }
+.history-modal{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.65); z-index:9999; overflow:auto; }
+.history-box{ width:95%; max-width:700px; margin:25px auto; background:#fff; border-radius:15px; padding:18px; }
+.history-title{ text-align:center; color:#4B0082; font-size:26px; font-weight:bold; margin-bottom:20px; }
+.history-card{ border:2px solid #b38728; border-radius:10px; padding:12px; margin-bottom:12px; background:#fffdf7; }
+.history-date{ color:#b71c1c; font-size:18px; font-weight:bold; margin-bottom:10px; }
+.close-history{ width:100%; padding:10px; border:none; border-radius:10px; background:#b71c1c; color:#fff; font-size:18px; cursor:pointer; }
+.lesson-highlight{ border:4px solid gold !important; box-shadow: 0 0 25px gold, 0 0 40px #ffd700 !important; animation:lessonFlash .8s infinite alternate; }
 
-.history-btn{
-    margin-top:8px;
-    width:100%;
-    padding:8px;
-    border:none;
-    border-radius:8px;
-    background:#4B0082;
-    color:#fff;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.history-modal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,.65);
-    z-index:9999;
-    overflow:auto;
-}
-
-.history-box{
-    width:95%;
-    max-width:700px;
-    margin:25px auto;
-    background:#fff;
-    border-radius:15px;
-    padding:18px;
-}
-
-.history-title{
-    text-align:center;
-    color:#4B0082;
-    font-size:26px;
-    font-weight:bold;
-    margin-bottom:20px;
-}
-
-.history-card{
-    border:2px solid #b38728;
-    border-radius:10px;
-    padding:12px;
-    margin-bottom:12px;
-    background:#fffdf7;
-}
-
-.history-date{
-    color:#b71c1c;
-    font-size:18px;
-    font-weight:bold;
-    margin-bottom:10px;
-}
-
-.close-history{
-    width:100%;
-    padding:10px;
-    border:none;
-    border-radius:10px;
-    background:#b71c1c;
-    color:#fff;
-    font-size:18px;
-    cursor:pointer;
-}
-
-.lesson-highlight{
-    border:4px solid gold !important;
-    box-shadow:
-    0 0 25px gold,
-    0 0 40px #ffd700 !important;
-    animation:lessonFlash .8s infinite alternate;
-}
-
-@keyframes lessonFlash{
-from{
-transform:scale(1);
-}
-to{
-transform:scale(1.02);
-}
-}
+@keyframes lessonFlash{ from{transform:scale(1);} to{transform:scale(1.02);} }
 
         @media print {
             .tabs, .footer-tools, .date-picker-container, .login-portal, .teacher-badge, .management-panel, .fb-uploader-card, .fb-del-btn, .parent-notice-bar, .three-dots-btn { display: none !important; }
@@ -441,17 +206,8 @@ transform:scale(1.02);
 <div id="classTimeBox" class="class-time-box"></div>
 
 <div id="classTimeEditor" class="class-time-editor" style="display:none;">
-    <input
-        type="text"
-        id="classTimeInput"
-        placeholder="کلاس ٹائم لکھیں">
-
-    <button
-        class="btn-mgmt"
-        style="background:#b38728;margin-top:5px;"
-        onclick="saveClassTime()">
-        محفوظ کریں
-    </button>
+    <input type="text" id="classTimeInput" placeholder="کلاس ٹائم لکھیں">
+    <button class="btn-mgmt" style="background:#b38728;margin-top:5px;" onclick="saveClassTime()">محفوظ کریں</button>
 </div>
 
     <div id="teacherBadge" class="teacher-badge" style="display: none;">🔓 استاد موڈ فعال ہے (ترمیم کھلی ہے)</div>
@@ -476,7 +232,6 @@ transform:scale(1.02);
     </div>
 
     <div id="dailyAtt" class="tab-content active">
-        <!-- نئی وارننگز -->
         <div id="unsavedNotice">⚠️ آپ نے کچھ تبدیلیاں کی ہیں! انہیں پکا محفوظ کرنے کے لیے نیچے دیئے گئے "سارا ریکارڈ آن لائن بھیجیں 🚀" بٹن کو دبائیں۔</div>
         <div class="parent-notice-bar" id="loadingBar" style="display:none;">🔄 کلاؤڈ سے آپ کا پرانا ڈیٹا لایا جا رہا ہے...</div>
         
@@ -493,30 +248,10 @@ transform:scale(1.02);
     </div>
 
     <div id="dailyLesson" class="tab-content">
-
-        <div style="position:sticky;top:0;z-index:20;
-            background:rgba(255,248,240,.9);
-            padding:10px;
-            backdrop-filter:blur(8px);">
-
-            <input
-                id="lessonSearch"
-                type="text"
-                placeholder="🔍 طالب علم کا نام یا نمبر لکھیں..."
-                onkeyup="searchLessonStudent(event)"
-                style="
-                    width:100%;
-                    padding:12px;
-                    font-size:18px;
-                    border:2px solid #ad1457;
-                    border-radius:12px;
-                    box-sizing:border-box;
-                    font-weight:bold;
-                ">
+        <div style="position:sticky;top:0;z-index:20; background:rgba(255,248,240,.9); padding:10px; backdrop-filter:blur(8px);">
+            <input id="lessonSearch" type="text" placeholder="🔍 طالب علم کا نام یا نمبر لکھیں..." onkeyup="searchLessonStudent(event)" style="width:100%; padding:12px; font-size:18px; border:2px solid #ad1457; border-radius:12px; box-sizing:border-box; font-weight:bold;">
         </div>
-
         <div id="lessCardsContainer"></div>
-
     </div>
 
     <div id="videoTab" class="tab-content">
@@ -544,14 +279,13 @@ transform:scale(1.02);
 
     <div id="miscellaneousTab" class="tab-content">
         <div class="fb-uploader-card" id="fbUploaderPanel" style="display: none;">
-            <strong style="color:var(--primary); font-size:18px;">📝 میڈیا ٹائم لائن پوسٹ تخلیق کریں (ڈرائیو/یوٹیوب/فیس بک):</strong>
+            <strong style="color:var(--primary); font-size:18px;">📝 میڈیا ٹائم لائن پوسٹ تخلیق کریں:</strong>
             <select id="mediaStudentSelect"><option value="">طالب علم کا انتخاب کریں (آپشنل)</option></select>
             <input type="text" id="mediaTitleInput" placeholder="پوسٹ کا عنوان یا ٹائٹل لکھیں...">
-            <input type="text" id="mediaUrlInput" placeholder="گوگل ڈرائیو، یوٹیوب یا فیس بک ویڈیو کا لنک پیسٹ کریں...">
+            <input type="text" id="mediaUrlInput" placeholder="یوٹیوب، ڈرائیو یا فیس بک کا لنک پیسٹ کریں...">
             <textarea id="timelineText" placeholder="صرف پیغام بھی لکھ سکتے ہیں..." rows="4"></textarea>
             <button class="btn-mgmt" style="background:var(--primary); width:100%; margin-top:5px; padding:10px;" onclick="addTimelinePost()">ٹائم لائن پر پوسٹ کریں ✨</button>
         </div>
-
         <div class="fb-feed-container" id="fbFeedTimeline"></div>
     </div>
 
@@ -563,17 +297,19 @@ transform:scale(1.02);
 
     <div class="footer-tools">
         <button class="btn-tool" style="background:#311b92" onclick="window.print()">پرنٹ نکالیں</button>
-        <button class="btn-tool teacher-only-btn" id="syncSupabaseBtn" onclick="forceFullSync()" style="background:#1b5e20;">سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀</button>
+        <button class="btn-tool teacher-only-btn" id="syncSupabaseBtn" onclick="forceFullSync()" style="background:#1b5e20;">سارا ریکارڈ آن لائن بھیجیں 🚀</button>
         <button class="btn-tool teacher-only-btn" style="background:var(--primary)" id="exportBtn" onclick="downloadBackup()">بیک اپ (Backup)</button>
     </div>
 
     <div class="login-portal" id="loginPortalSection">
         <h3 id="portalTitle">🔐 استاد پورٹل لاگ ان</h3>
         <div id="loginFormInputs">
-            <!-- اب یہاں نیا یوزر نیم اور پاسورڈ درج کیا جائے گا -->
-            <input type="text" id="uName" class="login-input" placeholder="ای میل ایڈریس">
-            <input type="password" id="pWord" class="login-input" placeholder="پاس ورد">
+            <input type="text" id="uName" class="login-input" placeholder="ای میل ایڈریس درج کریں">
+            <input type="password" id="pWord" class="login-input" placeholder="پاس ورڈ درج کریں">
             <button class="login-submit" onclick="checkTeacherLogin()">لاگ ان</button>
+            <br>
+            <!-- نیا Forgot Password کا لنک -->
+            <a class="forgot-pass-link" onclick="resetPassword()">پاسورڈ بھول گئے؟ یہاں کلک کریں</a>
         </div>
         <button id="logoutBtn" class="logout-btn-style" onclick="teacherLogout()">لاگ آؤٹ</button>
     </div>
@@ -605,8 +341,6 @@ transform:scale(1.02);
     
     let formerStudents = [];
     window.studentJoinDates = {};
-
-    // بگز ختم کرنے کے لیے نئے Variables
     let unsavedChanges = false;
     let loadedMonths = new Set(); 
 
@@ -619,30 +353,36 @@ transform:scale(1.02);
         return `${d.getDate()} ${urduMonths[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    window.onload = async function() {
+    // ای میل کے لنک سے واپس آنے پر نیا پاسورڈ سیٹ کرنے والا فنکشن
+    _supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+            const newPassword = prompt("پاسورڈ ری سیٹ کا عمل شروع ہو گیا ہے۔ براہ کرم اپنا نیا پاسورڈ درج کریں:");
+            if (!newPassword) return;
+            
+            const { data, error } = await _supabase.auth.updateUser({ password: newPassword });
+            if (data) alert("زبردست! آپ کا پاسورڈ کامیابی سے تبدیل ہو گیا ہے۔ اب آپ نئے پاسورڈ سے لاگ ان کر سکتے ہیں۔");
+            if (error) alert("پاسورڈ اپڈیٹ کرنے میں مسئلہ آیا: " + error.message);
+        }
+    });
 
+    window.onload = async function() {
         let today = new Date();
         let yyyy = today.getFullYear();
         let mm = String(today.getMonth() + 1).padStart(2, '0');
         let dd = String(today.getDate()).padStart(2, '0');
-
         document.getElementById('mainDate').value = `${yyyy}-${mm}-${dd}`;
 
         if (sessionStorage.getItem('isTeacherLoggedIn') === 'true') {
             activateTeacherMode();
         }
 
-        // آف لائن بیک اپ ریکوری
         const localBackup = localStorage.getItem('rizwan_masjid_backup');
-        if(localBackup) {
-            globalData = JSON.parse(localBackup);
-        }
+        if(localBackup) { globalData = JSON.parse(localBackup); }
 
         await fetchBasicSettings();
-        await fetchMonthData(`${yyyy}-${mm}`); // سمارٹ ڈیٹا لوڈنگ
+        await fetchMonthData(`${yyyy}-${mm}`);
     };
 
-    // سمارٹ لوڈر (1000 لمیٹ ایشو فکس)
     async function handleDateChange() {
         const dateInput = document.getElementById('mainDate').value;
         if(!dateInput) return;
@@ -663,12 +403,9 @@ transform:scale(1.02);
                 if(settingsData.names) names = JSON.parse(settingsData.names);
                 if(settingsData.videos) videoLists = JSON.parse(settingsData.videos);
                 if(settingsData.timeline) timelinePosts = JSON.parse(settingsData.timeline);
-                
                 if(settingsData.former_students) formerStudents = JSON.parse(settingsData.former_students);
                 if(settingsData.student_join_dates) window.studentJoinDates = JSON.parse(settingsData.student_join_dates);
-
                 classTime = settingsData.class_time || "";
-
                 document.getElementById('classTimeBox').innerText = classTime;
                 const inp = document.getElementById('classTimeInput');
                 if(inp){ inp.value = classTime; }
@@ -677,46 +414,31 @@ transform:scale(1.02);
             }
             populateStudentSelect();
             if(isTeacherMode) renderFormerStudents();
-        } catch (err) {
-            console.error("Settings لوڈنگ ایرر:", err);
-        }
+        } catch (err) { console.error("Settings Load Error:", err); }
     }
 
-    // نیا Pagination فنکشن 
     async function fetchMonthData(monthPrefix) {
         try {
-            let limit = 1000;
-            let start = 0;
-            
+            let limit = 1000; let start = 0;
             while(true) {
-                const { data, error } = await _supabase.from('attendance_records')
-                    .select('*')
-                    .like('date', `${monthPrefix}%`)
-                    .range(start, start + limit - 1);
-                
+                const { data, error } = await _supabase.from('attendance_records').select('*').like('date', `${monthPrefix}%`).range(start, start + limit - 1);
                 if (error) throw error;
-                
                 if (data && data.length > 0) {
                     data.forEach(row => {
                         if (!globalData[row.date]) globalData[row.date] = {};
                         globalData[row.date][row.student_name] = {
-                            aS: row.attendance_status || '---',
-                            aC: row.attendance_class || 'status-btn',
-                            lS: row.lesson_status || '---',
-                            lC: row.lesson_class || 'status-btn',
-                            w: row.quran_lesson || '',
-                            wD: row.prayer_lesson || ''
+                            aS: row.attendance_status || '---', aC: row.attendance_class || 'status-btn',
+                            lS: row.lesson_status || '---', lC: row.lesson_class || 'status-btn',
+                            w: row.quran_lesson || '', wD: row.prayer_lesson || ''
                         };
                     });
                 }
                 if(!data || data.length < limit) break;
                 start += limit;
             }
-            
             loadedMonths.add(monthPrefix); 
             document.getElementById('loadingBar').style.display = 'none';
             updateAll();
-
         } catch (err) {
             console.error("Month Load Error:", err);
             document.getElementById('loadingBar').innerText = "انٹرنیٹ کا مسئلہ! آف لائن موڈ چل رہا ہے۔";
@@ -726,24 +448,8 @@ transform:scale(1.02);
     }
 
     async function syncSettingsToSupabase() {
-
-        const payload = {
-            id: 1,
-            names: JSON.stringify(names),
-            videos: JSON.stringify(videoLists),
-            timeline: JSON.stringify(timelinePosts),
-            former_students: JSON.stringify(formerStudents),
-            student_join_dates: JSON.stringify(window.studentJoinDates || {}),
-            class_time: classTime
-        };
-
-        const { error } = await _supabase
-            .from('masjid_settings')
-            .upsert(payload);
-
-        if (error) {
-            console.error(error);
-        }
+        const payload = { id: 1, names: JSON.stringify(names), videos: JSON.stringify(videoLists), timeline: JSON.stringify(timelinePosts), former_students: JSON.stringify(formerStudents), student_join_dates: JSON.stringify(window.studentJoinDates || {}), class_time: classTime };
+        await _supabase.from('masjid_settings').upsert(payload);
     }
 
     function populateStudentSelect() {
@@ -752,67 +458,59 @@ transform:scale(1.02);
         names.forEach((n) => { select.innerHTML += `<option value="${n}">${n}</option>`; });
     }
 
-    // نیا اور محفوظ لاگ ان فنکشن
     async function checkTeacherLogin() {
         const u = document.getElementById('uName').value.trim();
         const p = document.getElementById('pWord').value.trim();
         
-        if(!u || !p) {
-            return alert("ای میل اور پاسورڈ درج کریں!");
-        }
+        if(!u || !p) return alert("ای میل اور پاسورڈ درج کریں!");
 
         const btn = document.querySelector('.login-submit');
-        btn.innerText = "لاگ ان ہو رہا ہے... ⏳";
-        btn.disabled = true;
+        btn.innerText = "لاگ ان ہو رہا ہے... ⏳"; btn.disabled = true;
 
         try {
-            const { data, error } = await _supabase.auth.signInWithPassword({
-                email: u,
-                password: p
-            });
-
+            const { data, error } = await _supabase.auth.signInWithPassword({ email: u, password: p });
             if (error) throw error;
-
             sessionStorage.setItem('isTeacherLoggedIn', 'true');
             activateTeacherMode();
             alert("لاگ ان کامیاب!");
-            
-            document.getElementById('uName').value = "";
-            document.getElementById('pWord').value = "";
-
+            document.getElementById('uName').value = ""; document.getElementById('pWord').value = "";
         } catch (err) {
-            console.error("Login Error:", err);
-            alert("غلط ای میل یا پاسورڈ!");
+            console.error("Login Error:", err); alert("غلط ای میل یا پاسورڈ!");
         } finally {
-            btn.innerText = "لاگ ان";
-            btn.disabled = false;
+            btn.innerText = "لاگ ان"; btn.disabled = false;
+        }
+    }
+
+    // نیا Forgot Password فنکشن
+    async function resetPassword() {
+        const email = prompt("اپنا وہ ای میل درج کریں جس سے آپ نے رجسٹر بنایا تھا:");
+        if (!email) return;
+
+        const { data, error } = await _supabase.auth.resetPasswordForEmail(email);
+        
+        if (error) {
+            alert("ایرر آیا ہے: " + error.message);
+        } else {
+            alert("پاسورڈ ری سیٹ کا لنک آپ کے ای میل پر بھیج دیا گیا ہے۔ اپنا ان باکس یا Spam فولڈر چیک کریں!");
         }
     }
 
     function activateTeacherMode() {
         isTeacherMode = true;
-        document.getElementById('teacherBadge').style.display = "block";
-        document.getElementById('managementPanel').style.display = "block";
-        document.getElementById('classTimeEditor').style.display = 'block';
-        document.getElementById('fbUploaderPanel').style.display = "block";
-        document.getElementById('loginFormInputs').style.display = "none";
-        document.getElementById('logoutBtn').style.display = "inline-block";
+        document.getElementById('teacherBadge').style.display = "block"; document.getElementById('managementPanel').style.display = "block";
+        document.getElementById('classTimeEditor').style.display = 'block'; document.getElementById('fbUploaderPanel').style.display = "block";
+        document.getElementById('loginFormInputs').style.display = "none"; document.getElementById('logoutBtn').style.display = "inline-block";
         document.getElementById('portalTitle').innerText = "🧔 ناصر علی (استاد)";
         document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'inline-block');
         document.querySelectorAll('.three-dots-btn').forEach(btn => btn.style.display = 'inline-block');
-        renderFormerStudents();
-        updateAll();
+        renderFormerStudents(); updateAll();
     }
 
     function teacherLogout() {
-        isTeacherMode = false;
-        sessionStorage.removeItem('isTeacherLoggedIn');
-        document.getElementById('teacherBadge').style.display = "none";
-        document.getElementById('managementPanel').style.display = "none";
-        document.getElementById('classTimeEditor').style.display = 'none';
-        document.getElementById('fbUploaderPanel').style.display = "none";
-        document.getElementById('loginFormInputs').style.display = "block";
-        document.getElementById('logoutBtn').style.display = "none";
+        isTeacherMode = false; sessionStorage.removeItem('isTeacherLoggedIn');
+        document.getElementById('teacherBadge').style.display = "none"; document.getElementById('managementPanel').style.display = "none";
+        document.getElementById('classTimeEditor').style.display = 'none'; document.getElementById('fbUploaderPanel').style.display = "none";
+        document.getElementById('loginFormInputs').style.display = "block"; document.getElementById('logoutBtn').style.display = "none";
         document.getElementById('portalTitle').innerText = "🔐 استاد پورٹل لاگ ان";
         document.querySelectorAll('.teacher-only-btn').forEach(btn => btn.style.display = 'none');
         document.querySelectorAll('.three-dots-btn').forEach(btn => btn.style.display = 'none');
@@ -821,39 +519,27 @@ transform:scale(1.02);
 
     async function editStudentInfo(index) {
         if (!isTeacherMode) return;
-        const oldName = names[index];
-        const oldPlaylist = videoLists[index] || "";
-
-        const newName = prompt(`طالب علم کا نیا نام لکھیں:`, oldName);
-        if (newName === null) return;
-        const trimmedName = newName.trim();
-        if (!trimmedName) return alert("نام خالی نہیں ہو سکتا!");
-
-        const newPlaylist = prompt(`یوٹیوب پلے لسٹ آئی ڈی:`, oldPlaylist);
-        if (newPlaylist === null) return;
+        const oldName = names[index]; const oldPlaylist = videoLists[index] || "";
+        const newName = prompt(`طالب علم کا نیا نام لکھیں:`, oldName); if (newName === null) return;
+        const trimmedName = newName.trim(); if (!trimmedName) return alert("نام خالی نہیں ہو سکتا!");
+        const newPlaylist = prompt(`یوٹیوب پلے لسٹ آئی ڈی:`, oldPlaylist); if (newPlaylist === null) return;
         let finalPlaylist = newPlaylist.trim();
-        
         if (finalPlaylist.includes('list=')) { finalPlaylist = finalPlaylist.split('list=').pop().split('&')[0]; }
 
         if (trimmedName !== oldName) {
             if (names.includes(trimmedName)) return alert("یہ نام پہلے سے موجود ہے!");
             for (let date in globalData) {
                 if (globalData[date][oldName]) {
-                    const oldRecord = globalData[date][oldName];
-                    globalData[date][trimmedName] = oldRecord;
+                    const oldRecord = globalData[date][oldName]; globalData[date][trimmedName] = oldRecord;
                     delete globalData[date][oldName];
                     await _supabase.from('attendance_records').delete().eq('date', date).eq('student_name', oldName);
                 }
             }
-            names[index] = trimmedName;
-            unsavedChanges = true; 
+            names[index] = trimmedName; unsavedChanges = true; 
         }
 
         videoLists[index] = finalPlaylist || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
-        await syncSettingsToSupabase();
-        
-        populateStudentSelect();
-        updateAll();
+        await syncSettingsToSupabase(); populateStudentSelect(); updateAll();
         document.getElementById('unsavedNotice').style.display = 'block';
     }
 
@@ -861,83 +547,72 @@ transform:scale(1.02);
         const name = document.getElementById('newStudentName').value.trim();
         let ytInput = document.getElementById('newStudentYT').value.trim();
         let ytList = "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
-        
-        if(!name) return alert("نام لکھیں");
-        if(names.includes(name)) return alert("یہ نام پہلے سے موجود ہے!");
+        if(!name) return alert("نام لکھیں"); if(names.includes(name)) return alert("یہ نام پہلے سے موجود ہے!");
 
-        if(ytInput) {
-            if(ytInput.includes('list=')) { ytList = ytInput.split('list=').pop().split('&')[0]; } 
-            else { ytList = ytInput; }
-        }
-
-        names.push(name);
-        videoLists.push(ytList);
-
+        if(ytInput) { if(ytInput.includes('list=')) { ytList = ytInput.split('list=').pop().split('&')[0]; } else { ytList = ytInput; } }
+        names.push(name); videoLists.push(ytList);
         const today = document.getElementById('mainDate').value;
         if(!window.studentJoinDates) window.studentJoinDates = {};
         window.studentJoinDates[name] = today;
 
         await syncSettingsToSupabase();
-        
-        document.getElementById('newStudentName').value = "";
-        document.getElementById('newStudentYT').value = "";
-        populateStudentSelect();
-        renderFormerStudents();
-        updateAll();
+        document.getElementById('newStudentName').value = ""; document.getElementById('newStudentYT').value = "";
+        populateStudentSelect(); renderFormerStudents(); updateAll();
     }
 
     function openTab(id, e) {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        e.currentTarget.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
         if(id.includes('Report')) loadReports();
     }
 
     async function addTimelinePost() {
-        const student = document.getElementById('mediaStudentSelect').value;
-        const title = document.getElementById('mediaTitleInput').value.trim();
-        let url = document.getElementById('mediaUrlInput').value.trim();
-        const text = document.getElementById('timelineText').value.trim();
-        const dObj = new Date();
-        const formattedCurrentUrduDate = `${urduDays[dObj.getDay()]}، ${dObj.getDate()} ${urduMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
-
-        if(!title) return alert("براہ کرم عنوان لکھیں!");
-        if(!url && !text){ alert('لنک یا پیغام درج کریں'); return; }
+        const student = document.getElementById('mediaStudentSelect').value; const title = document.getElementById('mediaTitleInput').value.trim();
+        let url = document.getElementById('mediaUrlInput').value.trim(); const text = document.getElementById('timelineText').value.trim();
+        const dObj = new Date(); const formattedCurrentUrduDate = `${urduDays[dObj.getDay()]}، ${dObj.getDate()} ${urduMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
+        if(!title) return alert("براہ کرم عنوان لکھیں!"); if(!url && !text){ alert('لنک یا پیغام درج کریں'); return; }
 
         timelinePosts.unshift({ student, title, text, url: url || "", date: formattedCurrentUrduDate });
         await syncSettingsToSupabase();
-        
-        document.getElementById('mediaTitleInput').value = '';
-        document.getElementById('mediaUrlInput').value = '';
-        document.getElementById('timelineText').value = '';
+        document.getElementById('mediaTitleInput').value = ''; document.getElementById('mediaUrlInput').value = ''; document.getElementById('timelineText').value = '';
         renderTimeline();
     }
 
     async function deleteTimelinePost(idx) {
         if(!confirm("حذف کریں؟")) return;
-        timelinePosts.splice(idx, 1);
-        await syncSettingsToSupabase();
-        renderTimeline();
+        timelinePosts.splice(idx, 1); await syncSettingsToSupabase(); renderTimeline();
     }
 
+    // نیا اور سمارٹ ویڈیو ڈیٹیکٹر (جو 9:16 اور 16:9 کو خودکار سمجھے گا)
     function formatMediaEmbed(url) {
-        if (url.includes('youtube.com/watch') || url.includes('youtu.be')) {
-            let videoId = url.includes('v=') ? url.split('v=').pop().split('&')[0] : url.split('/').pop();
-            return `<iframe src="https://www.youtube.com/embed/${videoId}" style="width:100%; min-height:250px; border:none; border-radius:12px;" allowfullscreen></iframe>`;
+        if (url.includes('youtube.com/watch') || url.includes('youtu.be') || url.includes('/shorts/')) {
+            let videoId = '';
+            let isShort = url.includes('/shorts/');
+            
+            if (isShort) {
+                videoId = url.split('/shorts/').pop().split('?')[0];
+            } else if (url.includes('v=')) {
+                videoId = url.split('v=').pop().split('&')[0];
+            } else {
+                videoId = url.split('/').pop().split('?')[0];
+            }
+            
+            // اگر Shorts ہے تو 9:16 موبائل والا سائز، ورنہ 16:9 نارمل سائز
+            let aspectStyle = isShort ? "aspect-ratio: 9/16; max-width: 350px; margin: 0 auto; display: block;" : "aspect-ratio: 16/9; width: 100%;";
+            
+            return `<iframe src="https://www.youtube.com/embed/${videoId}" style="${aspectStyle} border:none; border-radius:12px;" allowfullscreen></iframe>`;
         } else if (url.includes('drive.google.com')) {
             let embedUrl = url.replace('/view?usp=sharing', '/preview').replace('/view', '/preview');
-            return `<iframe src="${embedUrl}" style="width:100%; min-height:250px; border:none; border-radius:12px;" allowfullscreen></iframe>`;
+            return `<iframe src="${embedUrl}" style="aspect-ratio: 16/9; width: 100%; border:none; border-radius:12px;" allowfullscreen></iframe>`;
         } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
-            return `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0" style="width:100%; min-height:250px; border:none; border-radius:12px;" allowfullscreen="true"></iframe>`;
+            return `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0" style="aspect-ratio: 16/9; width: 100%; border:none; border-radius:12px;" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
         } else { 
-            return `<img src="${url}" class="timeline-media" loading="lazy">`; 
+            return `<img src="${url}" style="width: 100%; height: auto; border-radius: 12px; display: block; object-fit: contain;" loading="lazy">`; 
         }
     }
 
     function renderTimeline() {
-        const feed = document.getElementById('fbFeedTimeline');
-        feed.innerHTML = '';
+        const feed = document.getElementById('fbFeedTimeline'); feed.innerHTML = '';
         if(timelinePosts.length === 0) return;
         timelinePosts.forEach((post, idx) => {
             const delBtn = isTeacherMode ? `<button class="fb-del-btn" onclick="deleteTimelinePost(${idx})">حذف کریں</button>` : '';
@@ -948,37 +623,21 @@ transform:scale(1.02);
                         <div><span class="fb-post-date">${post.date}</span> ${delBtn}</div>
                     </div>
                     <div class="fb-post-title">${post.title}</div>
-                    
-                    ${post.text ? `
-                    <div class="timeline-text-post">
-                        ${post.text}
-                    </div>
-                    ` : ''}
-
-                    ${post.url ? `
-                    <div class="fb-post-media">
-                        ${formatMediaEmbed(post.url)}
-                    </div>
-                    ` : ''}
+                    ${post.text ? `<div class="timeline-text-post">${post.text}</div>` : ''}
+                    ${post.url ? `<div class="fb-post-media" style="background: transparent; border: none; box-shadow: none;">${formatMediaEmbed(post.url)}</div>` : ''}
                 </div>`;
         });
     }
 
     function getLatestLesson(targetDate, name, type) {
         let dates = Object.keys(globalData).sort((a, b) => b.localeCompare(a));
-        for(let d of dates) {
-            if (d < targetDate && globalData[d][name] && globalData[d][name][type]) {
-                return globalData[d][name][type];
-            }
-        }
+        for(let d of dates) { if (d < targetDate && globalData[d][name] && globalData[d][name][type]) { return globalData[d][name][type]; } }
         return '';
     }
 
     function updateAll() {
-        const date = document.getElementById('mainDate').value;
-        if(!date) return;
-        const dObj = new Date(date);
-        document.getElementById('displayUrduDate').innerText = `${urduDays[dObj.getDay()]}، ${dObj.getDate()} ${urduMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
+        const date = document.getElementById('mainDate').value; if(!date) return;
+        const dObj = new Date(date); document.getElementById('displayUrduDate').innerText = `${urduDays[dObj.getDay()]}، ${dObj.getDate()} ${urduMonths[dObj.getMonth()]} ${dObj.getFullYear()}`;
         document.getElementById('totalStudentsCount').innerText = `تعداد: ${names.length}`;
 
         const dayData = globalData[date] || {};
@@ -986,87 +645,40 @@ transform:scale(1.02);
         b1.innerHTML = ''; b4.innerHTML = ''; lessCardsContainer.innerHTML = '';
 
         names.forEach((n, i) => {
-            let s = dayData[n];
-            let currentW = '', currentWD = '';
-            
-            if (s) {
-                currentW = s.w || '';
-                currentWD = s.wD || '';
-            } else {
-                s = { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '', wD: '' };
-            }
-
-            if (!currentW) currentW = getLatestLesson(date, n, 'w');
-            if (!currentWD) currentWD = getLatestLesson(date, n, 'wD');
+            let s = dayData[n]; let currentW = '', currentWD = '';
+            if (s) { currentW = s.w || ''; currentWD = s.wD || ''; } else { s = { aS: '---', aC: 'status-btn', lS: '---', lC: 'status-btn', w: '', wD: '' }; }
+            if (!currentW) currentW = getLatestLesson(date, n, 'w'); if (!currentWD) currentWD = getLatestLesson(date, n, 'wD');
 
             b1.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n} <span class="three-dots-btn" style="display:${isTeacherMode?'inline-block':'none'}" onclick="openStudentMenu(${i})">⁝</span></td><td><div class="${s.aC}" onclick="tglA(this,'${n}')">${s.aS}</div></td></tr>`;
             lessCardsContainer.innerHTML += `
 <div class="student-lesson-card">
-
     <div class="lesson-row-container">
         <span>${i+1}. ${n}</span>
-        <div class="${s.lC}" onclick="tglL(this,'${n}')">
-        ${s.lS}
-        </div>
+        <div class="${s.lC}" onclick="tglL(this,'${n}')">${s.lS}</div>
     </div>
-
     <div class="lesson-inputs-holder">
-
-        <input
-        type="text"
-        class="diary-input"
-        value="${currentW}"
-        ${isTeacherMode?'':'disabled'}
-        onchange="saveW('${n}',this.value)"
-        placeholder="قرآن کا سبق...">
-
-        <input
-        type="text"
-        class="diary-input"
-        value="${currentWD}"
-        ${isTeacherMode?'':'disabled'}
-        onchange="saveWD('${n}',this.value)"
-        placeholder="دعا / نماز...">
-
-        <button
-        class="history-btn"
-        onclick="showLessonHistory('${n}')">
-        📖 مکمل سبق ریکارڈ
-        </button>
-
+        <input type="text" class="diary-input" value="${currentW}" ${isTeacherMode?'':'disabled'} onchange="saveW('${n}',this.value)" placeholder="قرآن کا سبق...">
+        <input type="text" class="diary-input" value="${currentWD}" ${isTeacherMode?'':'disabled'} onchange="saveWD('${n}',this.value)" placeholder="دعا / نماز...">
+        <button class="history-btn" onclick="showLessonHistory('${n}')">📖 مکمل سبق ریکارڈ</button>
     </div>
-
 </div>`;
             b4.innerHTML += `<tr><td>${i+1}</td><td class="student-name">${n}</td><td><button class="video-btn" onclick="toggleVideo(${i})">ویڈیوز</button></td></tr><tr id="videoRow-${i}" class="video-container"><td colspan="3"><div id="videoArea-${i}"></div></td></tr>`;
         });
-        renderTimeline();
-        renderFormerStudents();
-        loadReports();
+        renderTimeline(); renderFormerStudents(); loadReports();
     }
 
     function toggleVideo(i) {
-        const row = document.getElementById(`videoRow-${i}`);
-        const area = document.getElementById(`videoArea-${i}`);
+        const row = document.getElementById(`videoRow-${i}`); const area = document.getElementById(`videoArea-${i}`);
         const listID = videoLists[i] || "PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq";
-
-        if (row.style.display === "table-row") {
-            row.style.display = "none";
-            area.innerHTML = "";
-        } else {
-            document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none');
-            row.style.display = "table-row";
-            area.innerHTML = `
-                <iframe height="250" src="https://www.youtube.com/embed/videoseries?list=${listID}" frameborder="0" allowfullscreen></iframe>
-                <br>
-                <a href="https://www.youtube.com/playlist?list=${listID}" target="_blank" class="yt-playlist-link-btn">📺 ساری ویڈیوز یوٹیوب پر دیکھیں</a>
-            `;
+        if (row.style.display === "table-row") { row.style.display = "none"; area.innerHTML = ""; } 
+        else { document.querySelectorAll('.video-container').forEach(r => r.style.display = 'none'); row.style.display = "table-row";
+            area.innerHTML = `<iframe style="aspect-ratio: 16/9; width: 100%; border:none; border-radius:10px;" src="https://www.youtube.com/embed/videoseries?list=${listID}" allowfullscreen></iframe>
+            <br><a href="https://www.youtube.com/playlist?list=${listID}" target="_blank" class="yt-playlist-link-btn">📺 ساری ویڈیوز یوٹیوب پر دیکھیں</a>`;
         }
     }
 
-    // نیا آف لائن سیو فنکشن
     function saveLocalRecord(name, k, v, c) {
         const d = document.getElementById('mainDate').value;
-        
         if(!globalData[d]) globalData[d] = {};
         if(!globalData[d][name]) globalData[d][name] = {aS:'---', aC:'status-btn', lS:'---', lC:'status-btn', w:'', wD:''};
         
@@ -1076,8 +688,7 @@ transform:scale(1.02);
         else if(k==='wD'){ globalData[d][name].wD=v; }
 
         localStorage.setItem('rizwan_masjid_backup', JSON.stringify(globalData));
-        unsavedChanges = true;
-        document.getElementById('unsavedNotice').style.display = 'block';
+        unsavedChanges = true; document.getElementById('unsavedNotice').style.display = 'block';
     }
 
     function tglA(el, name) {
@@ -1087,8 +698,7 @@ transform:scale(1.02);
         else if(el.innerText==="حاضر"){s="غیر حاضر"; c="status-btn absent";}
         else if(el.innerText==="غیر حاضر"){s="رخصت"; c="status-btn leave";}
         else {s="---"; c="status-btn";}
-        el.innerText=s; el.className=c; 
-        saveLocalRecord(name, 'aS', s, c);
+        el.innerText=s; el.className=c; saveLocalRecord(name, 'aS', s, c);
     }
 
     function tglL(el, name) {
@@ -1098,14 +708,12 @@ transform:scale(1.02);
         else if(el.innerText==="سنایا"){s="یاد نہیں"; c="status-btn absent";}
         else if(el.innerText==="یاد نہیں"){s="نہیں سنایا"; c="status-btn leave";}
         else {s="---"; c="status-btn";}
-        el.innerText=s; el.className=c; 
-        saveLocalRecord(name, 'lS', s, c);
+        el.innerText=s; el.className=c; saveLocalRecord(name, 'lS', s, c);
     }
 
     function saveW(name, v) { saveLocalRecord(name, 'w', v); }
     function saveWD(name, v) { saveLocalRecord(name, 'wD', v); }
 
-    // نیا سمارٹ بلک اپلوڈ
     async function forceFullSync() {
         if (!isTeacherMode) return;
         const btn = document.getElementById('syncSupabaseBtn');
@@ -1116,48 +724,32 @@ transform:scale(1.02);
             for (const date in globalData) {
                 for (const student in globalData[date]) {
                     const r = globalData[date][student];
-                    recordsToUpload.push({
-                        date: date, student_name: student, attendance_status: r.aS, attendance_class: r.aC,
-                        lesson_status: r.lS, lesson_class: r.lC, quran_lesson: r.w, prayer_lesson: r.wD
-                    });
+                    recordsToUpload.push({ date: date, student_name: student, attendance_status: r.aS, attendance_class: r.aC, lesson_status: r.lS, lesson_class: r.lC, quran_lesson: r.w, prayer_lesson: r.wD });
                 }
             }
             if (recordsToUpload.length > 0) {
                 const { error } = await _supabase.from('attendance_records').upsert(recordsToUpload, { onConflict: 'date,student_name' });
                 if (error) throw error;
             }
-            
             await syncSettingsToSupabase();
-            
-            unsavedChanges = false;
-            document.getElementById('unsavedNotice').style.display = 'none';
+            unsavedChanges = false; document.getElementById('unsavedNotice').style.display = 'none';
             localStorage.removeItem('rizwan_masjid_backup'); 
-
             alert("کامیاب! سارا ریکارڈ Supabase پر پکا محفوظ ہو گیا ہے۔ 🚀");
-        } catch (err) {
-            console.error("Sync Error:", err); 
-            alert("اپ لوڈنگ میں مسئلہ آیا، انٹرنیٹ کنکشن چیک کریں۔");
-        } finally {
-            if(btn) { btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀"; btn.disabled = false; }
-        }
+        } catch (err) { console.error("Sync Error:", err); alert("اپ لوڈنگ میں مسئلہ آیا، انٹرنیٹ کنکشن چیک کریں۔"); } 
+        finally { if(btn) { btn.innerText = "سارا ریکارڈ آن لائن بھیجیں (Sync) 🚀"; btn.disabled = false; } }
     }
 
     function loadReports() {
-        const selectedDate = document.getElementById('mainDate').value;
-        if(!selectedDate) return;
-        const dateObj = new Date(selectedDate);
-        const selectedYear = dateObj.getFullYear();
-        const selectedMonth = dateObj.getMonth();
+        const selectedDate = document.getElementById('mainDate').value; if(!selectedDate) return;
+        const dateObj = new Date(selectedDate); const selectedYear = dateObj.getFullYear(); const selectedMonth = dateObj.getMonth();
         const monthKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
 
         document.querySelectorAll('.monthTitle').forEach(el => { el.innerText = `${urduMonths[selectedMonth]} ${selectedYear}`; });
-        const bA = document.getElementById('attReportBody');
-        const bL = document.getElementById('lessReportBody');
+        const bA = document.getElementById('attReportBody'); const bL = document.getElementById('lessReportBody');
         bA.innerHTML = ''; bL.innerHTML = '';
 
         names.forEach((n) => {
-            let p = 0, ab = 0, lv = 0;
-            let sn = 0, yn = 0, ns = 0;
+            let p = 0, ab = 0, lv = 0; let sn = 0, yn = 0, ns = 0;
             for (let d in globalData) {
                 if (d.startsWith(monthKey) && globalData[d][n]) {
                     const r = globalData[d][n];
@@ -1171,269 +763,103 @@ transform:scale(1.02);
     }
 
     async function saveClassTime(){
-        classTime = document.getElementById('classTimeInput').value.trim();
-        document.getElementById('classTimeBox').innerText = classTime;
-        await syncSettingsToSupabase();
-        alert('کلاس ٹائم محفوظ ہو گیا');
+        classTime = document.getElementById('classTimeInput').value.trim(); document.getElementById('classTimeBox').innerText = classTime;
+        await syncSettingsToSupabase(); alert('کلاس ٹائم محفوظ ہو گیا');
     }
 
-function closeLessonHistory(){
-    document.getElementById("lessonHistoryModal").style.display="none";
-}
+    function closeLessonHistory(){ document.getElementById("lessonHistoryModal").style.display="none"; }
 
-function showLessonHistory(studentName){
-
-    let html="";
-
-    document.getElementById("lessonHistoryTitle").innerHTML=
-    "📖 "+studentName;
-
-    let dates=Object.keys(globalData).sort().reverse();
-
-    dates.forEach(date=>{
-
-        if(
-            globalData[date] &&
-            globalData[date][studentName]
-        ){
-
-            let rec=globalData[date][studentName];
-
-            let quran=(rec.w||"").trim();
-            let namaz=(rec.wD||"").trim();
-
-            if(quran==="" && namaz==="")
-                return;
-
-            html+=`
-            <div class="history-card">
-                <div class="history-date">
-                    📅 ${formatUrduDate(date)}
-                </div>
-                <div style="margin-bottom:8px;">
-                    <b>📖 قرآن</b><br>
-                    ${quran || "-"}
-                </div>
-                <div>
-                    <b>🕌 نماز / دعا</b><br>
-                    ${namaz || "-"}
-                </div>
-            </div>
-            `;
-        }
-    });
-
-    if(html===""){
-        html=`
-        <div style="
-        text-align:center;
-        font-size:20px;
-        padding:20px;">
-        ابھی کوئی سبق محفوظ نہیں۔
-        </div>`;
+    function showLessonHistory(studentName){
+        let html=""; document.getElementById("lessonHistoryTitle").innerHTML= "📖 "+studentName;
+        let dates=Object.keys(globalData).sort().reverse();
+        dates.forEach(date=>{
+            if(globalData[date] && globalData[date][studentName]){
+                let rec=globalData[date][studentName]; let quran=(rec.w||"").trim(); let namaz=(rec.wD||"").trim();
+                if(quran==="" && namaz==="") return;
+                html+=`<div class="history-card"><div class="history-date">📅 ${formatUrduDate(date)}</div><div style="margin-bottom:8px;"><b>📖 قرآن</b><br>${quran || "-"}</div><div><b>🕌 نماز / دعا</b><br>${namaz || "-"}</div></div>`;
+            }
+        });
+        if(html===""){ html=`<div style="text-align:center; font-size:20px; padding:20px;">ابھی کوئی سبق محفوظ نہیں۔</div>`; }
+        document.getElementById("lessonHistoryBody").innerHTML=html; document.getElementById("lessonHistoryModal").style.display="block";
     }
-
-    document.getElementById("lessonHistoryBody").innerHTML=html;
-    document.getElementById("lessonHistoryModal").style.display="block";
-}
 
     function downloadBackup() {
         const backupData = { attendance: globalData, names, videos: videoLists, timelinePosts, formerStudents, studentJoinDates: window.studentJoinDates || {} };
-        const blob = new Blob([JSON.stringify(backupData)], {type:'text/plain'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        const blob = new Blob([JSON.stringify(backupData)], {type:'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
         a.download = 'rizwan_masjid_full_backup.txt'; a.click();
     }
 
     function renderFormerStudents(){
-        const countEl = document.getElementById('formerStudentsCount');
-        if(countEl) countEl.innerText = `سابقہ طلباء: ${formerStudents.length}`;
-        
-        const container = document.getElementById('formerStudentsContainer');
-        if(!container) return;
-        container.innerHTML = '';
-
-        if(formerStudents.length === 0){
-            container.innerHTML = `
-            <div style="text-align:center; font-size:20px; padding:30px; color:#666;">
-                ابھی کوئی سابقہ طالب علم موجود نہیں
-            </div>`;
-            return;
-        }
+        const countEl = document.getElementById('formerStudentsCount'); if(countEl) countEl.innerText = `سابقہ طلباء: ${formerStudents.length}`;
+        const container = document.getElementById('formerStudentsContainer'); if(!container) return; container.innerHTML = '';
+        if(formerStudents.length === 0){ container.innerHTML = `<div style="text-align:center; font-size:20px; padding:30px; color:#666;">ابھی کوئی سابقہ طالب علم موجود نہیں</div>`; return; }
 
         formerStudents.forEach((student, index) => {
             let restoreBtn = '';
-            if(isTeacherMode){
-                restoreBtn = `
-                <button class="restore-btn" onclick="restoreStudent(${index})">
-                    ♻️ ری سٹور کریں
-                </button>
-
-                <button
-                    class="btn-mgmt"
-                    style="background:#b71c1c;margin-right:8px;"
-                    onclick="deleteFormerStudent(${index})">
-                    🗑️ مستقل حذف
-                </button>`;
-            }
-
+            if(isTeacherMode){ restoreBtn = `<button class="restore-btn" onclick="restoreStudent(${index})">♻️ ری سٹور کریں</button> <button class="btn-mgmt" style="background:#b71c1c;margin-right:8px;" onclick="deleteFormerStudent(${index})">🗑️ مستقل حذف</button>`; }
             container.innerHTML += `
             <div class="former-student-card">
                 <div class="former-student-name">👤 ${student.name}</div>
-                <div class="former-student-line">🏷️ حیثیت: سابقہ طالب علم</div>
-                <div class="former-student-line">📅 چھوڑنے کی تاریخ: ${formatUrduDate(student.formerDate)}</div>
-                <div class="former-student-line">📖 آخری حاضری: ${formatUrduDate(student.lastAttendance)}</div>
-                <div class="former-student-line">⏳ مدت تعلیم: ${student.studyPeriod || '-'}</div>
-                <button class="video-btn" onclick="showFormerPlaylist(${index})">🎥 ویڈیوز دیکھیں</button>
-                <div id="formerVideo${index}" style="margin-top:10px;"></div>
+                <div class="former-student-line">🏷️ حیثیت: سابقہ طالب علم</div><div class="former-student-line">📅 چھوڑنے کی تاریخ: ${formatUrduDate(student.formerDate)}</div>
+                <div class="former-student-line">📖 آخری حاضری: ${formatUrduDate(student.lastAttendance)}</div><div class="former-student-line">⏳ مدت تعلیم: ${student.studyPeriod || '-'}</div>
+                <button class="video-btn" onclick="showFormerPlaylist(${index})">🎥 ویڈیوز دیکھیں</button><div id="formerVideo${index}" style="margin-top:10px;"></div>
                 ${restoreBtn}
             </div>`;
         });
     }
 
     function showFormerPlaylist(index){
-        const student = formerStudents[index];
-        const container = document.getElementById(`formerVideo${index}`);
-        if(container.innerHTML !== ''){
-            container.innerHTML = '';
-            return;
-        }
-
+        const student = formerStudents[index]; const container = document.getElementById(`formerVideo${index}`);
+        if(container.innerHTML !== ''){ container.innerHTML = ''; return; }
         const playlist = student.playlist || 'PL3-aVTBoE-13TR-5h0Mi9_ElEtmLI53Zq';
-
-        container.innerHTML = `
-        <iframe width="100%" height="250" src="https://www.youtube.com/embed/videoseries?list=${playlist}" frameborder="0" allowfullscreen></iframe>
-        <br>
-        <a href="intent://www.youtube.com/playlist?list=${playlist}#Intent;package=com.google.android.youtube;scheme=https;end" class="yt-playlist-link-btn">مکمل Playlist یوٹیوب پر دیکھیں</a>
-        `;
+        container.innerHTML = `<iframe style="aspect-ratio: 16/9; width: 100%; border:none; border-radius:10px;" src="https://www.youtube.com/embed/videoseries?list=${playlist}" allowfullscreen></iframe>
+        <br><a href="intent://www.youtube.com/playlist?list=${playlist}#Intent;package=com.google.android.youtube;scheme=https;end" class="yt-playlist-link-btn">مکمل Playlist یوٹیوب پر دیکھیں</a>`;
     }
 
     async function moveToFormerStudent(index){
-        const studentName = names[index];
-        if(!confirm(`${studentName} کو سابقہ طلباء میں منتقل کرنا ہے؟`)) return;
-
-        const today = document.getElementById('mainDate').value;
-        let lastAttendance = '-';
-        const allDates = Object.keys(globalData).sort().reverse();
-
-        for(const d of allDates){
-            if(globalData[d] && globalData[d][studentName] && globalData[d][studentName].aS === 'حاضر'){
-                lastAttendance = d;
-                break;
-            }
-        }
-
+        const studentName = names[index]; if(!confirm(`${studentName} کو سابقہ طلباء میں منتقل کرنا ہے؟`)) return;
+        const today = document.getElementById('mainDate').value; let lastAttendance = '-'; const allDates = Object.keys(globalData).sort().reverse();
+        for(const d of allDates){ if(globalData[d] && globalData[d][studentName] && globalData[d][studentName].aS === 'حاضر'){ lastAttendance = d; break; } }
         const joinDate = window.studentJoinDates ? window.studentJoinDates[studentName] : null;
         let studyPeriod = joinDate ? `${formatUrduDate(joinDate)} تا ${formatUrduDate(today)}` : '-';
-
-        formerStudents.push({
-            name: studentName,
-            playlist: videoLists[index] || '',
-            formerDate: today,
-            lastAttendance: lastAttendance,
-            studyPeriod: studyPeriod,
-            joinDate: joinDate || ''
-        });
-
-        names.splice(index,1);
-        videoLists.splice(index,1);
-
-        await syncSettingsToSupabase();
-        populateStudentSelect();
-        renderFormerStudents();
-        updateAll();
-        alert('سابقہ طلباء میں منتقل کر دیا گیا');
+        formerStudents.push({ name: studentName, playlist: videoLists[index] || '', formerDate: today, lastAttendance: lastAttendance, studyPeriod: studyPeriod, joinDate: joinDate || '' });
+        names.splice(index,1); videoLists.splice(index,1);
+        await syncSettingsToSupabase(); populateStudentSelect(); renderFormerStudents(); updateAll(); alert('سابقہ طلباء میں منتقل کر دیا گیا');
     }
 
     async function restoreStudent(index){
-        const student = formerStudents[index];
-        names.push(student.name);
-        videoLists.push(student.playlist || '');
-
-        if(student.joinDate){
-            if(!window.studentJoinDates) window.studentJoinDates = {};
-            window.studentJoinDates[student.name] = student.joinDate;
-        }
-
-        formerStudents.splice(index,1);
-        await syncSettingsToSupabase();
-        populateStudentSelect();
-        renderFormerStudents();
-        updateAll();
-        alert('طالب علم بحال کر دیا گیا');
+        const student = formerStudents[index]; names.push(student.name); videoLists.push(student.playlist || '');
+        if(student.joinDate){ if(!window.studentJoinDates) window.studentJoinDates = {}; window.studentJoinDates[student.name] = student.joinDate; }
+        formerStudents.splice(index,1); await syncSettingsToSupabase(); populateStudentSelect(); renderFormerStudents(); updateAll(); alert('طالب علم بحال کر دیا گیا');
     }
 
     async function deleteFormerStudent(index){
-        if(!isTeacherMode) return;
-
-        const student = formerStudents[index];
-
-        if(!confirm(`کیا "${student.name}" کو سابقہ ریکارڈ سے مستقل حذف کرنا ہے؟`)){
-            return;
-        }
-
-        formerStudents.splice(index, 1);
-        await syncSettingsToSupabase();
-        renderFormerStudents();
-        alert('سابقہ ریکارڈ سے مستقل حذف کر دیا گیا');
+        if(!isTeacherMode) return; const student = formerStudents[index];
+        if(!confirm(`کیا "${student.name}" کو سابقہ ریکارڈ سے مستقل حذف کرنا ہے؟`)){ return; }
+        formerStudents.splice(index, 1); await syncSettingsToSupabase(); renderFormerStudents(); alert('سابقہ ریکارڈ سے مستقل حذف کر دیا گیا');
     }
 
-    function openStudentMenu(index){
-        document.getElementById('menuStudentIndex').value = index;
-        document.getElementById('studentMenuModal').style.display = 'block';
-    }
+    function openStudentMenu(index){ document.getElementById('menuStudentIndex').value = index; document.getElementById('studentMenuModal').style.display = 'block'; }
+    function closeStudentMenu(){ document.getElementById('studentMenuModal').style.display = 'none'; }
+    function menuEditStudent(){ const index = document.getElementById('menuStudentIndex').value; closeStudentMenu(); editStudentInfo(index); }
+    function menuMoveFormer(){ const index = document.getElementById('menuStudentIndex').value; closeStudentMenu(); moveToFormerStudent(index); }
 
-    function closeStudentMenu(){
-        document.getElementById('studentMenuModal').style.display = 'none';
-    }
-
-    function menuEditStudent(){
-        const index = document.getElementById('menuStudentIndex').value;
-        closeStudentMenu();
-        editStudentInfo(index);
-    }
-
-    function menuMoveFormer(){
-        const index = document.getElementById('menuStudentIndex').value;
-        closeStudentMenu();
-        moveToFormerStudent(index);
-    }
-
-function searchLessonStudent(e){
-    let value=document.getElementById("lessonSearch").value.trim().toLowerCase();
-    let cards=document.querySelectorAll("#lessCardsContainer .student-lesson-card");
-    cards.forEach(c=>c.classList.remove("lesson-highlight"));
-    if(value=="") return;
-    let found=null;
-    cards.forEach((card,index)=>{
-        let txt=card.innerText.toLowerCase();
-        let number=(index+1).toString();
-        if(!found && (txt.includes(value)||number==value)){
-            found=card;
-        }
-    });
-    if(found){
-        found.classList.add("lesson-highlight");
-        found.scrollIntoView({
-            behavior:"smooth",
-            block:"center"
+    function searchLessonStudent(e){
+        let value=document.getElementById("lessonSearch").value.trim().toLowerCase(); let cards=document.querySelectorAll("#lessCardsContainer .student-lesson-card");
+        cards.forEach(c=>c.classList.remove("lesson-highlight")); if(value=="") return; let found=null;
+        cards.forEach((card,index)=>{
+            let txt=card.innerText.toLowerCase(); let number=(index+1).toString();
+            if(!found && (txt.includes(value)||number==value)){ found=card; }
         });
+        if(found){ found.classList.add("lesson-highlight"); found.scrollIntoView({ behavior:"smooth", block:"center" }); }
+        if(e.key==="Escape"){ document.getElementById("lessonSearch").value=""; cards.forEach(c=>c.classList.remove("lesson-highlight")); }
     }
-    if(e.key==="Escape"){
-        document.getElementById("lessonSearch").value="";
-        cards.forEach(c=>c.classList.remove("lesson-highlight"));
-    }
-}
 
-    // صفحہ بند کرنے سے پہلے وارننگ
     window.addEventListener('beforeunload', function (e) {
-        if (unsavedChanges) {
-            e.preventDefault();
-            e.returnValue = '';
-        }
+        if (unsavedChanges) { e.preventDefault(); e.returnValue = ''; }
     });
-
 </script>
-<!-- سبق ہسٹری -->
+
 <div id="lessonHistoryModal" class="history-modal">
     <div class="history-box">
         <div id="lessonHistoryTitle" class="history-title"></div>
