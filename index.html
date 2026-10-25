@@ -8,9 +8,17 @@
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
-        
-        * { font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif !important; }
+        @font-face {
+            font-family: 'Jameel Noori Nastaleeq';
+            src: url('JameelNoori.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * { 
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif !important; 
+            line-height: 1.8 !important; 
+        }
 
         :root { 
             --primary: #4B0082; 
@@ -61,14 +69,14 @@
         .parent-notice-bar {
             background-color: rgba(255, 243, 224, 0.85); color: #e65100; border: 2px dashed #ffb74d;
             padding: 8px; border-radius: 10px; text-align: center; font-weight: bold;
-            font-size: 16px; margin-bottom: 12px;
+            font-size: 18px; margin-bottom: 12px;
         }
 
         #unsavedNotice {
             display: none;
             background-color: #ffcdd2; color: #b71c1c; border: 2px dashed #e53935;
             padding: 8px; border-radius: 10px; text-align: center; font-weight: bold;
-            font-size: 16px; margin-bottom: 12px; animation: blinker 1.5s linear infinite;
+            font-size: 18px; margin-bottom: 12px; animation: blinker 1.5s linear infinite;
         }
         @keyframes blinker { 50% { opacity: 0.7; } }
 
@@ -78,7 +86,7 @@
         }
         .tab-btn { 
             flex: 1; min-width: 85px; padding: 10px 4px; cursor: pointer; border: 1px solid transparent; 
-            background: transparent; font-size: 17px; font-weight: bold; color: var(--primary); border-radius: 10px;
+            background: transparent; font-size: 19px; font-weight: bold; color: var(--primary); border-radius: 10px;
             text-align: center; transition: all 0.25s ease;
         }
         .tab-btn:hover { background: rgba(75, 0, 130, 0.15); color: #311b92; }
@@ -87,22 +95,28 @@
         .tab-content.active { display: block; }
         
         table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.85); border-radius: 10px; overflow: hidden; }
-        th, td { padding: 10px 5px; border: 1px solid #ddd; text-align: center; font-size: 18px; }
+        
+        /* ٹیبل کے الفاظ بڑے اور بولڈ کیے گئے ہیں */
+        th, td { padding: 10px 5px; border: 1px solid #ddd; text-align: center; font-size: 22px; font-weight: bold; }
         th { background-color: var(--primary); color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; width: 40%; }
+        
+        /* نام کے الفاظ کا سائز 24px کر دیا گیا ہے */
+        .student-name { text-align: right !important; padding-right: 10px; font-weight: bold; font-size: 24px; width: 40%; }
         
         .three-dots-btn {
             display: none; cursor: pointer; color: #b38728; font-weight: bold; font-size: 20px; padding: 0 8px; user-select: none; transition: color 0.2s;
         }
         .three-dots-btn:hover { color: var(--primary); }
 
+        /* حاضر/غیر حاضر بٹن کے الفاظ 20px کر دیے گئے ہیں */
         .status-btn { 
-            width: 90px; padding: 6px 0; cursor: pointer; font-weight: bold; border-radius: 6px; background: #eee; border: 1px solid #ccc; display: inline-block; text-align: center; font-size: 16px;
+            width: 90px; padding: 6px 0; cursor: pointer; font-weight: bold; border-radius: 6px; background: #eee; border: 1px solid #ccc; display: inline-block; text-align: center; font-size: 20px;
         }
         .present { background-color: var(--present-clr) !important; color: white !important; }
         .absent { background-color: var(--absent-clr) !important; color: white !important; }
         .leave { background-color: var(--leave-clr) !important; color: white !important; }
         
+        /* گنتی والے نمبرز کو چھیڑا نہیں گیا (ان کا فونٹ ایریل ہی رہے گا) */
         .report-count { font-weight: 900; font-family: Arial, sans-serif !important; font-size: 24px; }
 
         .student-lesson-card {
@@ -112,14 +126,16 @@
         .former-student-card{
             background:rgba(255,255,255,0.35); border:2px solid transparent; border-image:var(--gold-gradient) 1; border-radius:15px; padding:15px; margin-bottom:15px; box-shadow:var(--gold-glow); backdrop-filter:blur(8px); text-align: right;
         }
-        .former-student-name{ color:var(--primary); font-size:24px; font-weight:bold; margin-bottom:10px; }
-        .former-student-line{ font-size:18px; margin-bottom:6px; color:#111; }
-        .restore-btn{ background:#1b5e20; color:white; border:none; border-radius:10px; padding:8px 18px; font-size:17px; font-weight:bold; cursor:pointer; margin-top:10px; }
+        .former-student-name{ color:var(--primary); font-size:26px; font-weight:bold; margin-bottom:10px; }
+        .former-student-line{ font-size:20px; font-weight:bold; margin-bottom:6px; color:#111; }
+        .restore-btn{ background:#1b5e20; color:white; border:none; border-radius:10px; padding:8px 18px; font-size:18px; font-weight:bold; cursor:pointer; margin-top:10px; }
 
-        .lesson-row-container { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; }
+        .lesson-row-container { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; font-size: 22px; font-weight: bold; }
         .lesson-inputs-holder { display: flex; flex-direction: column; gap: 5px; width: 100%; margin-top: 5px; border-top: 1px dashed #ccc; padding-top: 5px; }
+        
+        /* ڈائری/سبق لکھنے والے خانے کا سائز 22px اور بولڈ کر دیا گیا ہے */
         .diary-input { 
-            width: 95%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; font-size: 17px; background: #fff; color: #000000 !important; font-weight: bold;
+            width: 95%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; font-size: 22px; background: #fff; color: #000000 !important; font-weight: bold;
         }
         .diary-input:disabled { background: rgba(240, 240, 240, 0.5); color: #000000 !important; border: 1px solid #ddd; cursor: not-allowed; }
 
@@ -127,59 +143,59 @@
             background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .fb-uploader-card select, .fb-uploader-card input, .fb-uploader-card textarea {
-            width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; font-family: inherit;
+            width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 18px; font-weight:bold; box-sizing: border-box; font-family: inherit;
         }
         .fb-feed-container { display: flex; flex-direction: column; gap: 20px; max-height: 700px; overflow-y: auto; padding: 5px; }
         .fb-post-card {
             background: rgba(255, 255, 255, 0.9); border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: right; position: relative;
         }
         .fb-post-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; margin-bottom: 12px; }
-        .fb-post-user { font-size: 18px; font-weight: bold; color: var(--primary); }
-        .fb-post-date { font-size: 13px; color: #777; font-family: Arial, sans-serif !important; }
-        .fb-post-title { font-size: 20px; font-weight: bold; color: #000000; margin-bottom: 12px; line-height: 1.5; }
+        .fb-post-user { font-size: 20px; font-weight: bold; color: var(--primary); }
+        .fb-post-date { font-size: 14px; color: #777; font-family: Arial, sans-serif !important; }
+        .fb-post-title { font-size: 24px; font-weight: bold; color: #000000; margin-bottom: 12px; line-height: 1.5; }
         
         .fb-post-media { 
             width: 100%; border-radius: 10px; border: 3px solid #b38728; box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.15); overflow: hidden; margin-bottom: 5px; position: relative; background: #fdfbf7;
         }
         
-        .timeline-text-post{ background:#fff; padding:18px; margin-top:12px; border-radius:12px; font-size:20px; line-height:1.9; white-space:pre-wrap; text-align:right; }
-        .fb-del-btn { background: #b71c1c; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .timeline-text-post{ background:#fff; padding:18px; margin-top:12px; border-radius:12px; font-size:22px; font-weight:bold; line-height:1.9; white-space:pre-wrap; text-align:right; }
+        .fb-del-btn { background: #b71c1c; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
 
-        .teacher-badge { background: rgba(232, 245, 233, 0.9); color: #2e7d32; border: 2px solid #4caf50; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 18px; }
+        .teacher-badge { background: rgba(232, 245, 233, 0.9); color: #2e7d32; border: 2px solid #4caf50; padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 20px; }
 
         .footer-tools { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
-        .btn-tool { padding: 12px; font-size: 17px; cursor: pointer; border: none; border-radius: 10px; color: white; flex: 1; min-width: 120px; font-weight: bold; }
+        .btn-tool { padding: 12px; font-size: 19px; cursor: pointer; border: none; border-radius: 10px; color: white; flex: 1; min-width: 120px; font-weight: bold; }
         .teacher-only-btn { display: none; }
 
         .management-panel { background: rgba(238, 242, 243, 0.9); border: 2px solid #b38728; padding: 15px; border-radius: 15px; margin-bottom: 15px; display: none; }
-        .mgmt-input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; width: 60%; max-width: 250px; }
-        .btn-mgmt { padding: 8px 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; color: white; }
+        .mgmt-input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 18px; font-weight:bold; width: 60%; max-width: 250px; }
+        .btn-mgmt { padding: 8px 15px; font-size: 18px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; color: white; }
 
-        .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .video-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
         .video-container { display: none; padding: 10px; background: rgba(249, 249, 249, 0.9); text-align: center; }
         .video-container iframe { width: 100%; max-width: 450px; height: 250px; border-radius: 10px; border: 2px solid #ff0000; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .yt-playlist-link-btn { display: inline-block; background: #ff0000; color: white !important; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 15px; font-weight: bold; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .yt-playlist-link-btn { display: inline-block; background: #ff0000; color: white !important; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 16px; font-weight: bold; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
         .login-portal { margin-top: 40px; background: rgba(255, 249, 229, 0.9); border: 3px dashed var(--primary); padding: 15px; border-radius: 15px; text-align: center; }
-        .login-portal h3 { margin-top: 0; color: var(--primary); font-size: 20px; }
-        .login-input { padding: 8px; margin: 5px; border: 1px solid var(--primary); border-radius: 5px; font-size: 16px; width: 80%; max-width: 200px; text-align: center; }
-        .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
-        .logout-btn-style { display:none; background:#b71c1c; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        .login-portal h3 { margin-top: 0; color: var(--primary); font-size: 22px; font-weight:bold; }
+        .login-input { padding: 8px; margin: 5px; border: 1px solid var(--primary); border-radius: 5px; font-size: 18px; font-weight:bold; width: 80%; max-width: 200px; text-align: center; }
+        .login-submit { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 18px; }
+        .logout-btn-style { display:none; background:#b71c1c; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 18px; }
         
-        .forgot-pass-link { display: inline-block; margin-top: 12px; color: var(--primary); font-weight: bold; font-size: 15px; text-decoration: underline; cursor: pointer; }
+        .forgot-pass-link { display: inline-block; margin-top: 12px; color: var(--primary); font-weight: bold; font-size: 17px; text-decoration: underline; cursor: pointer; }
 
-        .class-time-box{ width:80%; max-width:500px; margin:12px auto; padding:12px; min-height:50px; background:rgba(255,255,255,0.9); border:3px solid #b38728; border-radius:15px; text-align:center; font-size:20px; font-weight:bold; color:#4B0082; box-shadow: 0 0 10px rgba(218,165,32,0.4), inset 0 0 8px rgba(255,215,0,0.2); }
+        .class-time-box{ width:80%; max-width:500px; margin:12px auto; padding:12px; min-height:50px; background:rgba(255,255,255,0.9); border:3px solid #b38728; border-radius:15px; text-align:center; font-size:24px; font-weight:bold; color:#4B0082; box-shadow: 0 0 10px rgba(218,165,32,0.4), inset 0 0 8px rgba(255,215,0,0.2); }
         .class-time-editor{ text-align:center; margin-bottom:12px; }
-        .class-time-editor input{ width:80%; max-width:500px; padding:8px; border:2px solid #b38728; border-radius:10px; font-size:18px; }
+        .class-time-editor input{ width:80%; max-width:500px; padding:8px; border:2px solid #b38728; border-radius:10px; font-size:20px; font-weight:bold; }
 
 /* ===== سبق ہسٹری ===== */
-.history-btn{ margin-top:8px; width:100%; padding:8px; border:none; border-radius:8px; background:#4B0082; color:#fff; font-size:17px; font-weight:bold; cursor:pointer; }
+.history-btn{ margin-top:8px; width:100%; padding:8px; border:none; border-radius:8px; background:#4B0082; color:#fff; font-size:19px; font-weight:bold; cursor:pointer; }
 .history-modal{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.65); z-index:9999; overflow:auto; }
 .history-box{ width:95%; max-width:700px; margin:25px auto; background:#fff; border-radius:15px; padding:18px; }
-.history-title{ text-align:center; color:#4B0082; font-size:26px; font-weight:bold; margin-bottom:20px; }
-.history-card{ border:2px solid #b38728; border-radius:10px; padding:12px; margin-bottom:12px; background:#fffdf7; }
-.history-date{ color:#b71c1c; font-size:18px; font-weight:bold; margin-bottom:10px; }
-.close-history{ width:100%; padding:10px; border:none; border-radius:10px; background:#b71c1c; color:#fff; font-size:18px; cursor:pointer; }
+.history-title{ text-align:center; color:#4B0082; font-size:28px; font-weight:bold; margin-bottom:20px; }
+.history-card{ border:2px solid #b38728; border-radius:10px; padding:12px; margin-bottom:12px; background:#fffdf7; font-size: 22px; font-weight: bold; }
+.history-date{ color:#b71c1c; font-size:20px; font-weight:bold; margin-bottom:10px; }
+.close-history{ width:100%; padding:10px; border:none; border-radius:10px; background:#b71c1c; color:#fff; font-size:20px; font-weight:bold; cursor:pointer; }
 .lesson-highlight{ border:4px solid gold !important; box-shadow: 0 0 25px gold, 0 0 40px #ffd700 !important; animation:lessonFlash .8s infinite alternate; }
 
 @keyframes lessonFlash{ from{transform:scale(1);} to{transform:scale(1.02);} }
@@ -199,7 +215,7 @@
     </div>
 
     <div class="date-picker-container">
-        <label for="mainDate" style="color: var(--primary); font-weight: bold; font-size: 16px; margin-left: 5px;">تاریخ منتخب کریں:</label>
+        <label for="mainDate" style="color: var(--primary); font-weight: bold; font-size: 18px; margin-left: 5px;">تاریخ منتخب کریں:</label>
         <input type="date" id="mainDate" onchange="handleDateChange()">
     </div>
 
@@ -213,7 +229,7 @@
     <div id="teacherBadge" class="teacher-badge" style="display: none;">🔓 استاد موڈ فعال ہے (ترمیم کھلی ہے)</div>
 
     <div id="managementPanel" class="management-panel">
-        <strong style="color: var(--primary); font-size: 18px;">🆕 نیا داخلہ (طالب علم شامل کریں):</strong>
+        <strong style="color: var(--primary); font-size: 20px;">🆕 نیا داخلہ (طالب علم شامل کریں):</strong>
         <div style="margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
             <input type="text" id="newStudentName" class="mgmt-input" placeholder="طالب علم کا نام لکھیں...">
             <input type="text" id="newStudentYT" class="mgmt-input" placeholder="یوٹیوب پلے لسٹ آئی ڈی (آپشنل)">
@@ -239,7 +255,7 @@
 
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
             <div></div>
-            <div style="color:var(--primary); font-weight:bold; font-size:18px;" id="totalStudentsCount">تعداد: لوڈ ہو رہا ہے...</div>
+            <div style="color:var(--primary); font-weight:bold; font-size:20px;" id="totalStudentsCount">تعداد: لوڈ ہو رہا ہے...</div>
         </div>
         <table>
             <thead><tr><th>نمبر</th><th>نام طالب علم</th><th>حاضری</th></tr></thead>
@@ -249,7 +265,7 @@
 
     <div id="dailyLesson" class="tab-content">
         <div style="position:sticky;top:0;z-index:20; background:rgba(255,248,240,.9); padding:10px; backdrop-filter:blur(8px);">
-            <input id="lessonSearch" type="text" placeholder="🔍 طالب علم کا نام یا نمبر لکھیں..." onkeyup="searchLessonStudent(event)" style="width:100%; padding:12px; font-size:18px; border:2px solid #ad1457; border-radius:12px; box-sizing:border-box; font-weight:bold;">
+            <input id="lessonSearch" type="text" placeholder="🔍 طالب علم کا نام یا نمبر لکھیں..." onkeyup="searchLessonStudent(event)" style="width:100%; padding:12px; font-size:20px; border:2px solid #ad1457; border-radius:12px; box-sizing:border-box; font-weight:bold;">
         </div>
         <div id="lessCardsContainer"></div>
     </div>
@@ -262,7 +278,7 @@
     </div>
 
     <div id="attReport" class="tab-content">
-        <div style="text-align:center; padding:10px; font-weight:bold; font-size:24px; color:var(--primary);" class="monthTitle"></div>
+        <div style="text-align:center; padding:10px; font-weight:bold; font-size:26px; color:var(--primary);" class="monthTitle"></div>
         <table>
             <thead><tr><th>نام</th><th style="background:var(--present-clr)">حاضر</th><th style="background:var(--absent-clr)">غیر حاضر</th><th style="background:var(--leave-clr)">رخصت</th></tr></thead>
             <tbody id="attReportBody"></tbody>
@@ -270,7 +286,7 @@
     </div>
 
     <div id="lessReport" class="tab-content">
-        <div style="text-align:center; padding:10px; font-weight:bold; font-size:24px; color:var(--primary);" class="monthTitle"></div>
+        <div style="text-align:center; padding:10px; font-weight:bold; font-size:26px; color:var(--primary);" class="monthTitle"></div>
         <table>
             <thead><tr><th>نام</th><th style="background:var(--present-clr)">سنایا</th><th style="background:var(--absent-clr)">یاد نہیں</th><th style="background:var(--leave-clr)">نہیں سنایا</th></tr></thead>
             <tbody id="lessReportBody"></tbody>
@@ -279,7 +295,7 @@
 
     <div id="miscellaneousTab" class="tab-content">
         <div class="fb-uploader-card" id="fbUploaderPanel" style="display: none;">
-            <strong style="color:var(--primary); font-size:18px;">📝 میڈیا ٹائم لائن پوسٹ تخلیق کریں:</strong>
+            <strong style="color:var(--primary); font-size:20px;">📝 میڈیا ٹائم لائن پوسٹ تخلیق کریں:</strong>
             <select id="mediaStudentSelect"><option value="">طالب علم کا انتخاب کریں (آپشنل)</option></select>
             <input type="text" id="mediaTitleInput" placeholder="پوسٹ کا عنوان یا ٹائٹل لکھیں...">
             <input type="text" id="mediaUrlInput" placeholder="یوٹیوب، ڈرائیو یا فیس بک کا لنک پیسٹ کریں...">
@@ -290,8 +306,8 @@
     </div>
 
     <div id="formerStudentsTab" class="tab-content">
-        <div id="formerStudentsCount" style="text-align:center; font-size:20px; font-weight:bold; color:var(--primary); margin-bottom:15px;"></div>
-        <div style="text-align:center; font-size:24px; font-weight:bold; color:var(--primary); margin-bottom:15px;">سابقہ طلباء</div>
+        <div id="formerStudentsCount" style="text-align:center; font-size:22px; font-weight:bold; color:var(--primary); margin-bottom:15px;"></div>
+        <div style="text-align:center; font-size:28px; font-weight:bold; color:var(--primary); margin-bottom:15px;">سابقہ طلباء</div>
         <div id="formerStudentsContainer"></div>
     </div>
 
